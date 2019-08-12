@@ -1,0 +1,59 @@
+.whiteText{
+  color: white !important;
+}
+
+.limit-height {
+  height: 400px;
+  overflow: auto;
+}
+
+.openIndicator {
+  margin-right: 5px;
+}
+
+.branchNameSpan {
+  font-size: 15px;
+}
+
+div /deep/ .card {
+  margin-bottom: 10px !important;
+}
+
+.accordionHead{
+  padding: 0px;
+}
+
+div /deep/ .card-header {
+  padding-left: 12px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.list-group-item {
+  border-color: #212121;
+}
+
+.usageLabel {
+  font-weight: 700;
+  padding-right: 5px;
+}
+
+.stringData {
+  font-weight: 100;
+}
+
+.stringHeader {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+  white-space: nowrap;
+  font-weight: bolder;
+}
+
+.list-group-item {
+  display: initial !important;
+}
+
+.featureCountDiv {
+  margin-bottom: 15px;
+}

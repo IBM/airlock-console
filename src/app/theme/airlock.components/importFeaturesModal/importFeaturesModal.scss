@@ -1,0 +1,236 @@
+.importModal .has-success .control-label {
+  color: white;
+  margin-left: 15px;
+
+}
+.importModal .control-label-parent {
+  color: white;
+  margin-left: 15px;
+
+}
+.importModal .box{
+  box-sizing:border-box;
+
+}
+.importModal .has-success .control-label {
+  color: #ffffff;
+}
+.importModal .blackText{
+  //color: white !important;
+  //border: 1px solid #00abff !important;
+  //  background-color: white;
+}
+.importModal .nav-tabs{
+  /*background-color: #a9aaab !important;*/
+  background-color: #337ab7 !important;
+}
+.importModal .tab-content {
+  //background: rgba(255,255,255,0.1);
+  //color: rgba(255,255,255,0.1);
+}
+.importModal .nav-tabs .nav-item {
+  float: left;
+  margin-bottom: 0px;
+  margin-top: 1px;
+  margin-right: 0px;
+  margin-left: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.importModal .nav.nav-tabs > li > a:hover {
+  border: none;
+  /*background-color: #dcdcdc;*/
+  background-color: #e2e2e2;
+  color: #484c4f;
+}
+.importModal .nav.nav-tabs > li.active > a{
+  color: #55595c;
+  background-color: #fff;
+}
+.importModal .modal-backdrop{
+  background-color: #eee;
+}
+.importModal .tab-div-container{
+  height: 420px;
+  max-height: 420px;
+  overflow-y: hidden;
+}
+.importModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.importModal .select2-container--default .select2-selection--multiple {
+  background-color: currentColor !important;
+  color: currentColor !important;;
+}
+.importModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+.importModal .select2{
+  display:block !important;
+  width:400px !important;
+}
+.importModal .modal-title{
+  color:white !important;
+  //overflow: hidden;
+  //text-overflow: ellipsis;
+}
+.importModal .col-sm-10{
+  overflow: auto;
+  height: 300px;
+}
+.importModal .preview .col-sm-10{
+  overflow: auto;
+  height: 400px;
+}
+.importModal .preview .tree-container{
+  height: 450px  !important;
+}
+
+.importModal .box.row {
+  margin-left: 0em;
+  margin-right: 0em;
+}
+
+.importModal .notSelected {
+  opacity: 0.5;
+}
+
+.importModal .btn-group {
+  width: 100%;
+}
+
+.importModal .half-button {
+  width: 50%;
+}
+
+.importModal .small-right-padding {
+  padding-right: 1px;
+}
+.importModal .no-padding-left {
+  padding-left: 0px;
+  padding-right: 4px;
+}
+
+.importModal .no-padding-right {
+  padding-left: 4px;
+  padding-right: 0px;
+}
+
+.importModal .no-padding-middle {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.importModal .description-text {
+  height: 125px;
+}
+
+.importModal .nav-tabs .nav-item {
+  text-align: center;
+  width: 49.6%;
+}
+
+.importModal .config-state .nav-tabs .nav-item {
+  width: 33.2%;
+}
+
+.importModal .flexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  //-webkit-justify-content: flex-start;
+  //justify-content: flex-start;
+}
+
+.importModal .flexRightcontainer {
+  padding-top: 4px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.importModal .spreadFlexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+.importModal .modalLink {
+  color: lightblue;
+
+}
+.importModal .modalLink:hover {
+  color: #00abff;
+  cursor: pointer;
+
+}
+
+.importModal .accordionHead {
+  color: white;
+}
+
+.importModal .openIndicator {
+  min-width: 12px;
+}
+
+.importModal .semi-transparent {
+  opacity: 0.6;
+}
+
+.importModal .padTop {
+  padding-top: 4px;
+}
+
+.importModal .btn-expand {
+  font-size: 1.3rem;
+  margin: 10px;
+  margin-top: 0px;
+  /* margin-right: 0; */
+  float: right;
+  border-width: 1px;
+  color: #484c4f;
+  background: #e2e2e2;
+  border-color: #f5f5f5;
+  padding: 0.1rem 1rem;
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  margin-right: 16px;
+  opacity: 0.4;
+}
+
+.importModal .btn-expand:hover {
+  opacity: 1.0;
+}
+.importModal .btn-expand-down {
+  margin-top: 30px;
+}
+.importModal .select2-selection__rendered
+{
+  height: 35px;
+  overflow: auto !important;
+}
+
+.importModal  .sn-content{
+  white-space: pre;
+  overflow: auto;
+}
+.importModal .tree-container {
+  overflow: hidden !important;
+}
+.importModal  .simple-notification{
+  width: 400px;
+}
+.importModal  .mustType{
+  border-color: red !important;
+}
+

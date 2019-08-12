@@ -1,0 +1,106 @@
+<div *ngIf="visible" class="form-control" style="position:relative;top:43px;">
+  <ng-content></ng-content>
+  <button *ngIf="closable" (click)="close()" aria-label="Close" class="wlsummary__close-btn"><i style="font-size:15px" class="ion-ios-close-empty"></i></button>
+
+  <h3>Data Collection Summary</h3>
+    {{getString('analytics_summary_leading_txt_1')}} <span style="font-weight:bolder;">{{totalCountQuota}}</span> {{getString('analytics_summary_leading_txt_2')}}
+    <br>
+    {{getString('analytics_summary_leading_txt_total')}} <span style="font-weight:bolder;">{{totalCount}}</span>
+    <br>
+    {{getString('analytics_summary_leading_dev_txt_total')}} <span style="font-weight:bolder;">{{totalCountDev}}</span>
+    <br>
+    <button class="modalLink modalLinkButton" (click)="showAnaliticsHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+  <p>
+  <div style="font-size: small; color: ghostwhite;position:relative;top:15px;font-weight: bold">Context Fields
+    <!--i class="ion-clipboard" style="position:relative;top:-5px;"></i-->
+    <airlock-tooltip *ngIf="!isMasterBranch()" [content]="getString('analytics_summary_context_field_tooltip')" placement="right" [title]="getString('analytics_summary_context_field_tooltip_title')"></airlock-tooltip>
+  </div>
+  <hr/>
+
+  <div style="font-style: italic" *ngIf="analyticDataForDisplay.analyticsDataCollection.inputFieldsForAnalytics.length == 0">
+    {{getString('analytics_no_context_selected')}}
+  </div>
+  <ul style="list-style: none;">
+    <li *ngFor="let ctxAttribute of analyticDataForDisplay.analyticsDataCollection.inputFieldsForAnalytics">
+
+      <span *ngIf="isMasterIndicator(ctxAttribute)">
+        <span class="grayout-text" > <i class="ion-checkmark" tooltip="Context field"></i></span>
+        <span class="grayout"> {{ctxAttribute.name}} </span>
+      </span>
+      <span *ngIf="!isMasterIndicator(ctxAttribute)">
+        <i class="ion-checkmark" tooltip="Context field"></i>
+        {{ctxAttribute.name}}
+      </span>
+    </li>
+  </ul>
+  <p>
+  <div style="font-size: small; color: ghostwhite;position:relative;top:15px;font-weight: bold">Features, Configurations, Attributes, and Ordering Rules
+    <airlock-tooltip *ngIf="!isMasterBranch()" [content]="getString('analytics_summary_features_field_tooltip')" placement="right" [title]="getString('analytics_summary_features_field_tooltip_title')"></airlock-tooltip>
+  </div>
+
+  <hr/>
+  <div style="font-style: italic" *ngIf="analyticDataForDisplay.analyticsDataCollection.analyticsDataCollectionByFeatureNames.length == 0">
+    {{getString('analytics_no_attributes_selected')}}
+  </div>
+  <ul style="list-style: none;">
+    <li *ngFor="let feature of analyticDataForDisplay.analyticsDataCollection.analyticsDataCollectionByFeatureNames">
+      <!--
+      <span *ngIf="isIndicatorFeatures(feature)">
+        <i class="ion-radio-waves" style="color: white" tooltip="Feature"></i> {{feature.name}}
+      </span>
+      <span *ngIf="!isIndicatorFeatures(feature)" class="grayout">
+        <i class="ion-radio-waves" style="color: white" tooltip="Feature"></i> {{feature.name}}
+      </span>
+      -->
+      <span *ngIf="isIndicatorFeatures(feature) === 0">
+        <i class="ion-eye-disabled" style="color: white" tooltip="Feature is not reported"></i> {{feature.name}}
+      </span>
+      <span *ngIf="isIndicatorFeatures(feature) === 1">
+        <i class="ion-radio-waves" style="color: white" tooltip="Feature reported to analytics in MASTER"></i> {{feature.name}}
+      </span>
+      <span *ngIf="isIndicatorFeatures(feature) === 2">
+        <span class="grayout-text" ><i class="ion-radio-waves"  tooltip="Feature reported to analytics in MASTER"></i> </span>
+        <span class="grayout"> {{feature.name}} </span>
+      </span>
+      <span *ngIf="isIndicatorFeatures(feature) === 3">
+        <i class="ion-radio-waves" style="color: white" ></i> {{feature.name}}
+      </span>
+
+      <ul style="list-style: none;">
+        <li *ngFor="let conf of feature.configurationRules" style="padding-left: 20px">
+          <span *ngIf="isMasterIndicatorConfigurations(conf)">
+            <span class="grayout-text" ><i class="ion-wrench" tooltip="Configuration"></i> </span>
+            <span class="grayout">{{conf.name}}</span></span>
+          <span *ngIf="!isMasterIndicatorConfigurations(conf)">
+            <i class="ion-wrench" style="color: white" tooltip="Configuration"></i> {{conf.name}}
+          </span>
+        </li>
+      </ul>
+      <ul style="list-style: none;">
+        <li *ngFor="let orderingRule of feature.orderingRules" style="padding-left: 20px">
+          <span *ngIf="isMasterIndicatorOrderingRule(orderingRule)">
+            <span class="grayout-text" ><i class="ion-shuffle" tooltip="Ordering Rule"></i> </span>
+            <span class="grayout">{{orderingRule.name}}</span></span>
+          <span *ngIf="!isMasterIndicatorOrderingRule(orderingRule)">
+            <i class="ion-shuffle" style="color: white" tooltip="Ordering Rule"></i> {{orderingRule.name}}
+          </span>
+        </li>
+      </ul>
+      <ul style="list-style: none;">
+        <li *ngFor="let attribute of feature.attributes" style="padding-left: 20px">
+          <span *ngIf="isMasterIndicatorAtributes(attribute)">
+            <span class="grayout-text" ><i class="ion-ios-pricetag"  tooltip="Attribute"></i> </span>
+            <span class="grayout">{{attribute.name}}</span>
+            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>
+          </span>
+          <span *ngIf="!isMasterIndicatorAtributes(attribute)">
+            <span><i class="ion-ios-pricetag"  tooltip="Attribute"></i> </span>
+            {{attribute.name}}
+            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>
+          </span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!--div *ngIf="visible" class="overlay" (click)="close()"></div-->

@@ -1,0 +1,203 @@
+<about-modal #aboutModal></about-modal>
+<profile-modal #profileModal></profile-modal>
+<add-branch-modal #addBranchModal (onBranchAdded)="onBranchAdded($event)"></add-branch-modal>
+<div class="page-top clearfix" baScrollPosition maxHeight="50" (scrollChange)="scrolledChanged($event)"
+     [ngClass]="{scrolled: isScrolled}">
+
+    <span class="sp-container">
+        <div class="columnFlexContainer1">
+            <span class="frame-5">
+                <a (click)="openAbout()" class="al-logo clearfix title-text"><span style="color: #00abff">Airlock </span> <span class="columnFlexContainer" style="color: white">Control Center
+                <span *ngIf="!staticMode">
+                    <a style="color: white" class="collapse-info-link version-text"><span style="color: white">  {{getString('page_top_airlock_version')}}</span></a>
+                </span>
+                <span *ngIf="staticMode">
+                    <a style="color: lightgreen" class="collapse-info-link version-text light-text"><span style="color: #cefdce; font-size: 34px">  Light</span></a>
+                </span>
+                </span></a>
+            </span>
+        </div>
+    </span>
+    <span class="supaflexContainer">
+  <span class="rightFlexContainer prod-select-span">
+                <div class="buttonTitle" [class.grayed-out]="!enableProduct">Product:</div>
+                <div *ngIf="enableProduct" style="display: table-cell;">
+                    <ng-select *ngIf="!loading" [allowClear]="false"
+                               [items]="getProductsForSelect()"
+                               (selected)="selectProductFromSelect($event)"
+                               [placeholder]="selectedProduct?.name"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="!enableProduct" class="disabled-placeholder">- -</div>
+                <div class="buttonTitle" [class.grayed-out]="!enableSeason"><span class="bottom-align-text">
+                    Version Range:
+                </span></div>
+                <div *ngIf="enableSeason" style="display: table-cell;">
+                    <!--<div class="btn-group" dropdown  style="vertical-align:baseline">-->
+                    <!--<button type="button" class="btn btn-default" [disabled]="!enableSeason" dropdownToggle>-->
+                    <!--{{getSeasonName(selectedSeason)}}-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu1" dropdownMenu>-->
+                    <!--<template ngFor let-item [ngForOf]="seasons" [ngForTrackBy]="itemTrackBy">-->
+                    <!--<li class="dropdown-item" (click)="selectSeason(item)">{{getSeasonName(item)}}</li>-->
+                    <!--</template>-->
+
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <ng-select *ngIf="!loading" [allowClear]="false"
+                               [items]="getSeasonsForSelect()"
+                               (selected)="selectSeasonFromSelect($event)"
+                               [placeholder]="getSeasonName(selectedSeason)"
+                               [active] = "[getSeasonName(selectedSeason)]"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="!enableSeason" class="disabled-placeholder">- -</div>
+                <div *ngIf="showBranches && !staticMode" class="buttonTitle" [class.grayed-out]="!enableBranches"><span class="bottom-align-text">
+                    Branch:
+                </span></div>
+                <div *ngIf="enableBranches && showBranches && !staticMode" style="display: table-cell;">
+                    <!--<div class="btn-group" dropdown  style="vertical-align:baseline">-->
+                    <!--<button type="button" class="btn btn-default" [disabled]="!enableBranches"  dropdownToggle>-->
+                    <!--Master-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu1" dropdownMenu>-->
+                    <!--&lt;!&ndash;<template ngFor let-item [ngForOf]="seasons" [ngForTrackBy]="itemTrackBy">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="dropdown-item" (click)="selectSeason(item)">{{getSeasonName(item)}}</li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</template>&ndash;&gt;-->
+
+                    <!--</ul>-->
+                    <!--<button id="single-button" type="button" class="btn btn-primary" title="Actions">-->
+                    <!--<i class="ion-plus-circled"></i>-->
+                    <!--</button>-->
+                    <!--</div>-->
+                    <div *ngIf="!loading" class="btn-group" dropdown  style="vertical-align:baseline">
+                        <ng-select [allowClear]="false"
+                                   [items]="getBranchesForSelect()"
+                                   (selected)="selectBranchFromSelect($event)"
+                                   [placeholder]="selectedBranch?.name"
+                        >
+                        </ng-select>
+                        <button id="single-button" type="button" (click)="createNewBranch()" class="btn btn-primary" title="{{getNewBranchTitle()}}" [disabled]="!isBranchSupported()">
+                            <i class="ion-plus-circled"></i>
+                        </button>
+                    </div>
+
+                </div>
+                <div *ngIf="!enableBranches && showBranches && !staticMode" class="disabled-placeholder">- -</div>
+  </span>
+
+  <span class="flexcontainer">
+    <div *ngIf="showRole" class="user-label">
+      <h5 style="padding-top: 10px;color: white; min-width: 45px;text-align: center; padding-left: 4px;" class="modal-title">{{userName}}</h5>
+        <h6 class="modal-sub-title">({{userRole}})</h6>
+    </div>
+    <div *ngIf="!showRole" class="user-label1">
+      <h5 style="padding-top: 20px;color: white; min-width: 45px;text-align: center; padding-left: 4px; padding-right: 4px;" class="modal-title">{{userName}}</h5>
+    </div>
+
+    <div class="user-profile clearfix">
+    <div class="dropdown al-user-profile" dropdown>
+
+      <a class="profile-toggle-link dropdown-toggle" id="user-profile-dd" data-toggle="dropdown" aria-expanded="false" dropdownToggle>
+        <img src="{{ ( avatar | baProfilePicture ) }}">
+      </a>
+
+      <div class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd">
+        <li class="dropdown-item"><i class="dropdown-arr"></i></li>
+        <li class="dropdown-item"><a href="#/profile" (click)="openProfile()"><i class="fa fa-user"></i>Profile</a></li>
+          <!--<li class="dropdown-item"><a href="#/about" (click)="openAbout()"><i class="fa fa-info-circle"></i>About</a></li>-->
+         <li class="dropdown-item"><a class="signout1" (click)="getNewAvatar()"><i class="fa ion-person"></i>Change picture</a></li>
+          <li class="dropdown-item" *ngIf="canShowIdMode() && !isIdModeOn()"><a class="signout1" (click)="toggleIdMode()"><i class="fa ion-paper"></i>Turn ID mode ON</a></li>
+          <li class="dropdown-item" *ngIf="canShowIdMode() && isIdModeOn()"><a class="signout1" (click)="toggleIdMode()"><i class="fa ion-paper"></i>Turn ID mode OFF</a></li>
+        <li class="dropdown-item"><a class="signout" (click)="logOut()"><i class="fa fa-power-off"></i>Sign out</a></li>
+      </div>
+    </div>
+
+        <!--<ba-msg-center></ba-msg-center>-->
+  </div>
+  </span>
+  </span>
+</div>
+<div *ngIf="false" class="current-selection" (mouseover)="mouseOver()" (mouseleave)="mouseOut()">
+    <div class="selection-preview" *ngIf="!showSelection">
+        <span class="rightFlexContainer">
+                <div class="buttonTitle">Product:</div>
+                <div style="display: table-cell;">
+                    <div class="selected-text" style="vertical-align:baseline">
+                            {{selectedProduct?.name}}
+                    </div>
+                </div>
+                <div class="buttonTitle"><span class="bottom-align-text">
+                    Version Range:
+                </span></div>
+                <div style="display: table-cell;">
+                    <div class="selected-text"  style="vertical-align:baseline">
+                            {{getSeasonName(selectedSeason)}}
+                    </div>
+                </div>
+                <div *ngIf="showBranches" class="buttonTitle"><span class="bottom-align-text">
+                    Branch:
+                </span></div>
+                <div *ngIf="showBranches" style="display: table-cell;">
+                    <div class="selected-text"  style="vertical-align:baseline">
+                            Master
+                    </div>
+                </div>
+  </span>
+    </div>
+    <div class="selection-div" *ngIf="showSelection">
+        <span class="rightFlexContainer prod-select-span">
+            <div class="buttonTitle">Product:</div>
+            <div style="display: table-cell;">
+                <div class="btn-group" dropdown style="vertical-align:baseline">
+                    <button type="button" class="btn btn-default" (click)="onProductsClick()" dropdownToggle>
+                        {{selectedProduct?.name}}
+                    </button>
+                    <ul class="dropdown-menu-wide" [style.width]="productDropDownWidth" dropdownMenu>
+                        <template ngFor let-item [ngForOf]="products" [ngForTrackBy]="itemTrackBy">
+                            <li class="dropdown-item truncate" (click)="selectProduct(item)">{{item.name}}</li>
+                        </template>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="buttonTitle"><span class="bottom-align-text">
+                        Version Range:
+                    </span></div>
+            <div style="display: table-cell;">
+                <div class="btn-group" dropdown  style="vertical-align:baseline">
+                    <button type="button" class="btn btn-default" dropdownToggle>
+                        {{getSeasonName(selectedSeason)}}
+                    </button>
+                    <ul class="dropdown-menu1" dropdownMenu>
+                        <template ngFor let-item [ngForOf]="seasons" [ngForTrackBy]="itemTrackBy">
+                            <li class="dropdown-item" (click)="selectSeason(item)">{{getSeasonName(item)}}</li>
+                        </template>
+
+                    </ul>
+                </div>
+            </div>
+            <div *ngIf="showBranches" class="buttonTitle"><span class="bottom-align-text">
+                        Branch:
+                    </span></div>
+            <div *ngIf="showBranches" style="display: table-cell;">
+                <div class="btn-group" dropdown  style="vertical-align:baseline">
+                    <button type="button" class="btn btn-default" dropdownToggle>
+                        My Test Branch
+                    </button>
+                    <ul class="dropdown-menu1" dropdownMenu>
+                        <!--<template ngFor let-item [ngForOf]="seasons" [ngForTrackBy]="itemTrackBy">-->
+                        <!--<li class="dropdown-item" (click)="selectSeason(item)">{{getSeasonName(item)}}</li>-->
+                        <!--</template>-->
+
+                    </ul>
+                    <button id="single-button2" type="button" class="btn btn-primary" title="Actions">
+                        <i class="ion-plus-circled"></i>
+                    </button>
+                </div>
+            </div>
+    </span>
+    </div>
+</div>

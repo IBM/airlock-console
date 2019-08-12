@@ -1,0 +1,613 @@
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg); /* Firefox 16+, IE 10+, Opera */
+  }
+  100% {
+    transform: rotate(360deg); /* Firefox 16+, IE 10+, Opera */
+  }
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg); /* Firefox 16+*/
+  }
+  100% {
+    -moz-transform: rotate(360deg); /* Firefox 16+*/
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); /* Firefox 16+, IE 10+, Opera */
+  }
+  100% {
+    transform: rotate(360deg); /* Firefox 16+, IE 10+, Opera */
+  }
+}
+
+#preloader-old {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1003;
+  background: #000000;
+  & > div {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $danger;
+    transform: translate3d(0, 0, 0);
+    animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    &:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $primary;
+      -webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+      animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $warning;
+      animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+  }
+}
+
+
+#tloader-old {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.51);
+  & > div {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $danger;
+    transform: translate3d(0, 0, 0);
+    animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    &:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $primary;
+      -webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+      animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $warning;
+      animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+  }
+}
+
+#tinlineloader-old {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.51);
+  & > div {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $danger;
+    transform: translate3d(0, 0, 0);
+    animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    &:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $primary;
+      -webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+      animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: $warning;
+      animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+    }
+  }
+}
+
+
+div#nb-global-spinner {
+  @-webkit-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @-moz-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(0, 0, 0, 0.51);
+    overflow:hidden;
+
+  div:first-child{
+    display:block;
+    position:relative;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:150px;
+    margin:-75px 0 0 -75px;
+    border-radius:50%;
+    box-shadow:0 3px 3px 0 rgb(151, 255, 141);
+    transform:translate3d(0,0,0);
+    animation:spin 2s linear infinite
+  }
+  div:first-child:after, div:first-child:before{
+    content:'';
+    position:absolute;border-radius:50%
+  }
+  div:first-child:before{
+    top:5px;
+    left:5px;
+    right:5px;
+    bottom:5px;
+    box-shadow:0 3px 3px 0 rgb(34, 43, 255);
+    -webkit-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite
+  }
+  div:first-child:after{
+         top:15px;
+         left:15px;
+         right:15px;
+         bottom:15px;
+         box-shadow:0 3px 3px 0 rgb(255, 59, 51);
+         animation:spin 1.5s linear infinite
+  }
+
+  span {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(0, 0, 0, 0.0);
+    overflow:hidden;
+    img {
+      position:relative;
+      left:calc(50% - 25px);
+      top:calc(50% - 25px);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+
+}
+
+
+div#preloader {
+  @-webkit-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @-moz-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1003;
+  background: rgba(0, 0, 0, 1.0);
+  overflow:hidden;
+
+  div:first-child{
+    display:block;
+    position:relative;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:150px;
+    margin:-75px 0 0 -75px;
+    border-radius:50%;
+    box-shadow:0 3px 3px 0 rgb(151, 255, 141);
+    transform:translate3d(0,0,0);
+    animation:spin 2s linear infinite
+  }
+  div:first-child:after, div:first-child:before{
+    content:'';
+    position:absolute;border-radius:50%
+  }
+  div:first-child:before{
+    top:5px;
+    left:5px;
+    right:5px;
+    bottom:5px;
+    box-shadow:0 3px 3px 0 rgb(34, 43, 255);
+    -webkit-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite
+  }
+  div:first-child:after{
+    top:15px;
+    left:15px;
+    right:15px;
+    bottom:15px;
+    box-shadow:0 3px 3px 0 rgb(255, 59, 51);
+    animation:spin 1.5s linear infinite
+  }
+
+  span {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(0, 0, 0, 0.0);
+    overflow:hidden;
+    img {
+      position:relative;
+      left:calc(50% - 25px);
+      top:calc(50% - 25px);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+
+}
+
+div#tinlineloader {
+  @-webkit-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @-moz-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+  @keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(90deg)
+    }
+    100%{
+      transform:rotate(0)
+    }
+  }
+
+  position:absolute;
+  top:70px;
+  left:0;
+  width:100%;
+  height:calc(100% - 70px);
+  z-index:1003;
+  background: rgba(0, 0, 0, 0.51);
+  overflow:hidden;
+
+  div:first-child{
+    display:block;
+    position:relative;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:150px;
+    margin:-75px 0 0 -75px;
+    border-radius:50%;
+    box-shadow:0 3px 3px 0 rgb(151, 255, 141);
+    transform:translate3d(0,0,0);
+    animation:spin 2s linear infinite
+  }
+  div:first-child:after, div:first-child:before{
+    content:'';
+    position:absolute;border-radius:50%
+  }
+  div:first-child:before{
+    top:5px;
+    left:5px;
+    right:5px;
+    bottom:5px;
+    box-shadow:0 3px 3px 0 rgb(34, 43, 255);
+    -webkit-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite
+  }
+  div:first-child:after{
+    top:15px;
+    left:15px;
+    right:15px;
+    bottom:15px;
+    box-shadow:0 3px 3px 0 rgb(255, 59, 51);
+    animation:spin 1.5s linear infinite
+  }
+
+  span {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(0, 0, 0, 0.0);
+    overflow:hidden;
+    img {
+      position:relative;
+      left:calc(50% - 25px);
+      top:calc(50% - 25px);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+
+}
+
+div#tloader {
+  @-webkit-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+  @-moz-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+  @keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1003;
+  background: rgba(0, 0, 0, 0.51);
+  overflow:hidden;
+
+  div:first-child{
+    display:block;
+    position:relative;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:150px;
+    margin:-75px 0 0 -75px;
+    border-radius:50%;
+    box-shadow:0 3px 3px 0 rgb(151, 255, 141);
+    transform:translate3d(0,0,0);
+    animation:spin 2s linear infinite
+  }
+  div:first-child:after, div:first-child:before{
+    content:'';
+    position:absolute;
+    border-radius:50%
+  }
+  div:first-child:before{
+    top:5px;
+    left:5px;
+    right:5px;
+    bottom:5px;
+    box-shadow:0 3px 3px 0 rgb(34, 43, 255);
+    -webkit-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite
+  }
+  div:first-child:after{
+    top:15px;
+    left:15px;
+    right:15px;
+    bottom:15px;
+    box-shadow:0 3px 3px 0 rgb(255, 59, 51);
+    animation:spin 1.5s linear infinite
+  }
+
+  span {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(61, 183, 76, 0.72);
+    overflow:hidden;
+    img {
+      position:relative;
+      left:calc(50% - 25px);
+      top:calc(50% - 25px);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+
+}

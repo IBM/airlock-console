@@ -1,0 +1,131 @@
+.limit-height {
+  height: calc(100vh - 314px);
+  overflow: auto;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.noExpand {
+  .btn:hover {
+    transform: none !important;
+    background-color: #009ff3 !important;
+
+  }
+}
+
+.locale-tr:hover {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+.detail-background {
+  background: rgba(62, 80, 107, 0.33);
+  border-radius: 2px;
+}
+
+.topPad {
+  padding-top: 8px;
+}
+
+.override-button {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.instruction-field {
+  height: 50px;
+}
+
+.translationSpan {
+  text-overflow: ellipsis;
+  overflow : hidden;
+  white-space: nowrap;
+  width:300px;
+  display:inline-block;
+}
+
+.translationSpan:hover {
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-all;
+  width:300px;
+  display:inline-block;
+}
+
+.locale-cell {
+  font-size: 15px;
+  text-shadow: black 1px 1px;
+}
+
+//.dropdown-li {
+//  a {
+//    color: yellow;
+//  }
+//  background-color: #7bf2f5;
+//}
+//li.dropdown-item {
+//  a {
+//    width: 100%;
+//  }
+//}
+li.dropdown-item {
+  width: 160px;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+.dropdown-item {
+  width: auto !important;
+  a:hover {
+    background: transparent;
+  }
+}
+.top-dropdown-menu.profile-dropdown a:hover {
+  background: transparent;
+}
+.top-dropdown-menu.profile-dropdown a {
+  text-align: left;
+  border: none;
+  text-decoration: none;
+  color: black;
+  padding: 4px 16px 4px 20px;
+}
+.top-dropdown-menu.profile-dropdown {
+  width: 160px;
+  top: 35px;
+  right: -10px;
+  left: auto;
+  z-index: 9999999;
+}
+.action-dropdown {
+  height: 20px;
+}
+
+.actionsMenu {
+  //margin: 0 0 2em 0;
+  margin: auto;
+  list-style-type: none;
+  padding: 0;
+}
+.actionsMenu li {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: white;
+  color: black;
+  margin: .5em;
+  padding: .3em 0;
+  height: 3.2em;
+  border-radius: 4px;
+}
+.actionsMenu li.selected:hover {
+  background-color: #BBD8DC !important;
+  color: black;
+}
+.actionsMenu li:hover {
+  color: black;
+  background-color: #DDD;
+  left: .1em;
+}

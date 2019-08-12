@@ -1,0 +1,94 @@
+
+<modal #editModal id="editModal" class="editWebhookModal"  [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+        <modal-header [show-close]="false" *ngIf = "webhook != null">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+                <span>
+                     {{title}} - {{webhook?.name}}
+                </span>
+            </h4>
+        </modal-header>
+        <modal-body>
+            <div class="box" *ngIf="webhook != null">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div  class="form-group">
+                            <label for="input01" class="control-label">Name</label>
+                            <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_name')" [title]="getString('add_webhook_name_title')"></airlock-tooltip>
+                            <input [class.mustType] = "isInputWarningOn(webhook.name)"   type="text" id="input01" [(ngModel)]="webhook.name" class="form-control whiteText" tabindex="2" >
+                        </div>
+                        <div  class="form-group">
+                            <label for="input01" class="control-label">URL</label>
+                            <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_url')" [title]="getString('add_webhook_url_title')"></airlock-tooltip>
+                            <input [class.mustType] = "isInputWarningOn(webhook.url)"   type="text" id="input02" [(ngModel)]="webhook.url" class="form-control whiteText" tabindex="2" >
+                        </div>
+                        <div  class="form-group">
+                            <label for="input01" class="control-label">Products</label>
+
+
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_products')" [title]="getString('add_webhook_products_title')"></airlock-tooltip>
+                            <div>
+                                <input type="checkbox" [checked]="globalWebhook" (click)="toggleGlobal($event)">
+                                <span class="control-label">All Products</span>
+                            </div>
+                            <span [class.hide]="globalWebhook">
+                                <select id="select05"  class="js_example" multiple tabindex="3" multiple="true">
+                                    <template ngFor let-item [ngForOf]="possibleProdsList" [ngForTrackBy]="itemTrackBy">
+                                        <option [value]="item.uniqueId">{{item.name}}</option>
+                                    </template>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div  class="form-group">
+                            <label for="input01" class="control-label">Minimum Stage</label>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_webhook_minStage')" [title]="getString('edit_webhook_minStage_title')"></airlock-tooltip>
+                            <!--<input [class.mustType] = "isInputWarningOn(webhook.name)"   type="text" id="input01" [(ngModel)]="webhook.name" class="form-control whiteText" tabindex="2" >-->
+                            <div class="minStage-div">
+                                <select id="select06" class="minStage-select" tabindex="3" [ngModel]="webhook.minStage">
+                                    <option [value]="'PRODUCTION'">Production</option>
+                                    <option [value]="'DEVELOPMENT'">Development</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div  class="no-margin "  *ngIf = "webhook != null">
+                                <label for="input28" class="control-label">Creator</label>
+                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_notification_creator')" [title]="getString('edit_notification_creator_title')"></airlock-tooltip>
+                                <input type="text" id="input28" disabled placeholder="" [(ngModel)]="webhook.creator"  class="form-control blackText" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div  class="no-margin "  *ngIf = "webhook != null">
+                                <label for="input80" class="control-label">Creation Date</label>
+                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_notification_creation_date')" [title]="getString('edit_notification_creation_date_title')"></airlock-tooltip>
+                                <input type="text"   id="input80" disabled placeholder="" [value]="creationDate | date:'medium'"  class="form-control blackText" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div  class="no-margin "  *ngIf = "webhook != null">
+                                <label for="input82" class="control-label">Last Modified</label>
+                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_notification_last_modified')" [title]="getString('edit_notification_last_modified_title')"></airlock-tooltip>
+                                <input type="text"  id="input82" disabled placeholder="" [value]="lastModificationDate | date:'medium'"  class="form-control blackText" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </modal-body>
+        <modal-footer *ngIf = "webhook != null">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled] = "isOnlyDisplayMode">Save</button>
+        </modal-footer>
+    </modal>

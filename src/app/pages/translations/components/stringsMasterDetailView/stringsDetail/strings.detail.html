@@ -1,0 +1,100 @@
+<div  class="productDetails" >
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <show-message-modal #showMessageModal></show-message-modal>
+    <override-string-modal #overrideStringModal (stringOverridden)="reloadString($event)"></override-string-modal>
+    <edit-string-modal #editStringModal (onEditString)="reloadString($event)"></edit-string-modal>
+    <ba-action-card *ngIf="_selectedString" title="{{_selectedString.key}}" baCardClass="with-scroll limit-height detail-background "
+        [showAction]="canUserEditString()" (onActionClicked)="onEditString($event)">
+        <div class="row limit-height detail-background topPad">
+            <div class="form-group col-md-12">
+                <label for="key">String ID</label>
+                <input type="text" class="form-control" id="key" placeholder="" required
+                       [(ngModel)]="_selectedString.key" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="key">String Value</label>
+                <input type="text" class="form-control" id="value" placeholder="" required
+                       [(ngModel)]="_selectedString.value" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+
+            <div class="form-group col-md-12">
+                <label for="key">International Fallback</label>
+                <input type="text" class="form-control" id="internationalFallback" placeholder="" required
+                       [(ngModel)]="_selectedString.internationalFallback" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="key">Instructions for Translators</label>
+                <textarea type="text" class="form-control instruction-field" id="internationalFallback1" placeholder="" required
+                          [(ngModel)]="_selectedString.translationInstruction" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()"></textarea>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="key">Status</label>
+                <input type="text" class="form-control" id="status" placeholder="" required
+                       [ngModel]="getStringStatus(_selectedString.status)" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="key">Stage</label>
+                <input type="text" class="form-control" id="stage" placeholder="" required
+                       [(ngModel)]="_selectedString.stage" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="key">Max translation length</label>
+                <input type="text" class="form-control" id="maxStringSize" placeholder=""
+                       [(ngModel)]="_selectedString.maxStringSize" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="key">Creator</label>
+                <input type="text" class="form-control" id="stringOwner" placeholder=""
+                       [(ngModel)]="_selectedString.creator" name="name" #name="ngModel" [readonly] = "true" (keydown.enter)="$event.preventDefault()">
+            </div>
+
+            <div class="form-group col-md-12">
+                <label for="key">Locales</label>
+                <table>
+                    <template ngFor let-item [ngForOf]="_selectedString.translations" [ngForTrackBy]="itemTrackBy" let-i="index" >
+
+
+                        <tr  *ngIf="isSupportedLocale(item.locale)" class="locale-tr" style="height: 34px;">
+                            <td class="locale-cell">{{item.locale}}</td>
+                            <td>
+                                <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="item.translationStatus == 'TRANSLATED'"></i>
+                                <i aria-hidden="true" class="ion-compose featureEnabled" *ngIf="item.translationStatus == 'OVERRIDE'"></i>
+                                <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="item.translationStatus != 'TRANSLATED' && item.translationStatus != 'OVERRIDE'"></i>
+                            </td>
+                            <td style="width: 95%;padding-left: 10px;" title="{{item.translation}}">
+                                 <span class="translationSpan">
+                                {{item.translation}}
+                                    </span>
+                            </td>
+                            <!--<td *ngIf="typeof(item.issueStatus)!=='undefined'">-->
+                                <!--<i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="item.issueStatus == 'HAS_ISSUES'"></i>-->
+                                <!--<i aria-hidden="true" class="ion-compose featureEnabled" *ngIf="item.issueStatus == 'HAS_OPEN_ISSUES'"></i>-->
+                                <!--<i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="item.issueStatus != 'NO_ISSUES' && item.translationStatus != 'OVERRIDE'"></i>-->
+                            <!--</td>-->
+
+                            <td class="noExpand actionsMenu">
+                            <div  *ngIf="canShowActionsMenu()" class="dropdown buttonMargin noExpand maxWidth" dropdown >
+                                <button dropdownToggle class="btn btn-primary right-margin" id="user-profile-dd" aria-expanded="false" [disabled]="shouldDisableActions(s)">
+                                    <i class="ion-settings"></i>
+                                </button>
+                                <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">
+                                    <i class="dropdown-arr"></i>
+                                    <li style="height: 22px" class="dropdown-item dropdown-li"  *ngIf="canUserCancelOverrideLocale(item.translationStatus)" (click)="cancelOverrideTranslation(_selectedString.uniqueId,item.locale,item.translation)"><a ><i class="fa ion-compose"></i>Cancel Override</a></li>
+                                    <li style="height: 22px" class="dropdown-item dropdown-li"  *ngIf="canUserOverrideLocale()" (click)="overrideTranslation(_selectedString.uniqueId,item.locale,item.translation, item.translationStatus)"><a ><i class="fa ion-compose"></i>Override</a></li>
+                                    <!--<li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="item.translationStatus == 'TRANSLATED' && canViewIssues()" (click)="showStringIssues(_selectedString.uniqueId,item.locale,item.issueStatus,_selectedString.key,true)"><a><i class="fa ion-ios-list-outline"></i>Issues</a></li>-->
+                                </ul>
+                            </div>
+                            </td>
+                            <!--<string-issue-modal #stringIssueModal [seasonId]="selectedSeason?.uniqueId"></string-issue-modal>-->
+                        </tr>
+                    </template>
+                </table>
+            </div>
+        </div>
+    </ba-action-card>
+</div>

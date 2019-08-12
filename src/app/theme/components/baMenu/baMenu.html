@@ -1,0 +1,18 @@
+<aside class="al-sidebar" (mouseleave)="hoverElemTop=outOfArea" sidebarResize>
+  <ul id="al-sidebar-list" class="al-sidebar-list" baSlimScroll [baSlimScrollOptions]="{height: menuHeight}">
+    <ba-menu-item
+      [menuItem]="item"
+      (itemHover)="hoverItem($event)"
+      (toggleSubMenu)="toggleSubMenu($event)"
+      *ngFor="let item of menuItems"></ba-menu-item>
+  </ul>
+  <div *ngIf="sidebarCollapsed==false" (click)="toggleMenu()" class="ba-collapse"><i class="ios ion-chevron-left" style="position: relative;right:5px; float: right"></i></div>
+  <div *ngIf="sidebarCollapsed!=false" (click)="toggleMenu()" class="ba-collapse"><i class="ios ion-chevron-right" style="position: relative;right:5px; float: right"></i></div>
+
+  <div class="sidebar-hover-elem" [ngStyle]="{top: hoverElemTop + 'px', height: hoverElemHeight + 'px'}"
+       [ngClass]="{'show-hover-elem': showHoverElem }"></div>
+  <a  class="help-link" style="padding-left: 23px;" (click)="getHelpScreen()">
+    <i class="ios ion-help" style="margin-right: 18px;"></i><span *ngIf="sidebarCollapsed==false" class="help-text">Help</span>
+  </a>
+
+</aside>

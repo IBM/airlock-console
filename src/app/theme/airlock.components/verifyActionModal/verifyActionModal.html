@@ -1,0 +1,53 @@
+
+<modal #verifyActionModal  class="verifyActionModal"  id="verifyActionModal" style ="z-index:9988 !important;"  [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">
+            <span>
+                                <ul class="listOfData"  *ngIf="title != null">
+                <li *ngFor="let s of title.split('\n')">
+                    {{s}}
+                </li>
+                </ul>
+            </span>
+        </h4>
+        <h5 class="modal-title">
+            <ul class="listOfData" *ngIf="text != null">
+                <li *ngFor="let s of text.split('\n')">
+                    {{s}}
+                </li>
+            </ul>
+        </h5>
+    </modal-header>
+    <modal-body>
+
+        <form *ngIf="feature!=null || experiment!=null || variant!=null || stream!=null || notification!=null">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="name" class="control-label">Re-type {{getType()}} name to confirm (<span class="feature-name">{{getName()}}</span>)</label>
+                    <input type="text" class="form-control" id="name" placeholder="" class="form-control blackText"
+                           [(ngModel)]="validationNameString" name="name" required>
+                    <div></div>
+                    <div class="checkbox-flex" *ngIf = "confirmSubfeatureStageChange">
+                        <input type="checkbox" id="checkboxname" class="form-control blackText check-all"
+                               [(ngModel)]="confirmRecursiveStageChange" name="checkboxname" required>
+                        <label for="checkboxname" class="control-label-checkbox">{{getString('verify_action_modal_recursive_stage_change')}}</label>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cancel()">Cancel</button>
+        <button *ngIf = "showDiscard" type="button" class="btn btn-default" data-dismiss="modal" (click)="discard()">Discard</button>
+        <button *ngIf = "confirmSubfeatureStageChange" type="button" class="btn btn-primary" (click)="save()" [title]="getConfirmTitle()" [disabled]="!validationNameString &&  feature!=null || !confirmRecursiveStageChange">Confirm</button>
+        <button *ngIf = "!confirmSubfeatureStageChange" type="button" class="btn btn-primary" (click)="save()" [disabled]="!validationNameString && feature!=null " >Confirm</button>
+    </modal-footer>
+</modal>

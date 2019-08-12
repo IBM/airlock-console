@@ -1,0 +1,35 @@
+.bold {
+  font-weight: 700;
+}
+
+.block {
+  display: inline-block;
+}
+
+div.inline-edit {
+  text-decoration: none;
+  border-bottom: #A8B9CE dashed 1px;
+  cursor: pointer;
+  text-align: left;
+  padding: .3em 0;
+  color: whitesmoke !important;
+  width: auto;
+  float:left;
+}
+
+input {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 4px 10px;
+  background-color: whitesmoke;
+}
+
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+

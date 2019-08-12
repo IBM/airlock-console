@@ -1,0 +1,63 @@
+<div class = "stringList">
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+    <edit-string-modal #editStringModal (onEditString)="reloadString($event)"></edit-string-modal>
+
+    <div>
+        <div class="limit-height1 ">
+            <ba-card baCardClass="with-scroll">
+        <ul class="strings limit-height">
+            <li *ngFor="let s of _strings"
+                [class.selected]="s === curSelectedString"
+                (click)="onSelect(s)"
+                class=""  style="position: static">
+                <div class="badge" style="position: static;margin-top: -4px;">
+                    <string-status [status]="s.status" [tooltip]="getStringStatus(s.status)"></string-status>
+                </div>
+
+                <label class="custom-input-success stringLabel" style="vertical-align: top;padding-top: 4px;">
+
+                    <span style="font-size: 14px">{{ s.key}}</span><br>
+                    <span class="limit-text-height" style="color: #888888;font-size: 10px">{{ s.value}}</span>
+                </label>
+
+                <div style="float: right; height: 100%;">
+
+
+                    <span class="flexcontainer">
+                        <span class="production-indicator right-pad">
+                            <i *ngIf="s.stage=='PRODUCTION'" class="fa fa-product-hunt production-indicator" [tooltip]="'String in Production'"></i>
+                        </span>
+                        <label class="custom-input-success right-pad" style="vertical-align: top;padding-top: 4px;">
+
+                            <span class="cut-with-dots" style="max-width: 200px;font-size: 14px">({{getNumberOfTranslatedLocales(s)}}/{{getNumberOfSupportedLocales(s)}})</span>
+                            <span class="cut-with-dots" style="max-width: 200px;color: #888888;font-size: 10px">Translated</span>
+                        </label>
+                        <div  *ngIf="canShowActionsMenu()" class="dropdown buttonMargin noExpand maxWidth" dropdown >
+                            <button dropdownToggle class="btn btn-primary right-margin" id="user-profile-dd" aria-expanded="false" [disabled]="shouldDisableActions(s)">
+                                <i class="ion-settings"></i>
+                            </button>
+                            <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">
+                                <!--<li class="dropdown-item"><i class="dropdown-arr"></i></li>-->
+                                <i class="dropdown-arr"></i>
+                                <li style="height: 22px" class="dropdown-item dropdown-li"  *ngIf="canUserEditString(s)" (click)="showEditString(s)"><a ><i class="fa ion-compose"></i>Edit</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canMarkForTranslation(s)" (click)="markStringForTranslation(s)"><a><i class="fa ion-checkmark-round"></i>Mark for review</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canReviewForTranslation(s)" (click)="reviewStringForTranslation(s)"><a><i class="fa ion-ios-book"></i>Complete review</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canSendForTranslation(s)" (click)="sendStringForTranslation(s)"><a><i class="fa ion-android-send"></i>Send to translation</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canUserCopyString()" (click)="copyString(s)"><a><i class="fa ion-ios-copy-outline"></i>Copy string</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canUserExportString()" (click)="exportString(s)"><a><i class="fa ion-share"></i>Export string</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canViewUsage(s)" (click)="viewStringUsage(s)"><a><i class="eyeIcon fa fa-eye"></i>View usage</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canUserChangeProduction()" (click)="changeStage(s)"><a><i class="fa" [class.ion-code-working]="s?.stage!='DEVELOPMENT'" [class.fa-flag]="s?.stage=='DEVELOPMENT'"></i>{{s?.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                <li style="height: 22px" class="dropdown-item dropdown-li"  *ngIf="canUserDeleteString(s)" (click)="deleteString(s)"><a class="signout destructive" [style.color]="getDeleteColor(s)" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+            </li>
+        </ul>
+                <string-usage-modal #stringUsageModal></string-usage-modal>
+    </ba-card>
+        </div>
+</div>
+</div>

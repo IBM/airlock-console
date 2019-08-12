@@ -1,0 +1,77 @@
+//.has-success .control-label {
+//  color: black;
+//}
+//
+//.control-label {
+//  color: black;
+//}
+//
+//.box{
+//  box-sizing:border-box;
+//}
+//
+//.blackText{
+//  //color: black !important;
+//  border: 1px solid #00abff !important;
+//}
+//.has-success .control-label {
+//  //color: black;
+//}
+.seasonModal{
+
+}
+.seasonModal .has-success .control-label {
+  color: #ffffff;
+}
+.seasonModal .box{
+  box-sizing:border-box;
+}
+
+.seasonModal .whiteText{
+  color: white !important;
+  //color: black !important;
+  //border: 1px solid #00abff !important;
+}
+
+.seasonModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.seasonModal .modal-title{
+  color:white !important;
+}
+//.select2-container--default{
+//  border: solid white 1px;
+//  background-color: currentColor;
+//}
+//
+
+.seasonModal .select2-container--default .select2-selection--multiple {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+.seasonModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+//.seasonModal .select2-container--default .select2-selection--multiple {
+//  background-color: currentColor !important;
+//  color: currentColor !important;
+//}
+.seasonModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+
+.seasonModal .tab-content {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+
+.seasonModal .select2{
+  display:block !important;
+}
+
+h6 .modal-title {
+  font-size: 12px;
+}

@@ -1,0 +1,44 @@
+<div style="color:whitesmoke" *ngIf="!featureAnalyticDisplayAttributes || featureAnalyticDisplayAttributes.length == 0"> {{getString('analytics_no_attributes_available')}} </div>
+<accordion-all *ngIf="featureAnalyticDisplayAttributes && featureAnalyticDisplayAttributes.length > 0" class="form-control">
+    <accordion-section [heading]="panel.heading" *ngFor="let panel of panels">
+        <div class="checkbox" *ngFor="let attribute of featureAnalyticDisplayAttributes;let first = first;let index = index;">
+            <!--div *ngIf="first"  style="width: 20px;height: 20px; position:relative; bottom: 10px;">
+                <div title="{{getString('analytics_add_custom_attribute')}}" *ngIf="first" class="control" (click)="addCustomAttribute()"><i style="font-size: 14px" class="ion-android-add-circle"></i></div>
+            </div-->
+            <div *ngIf="!first"  style="height: 8px; position:relative; bottom: 8px;"></div>
+            <label>
+                <div *ngIf="custom(attribute)" title="{{getString('analytics_delete_custom_attribute')}}" class="control" (click)="removeCustomAttribute(index)" style="float:left;position:relative;top:3px;"><i class="ion-android-remove-circle"></i></div>
+                <input *ngIf="!custom(attribute)" type="checkbox" [(ngModel)]="attribute.selected" (ngModelChange)="onCheckboxChange(attribute)" style="float:left;position:relative;top:3px;">
+                <div *ngIf="!editable(attribute)" style="float:right;position:relative;left: 5px;"> {{attribute.name[0]}} </div>
+                <inline-edit *ngIf="custom(attribute)" [(ngModel)]="attribute.name[0]"[type]="attribute.type" label="e.g. big.label.size[5]" value="e.g. big.label.size[5]" [required]="true" type="text" style="float:left;position:relative;top:-7px;left: 10px; height: 12px"></inline-edit>
+
+                <div class="checkbox" style="float:left;position:relative;" *ngIf="array(attribute) && attribute.name[0] && attribute.name.length < 4">
+                    <div *ngIf="array(attribute) && attribute.name[1]" style="float:right;position:relative;left: 5px;">{{attribute.name[1]}}</div>
+                    <inline-edit *ngIf="array(attribute) && !editing" [(ngModel)]="attribute.arrayPattern[0]" [type]="attribute.type" label="e.g. 1-5, 8, 11-13" [required]="true" type="text" style="float:right;position:relative;top:-7px;left: 5px; height: 12px"></inline-edit>
+                    <div *ngIf="array(attribute)" style="float:right;position:relative;left: 5px;">{{attribute.name[0]}}</div>
+                </div>
+
+                <div class="checkbox" style="float:left;position:relative;" *ngIf="array(attribute) && (attribute.name[1] && attribute.arrayPattern[1] || attribute.name[2]) && attribute.name.length < 4">
+                    <div *ngIf="array(attribute) && attribute.name[2]" style="float:right;position:relative;left: 5px;">{{attribute.name[2]}}</div>
+                    <inline-edit *ngIf="array(attribute) && !editing" [(ngModel)]="attribute.arrayPattern[1]" [type]="attribute.type" label="e.g. 1-5, 8, 11-13" [required]="true" type="text" style="float:right;position:relative;top:-7px;left: 5px; height: 12px"></inline-edit>
+                </div>
+
+                <div *ngIf="array(attribute) && (attribute.name.length >= 4)" style="float:left;position:relative;">
+                    <div class="checkbox" style="float:left;position:relative;" *ngFor="let ca of attribute.arrayPattern;let i = index;let last = last;">
+                        <div *ngIf="last && array(attribute) && attribute.name[i + 1]" style="float:right;position:relative;left: 5px;">{{attribute.name[i + 1]}}</div>
+                        <inline-edit *ngIf="array(attribute) && !editing" [(ngModel)]="attribute.arrayPattern[i]" [editing]="true" [type]="attribute.type" label="" [required]="true" type="text" style="float:right;position:relative;top:-7px;left: 5px; height: 12px"></inline-edit>
+                        <div *ngIf="array(attribute)" style="float:right;position:relative;left: 5px;">{{attribute.name[i]}}</div>
+                    </div>
+                </div>
+            </label>
+        </div>
+        <!--p>
+        <hr-->
+    </accordion-section>
+    <!--accordion-section heading="Last Group Header" [isGroupOpen]="isGroupOpen">
+      Another group
+    </accordion-section-->
+</accordion-all>
+<br>
+<button type="button" class="btn btn-primary" style="position: relative;float: right" (click)="addCustomAttribute()">{{getString('analytics_add_custom_attribute')}}</button>
+<br>

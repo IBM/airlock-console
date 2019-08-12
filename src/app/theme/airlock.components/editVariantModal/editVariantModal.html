@@ -1,0 +1,164 @@
+
+<modal #editModal id="editModal" class="editVariantModal"  [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+                                         (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+                                        (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+                                        (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)"
+
+    >
+    </ace-modal>
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+        <modal-header [show-close]="false" *ngIf = "variant != null">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+                <span>
+                     {{title}} - {{variant.name}}
+                </span>
+            </h4>
+        </modal-header>
+        <modal-body>
+            <tabset *ngIf="isOpen">
+                <tab heading="General" [active]="generalTabActive">
+                    <div class="tabContentBackgroud tab-div-container" >
+                    <div class="box">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div  class="no-margin "  *ngIf = "variant != null">
+                                    <label for="input01" class="control-label">Name</label>
+                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_name')" [title]="getString('edit_variant_name_title')"></airlock-tooltip>
+                                    <input type="text" disabled id="input01" placeholder="" [(ngModel)]="variant.name"  class="form-control blackText" tabindex="1">
+                                </div>
+                                <div  class="no-margin "  *ngIf = "variant != null">
+                                    <label for="input101" class="control-label">Display Name</label>
+                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_displayname')" [title]="getString('edit_variant_displayname_title')"></airlock-tooltip>
+                                    <input type="text"[disabled] = "isOnlyDisplayMode" id="input101" placeholder="" [(ngModel)]="variant.displayName"  class="form-control blackText" tabindex="2">
+                                </div>
+                                <div  class="no-margin "  *ngIf = "variant != null">
+                                    <label for="input01" class="control-label">Branch</label>
+                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_name')" [title]="getString('edit_variant_name_title')"></airlock-tooltip>
+                                    <ng-select *ngIf="!loading" [allowClear]="false"
+                                               [items]="getBranchesForSelect()"
+                                               (selected)="selectBranchFromSelect($event)"
+                                               [placeholder]="variant?.branchName"
+                                               tabindex="3"
+                                    >
+                                    </ng-select>
+                                </div>
+                                <div class="row" *ngIf = "variant != null">
+                                    <div class="col-md-6 no-padding-left">
+                                        <div  class="no-margin "  *ngIf = "variant != null">
+                                            <label for="input07" class="control-label">Stage</label>
+                                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_stage')" [title]="getString('edit_variant_stage_title')"></airlock-tooltip>
+                                            <input type="text" id="input07" placeholder="" [(ngModel)]="variant.stage"  class="form-control blackText" disabled >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 no-padding-right">
+                                        <div  class="no-margin "  *ngIf = "variant != null">
+                                            <label for="input87" class="control-label">Rollout Percentage</label>
+                                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_rollout')" [title]="getString('edit_variant_rollout_title')"></airlock-tooltip>
+                                            <div class="input-group rollout">
+                                                <input id= "input87"[disabled] = "isOnlyDisplayMode"  aria-label="Rollout percentage" class="form-control with-success-addon numberInput" type="number" min="0" max="100" [(ngModel)]="variant.rolloutPercentage" tabindex="4" style="width: 100px;height: 33px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div  class="no-margin " >
+                                    <label class="control-label">User Groups</label>
+                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_groups')" [title]="getString('edit_variant_groups_title')"></airlock-tooltip>
+                                    <select  class="js_example blackText" multiple [disabled] = "isOnlyDisplayMode"  tabindex="5">
+                                        <template ngFor let-item [ngForOf]="possibleGroupsList" [ngForTrackBy]="itemTrackBy">
+                                            <option [value]="item">{{item}}</option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 no-padding-left">
+                                        <div  class="no-margin "  *ngIf = "variant != null">
+                                            <label for="input80" class="control-label">Creation Date</label>
+                                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_varianr_creation_date')" [title]="getString('edit_variant_creation_date_title')"></airlock-tooltip>
+                                            <input type="text"   id="input80" disabled placeholder="" [value]="creationDate | date:'medium'"  class="form-control blackText" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 no-padding-right">
+                                        <div  class="no-margin "  *ngIf = "variant != null">
+                                            <label for="input82" class="control-label">Last Modified</label>
+                                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_last_modified')" [title]="getString('edit_variant_last_modified_title')"></airlock-tooltip>
+                                            <input type="text"  id="input82" disabled placeholder="" [value]="lastModificationDate | date:'medium'"  class="form-control blackText" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 no-padding-left">
+                                        <div  class="no-margin "  *ngIf = "variant != null">
+                                            <label for="input08" class="control-label">Creator</label>
+                                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_creator')" [title]="getString('edit_variant_creator_title')"></airlock-tooltip>
+                                            <input type="text" id="input08" disabled placeholder="" [(ngModel)]="variant.creator"  class="form-control blackText" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 no-padding-right">
+                                        <div class="no-margin "  *ngIf = "variant != null">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td class="align-right"> <label class="control-label">Enabled</label></td>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_enabled')" [title]="getString('edit_variant_enabled_title')"></airlock-tooltip>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-right"><ui-switch [disabled] = "isOnlyDisplayMode" [checked]="variant.enabled" (change)="variant.enabled = $event" tabindex="9"></ui-switch></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </tab>
+
+                <tab [active]="ruleTabActive" heading="{{getString('edit_variant_rule_tab_heading')}}"  *ngIf = "variant != null">
+                    <div  class="no-margin  tab-div-container" >
+                        <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_variant_rule_tab_details')}}
+                                <br>
+                                <button class="modalLink modalLinkButton" (click)="showRuleHelp()">{{getString('edit_variant_rule_tab_learn_more')}}</button>
+                            </h5>
+                        </span>
+
+                        <div> </div>
+                        <span>
+                            <button class="btn btn-expand btn-icon" type="button" (click)="openAceEditorRuleExpand()">
+                            <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div #mytesteditor ace-editor id="input56" (onTextChanged)="ruleUpdated($event)"
+                             [markdown]="variant.rule.ruleString" [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo" [heightSize]="aceEditorRuleHeight">
+                        </div>
+                        </span>
+                    </div>
+                </tab>
+
+                <tab [active]="descriptionTabActive" heading="{{getString('edit_variant_description_tab_heading')}}"  *ngIf = "variant != null">
+                    <div  class="no-margin  tab-div-container" >
+                        <div  class="no-margin "  *ngIf = "variant != null">
+                            <label for="input55" class="control-label">Description</label>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_variant_description')" [title]="getString('edit_variant_description_title')"></airlock-tooltip>
+                            <textarea id="input55"[disabled] = "isOnlyDisplayMode" placeholder="" [(ngModel)]="variant.description" value="FEATURE" class="form-control description-text blackText" style="height: 100px; resize:none"  tabindex="8"></textarea>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+
+        </modal-body>
+        <modal-footer *ngIf = "variant != null">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled] = "isOnlyDisplayMode">Save</button>
+        </modal-footer>
+    </modal>

@@ -1,0 +1,369 @@
+.editNotificationModal .has-success .control-label {
+  color: white;
+}
+
+.editNotificationModal button.btn.btn-primary.dropdown-toggle {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.editNotificationModal {
+  .open > .btn.dropdown-toggle.btn.btn-primary {
+    background: rgba(0, 145, 217, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  ul.dropdown-menu {
+    width: 100%;
+    text-align: -moz-center;
+    text-align: -webkit-center;
+  }
+}
+
+.editNotificationModal .padding-leftB {
+  padding-left: 3px;
+}
+
+
+.editNotificationModal .notif-padding {
+  padding-left: 8px;
+  padding-right: 60px;
+}
+.warning-no-intellisense {
+  color: orange;
+  font-weight: 400;
+  padding-bottom: 4px;
+}
+.editNotificationModal .box{
+  box-sizing:border-box;
+
+}
+.editNotificationModal .has-success .control-label {
+  color: #ffffff;
+}
+.editNotificationModal .blackText{
+  //color: white !important;
+  //border: 1px solid #00abff !important;
+  //  background-color: white;
+}
+.editNotificationModal .nav-tabs{
+  /*background-color: #a9aaab !important;*/
+  background-color: #337ab7 !important;
+}
+.editNotificationModal .tab-content {
+  //background: rgba(255,255,255,0.1);
+  //color: rgba(255,255,255,0.1);
+}
+.editNotificationModal .nav-tabs .nav-item {
+  float: left;
+  margin-bottom: 0px;
+  margin-top: 1px;
+  margin-right: 0px;
+  margin-left: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.editNotificationModal .nav.nav-tabs > li > a:hover {
+  border: none;
+  /*background-color: #dcdcdc;*/
+  background-color: #e2e2e2;
+  color: #484c4f;
+}
+.editNotificationModal .nav.nav-tabs > li.active > a{
+  color: #55595c;
+  background-color: #fff;
+}
+.editNotificationModal .modal-backdrop{
+  background-color: #eee;
+}
+.editNotificationModal .tab-div-container{
+  //height: 500px;
+  max-height: 500px;
+}
+
+.editNotificationModal .tab-div-container-analytics{
+  height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.editNotificationModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.editNotificationModal .select2-container--default .select2-selection--multiple {
+  background-color: currentColor !important;
+  color: currentColor !important;;
+}
+.editNotificationModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+.editNotificationModal .select2{
+  display:block !important;
+  width:400px !important;
+}
+.editNotificationModal .modal-title{
+  color:white !important;
+  text-overflow: ellipsis;
+
+}
+
+.box.row {
+  margin-left: 0em;
+  margin-right: 0em;
+}
+
+.notSelected {
+  opacity: 0.5;
+}
+
+.btn-group {
+  width: 100%;
+}
+
+.half-button {
+  width: 50%;
+}
+
+small-right-padding {
+  padding-right: 1px;
+}
+.no-padding-left {
+  padding-left: 0px;
+  padding-right: 4px;
+}
+
+.no-padding-right {
+  padding-left: 4px;
+  padding-right: 0px;
+}
+
+.no-padding-middle {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.description-text {
+  height: 125px;
+}
+
+.editNotificationModal .nav-tabs .nav-item {
+  text-align: center;
+  width: 33.3333%;
+}
+
+.editNotificationModal .config-state .nav-tabs .nav-item {
+  width: 33.2%;
+}
+
+.myFlexcontainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: -moz-available;          /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  //-webkit-justify-content: flex-start;
+  //justify-content: flex-start;
+}
+
+.flexRightcontainer {
+  padding-top: 4px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.spreadFlexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+.modalLink {
+  color: lightblue;
+
+}
+.modalLink:hover {
+  color: #00abff;
+  cursor: pointer;
+
+}
+
+.modalLinkButton {
+  background: transparent;
+  border: 0px solid transparent;
+  padding-left: 0px;
+  padding-right: 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.accordionHead {
+  color: white;
+}
+
+.openIndicator {
+  min-width: 12px;
+}
+
+.semi-transparent {
+  opacity: 0.6;
+}
+
+.padTop {
+  padding-top: 4px;
+}
+
+.btn-expand {
+  font-size: 1.3rem;
+  margin: 10px;
+  margin-top: 0px;
+  /* margin-right: 0; */
+  float: right;
+  border-width: 1px;
+  color: #484c4f;
+  background: #e2e2e2;
+  border-color: #f5f5f5;
+  padding: 0.1rem 1rem;
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  margin-right: 16px;
+  opacity: 0.4;
+}
+
+.btn-expand:hover {
+  opacity: 1.0;
+}
+.btn-expand-down {
+  margin-top: 30px;
+}
+.editNotificationModal .select2-selection__rendered
+{
+  height: 77px;
+  overflow: auto !important;
+}
+.editNotificationModal .select2-selection
+{
+  height: 111px !important;
+}
+
+.rollout {
+  height: 35px;
+}
+
+.form-group {
+  margin-top: 0px;
+}
+
+.no-margin {
+  margin-top: 0px;
+  margin-bottom: 1rem;
+}
+.numberInput{
+
+}
+
+.small_pading{
+  padding-left: 10px;
+}
+
+.descpPopover{
+  color: black;
+}
+
+.grayout {
+  opacity: 0.6; /* Real browsers */
+  filter: alpha(opacity = 60); /* MSIE */
+}
+
+.grayout-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+span.btn:hover{
+  transform: none;
+  color: gray;
+}
+
+.ui-select-container .ui-select-search {
+  //display: none;
+  //visibility: hidden;
+  pointer-events: none;
+}
+
+.check-all{
+  width: 20px;
+  height: 17px;
+}
+
+#limitLabel{
+  display: inline-block;
+}
+
+#limitInput{
+  display: inline-block;
+}
+
+.limitClass{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.padding-right{
+  padding-right: 10px;
+}
+
+.padding-rightB{
+  /*padding-right: 13px;*/
+  padding-top: 4px;
+}
+
+.padding-left{
+  padding-left: 10px;
+}
+
+.remove-padding-left{
+  padding-left: 0px;
+}
+
+.remove-padding{
+  padding: 0px;
+}
+
+.intervalPickerBtn:disabled {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.notif-limit-disabled {
+  opacity: 0.4;
+}
+
+.editNotificationModal .notifs-limit {
+  padding-left: 24px;
+  background-color: #ffffff2b;
+  border-radius: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.editNotificationModal .paddingTop {
+  padding-top: 4px;
+}
+
+.editNotificationModal .dropdown-menu{
+  min-width: auto;
+}
+
+.editNotificationModal .modal-body{
+  font-size: 0.9rem;
+}
+
+.editNotificationModal .intervalPicker{
+  width: 18%;
+}

@@ -1,0 +1,50 @@
+{
+  "version" : "1.0.1",
+  "name" : "airlock-apps-console",
+  "number" : "1473495696762",
+  "type" : "GRADLE",
+  "buildAgent" : {
+    "name" : "Gradle",
+    "version" : "2.12"
+  },
+  "agent" : {
+    "name" : "Gradle",
+    "version" : "2.12"
+  },
+  "started" : "2016-09-10T11:21:36.346+0300",
+  "durationMillis" : 248997,
+  "principal" : "andreis",
+  "artifactoryPrincipal" : "airlock-machine-user",
+  "artifactoryPluginVersion" : "Unknown",
+  "licenseControl" : {
+    "runChecks" : false,
+    "includePublishedArtifacts" : false,
+    "autoDiscover" : false,
+    "licenseViolationsRecipientsList" : "",
+    "scopesList" : ""
+  },
+  "buildRetention" : {
+    "count" : -1,
+    "deleteBuildArtifacts" : true,
+    "buildNumbersNotToBeDiscarded" : [ ]
+  },
+  "modules" : [ {
+    "id" : ":airlock-apps-console:unspecified",
+    "artifacts" : [ {
+      "type" : "zip",
+      "sha1" : "f51a672c5a5e6da037e1722c765523aac178afa8",
+      "md5" : "1c2837f552aa11e9428aab5946faabad",
+      "name" : "airlock-console-0.1.zip"
+    } ],
+    "excludedArtifacts" : [ ],
+    "dependencies" : [ ]
+  } ],
+  "governance" : {
+    "blackDuckProperties" : {
+      "runChecks" : false,
+      "includePublishedArtifacts" : false,
+      "autoCreateMissingComponentRequests" : false,
+      "autoDiscardStaleComponentRequests" : false
+    }
+  }
+}

@@ -1,0 +1,66 @@
+ul {
+  margin-bottom: 0px;
+
+}
+.panel {
+  background-color: rgba(255,255,255,0.40);
+}
+
+.panel-body[_ngcontent-hoa-10] {
+  padding: 8px;
+}
+
+.panel-warning {
+  margin-bottom: 20px;
+}
+
+.feature-cell {
+  padding-bottom: 0px;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: white;
+}
+
+.fix-to-top {
+  position: fixed;
+  top: 110px;
+  z-index: 100;
+}
+
+.row.col-sm-12.featuresContainer {
+  margin: 0px;
+  padding: 0px;
+}
+.featureEnabled {
+  font-size: 14px;
+  color: #2D5C18
+
+}
+
+
+.featureDisabled {
+  font-size: 14px;
+  color: rgba(160, 0, 0, 0.39);
+}
+
+
+a.disabled {
+  color: rgba(0, 0, 0, 0.2) !important;
+  cursor: not-allowed;
+  text-decoration: underline;
+}
+
+.btn:hover {
+  transform: none !important;
+  background-color: #009ff3 !important;
+
+}
+
+.btn-group button.btn.btn-primary:hover {
+  background-color: #009ff3;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}

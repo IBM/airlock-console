@@ -1,0 +1,332 @@
+@import "../../../../../theme/sass/conf/conf";
+.stringList {
+  .strings .selected {
+    background-color: #BBD8DC !important;
+    color: black;
+  }
+
+  .strings {
+    //margin: 0 0 2em 0;
+    margin: auto;
+    list-style-type: none;
+    padding: 0;
+  }
+  .strings li {
+    cursor: pointer;
+    position: relative;
+    left: 0;
+    background-color: white;
+    color: black;
+    margin: .5em;
+    padding: .3em 0;
+    height: 3.2em;
+    border-radius: 4px;
+  }
+  .strings li.selected:hover {
+    background-color: #BBD8DC !important;
+    color: black;
+  }
+  .strings li:hover {
+    color: black;
+    background-color: #DDD;
+    left: .1em;
+  }
+  .strings .text {
+    position: relative;
+    top: -3px;
+  }
+  .strings .badge {
+    display: inline-block;
+    font-size: small;
+    color: transparent;
+    padding: 0.8em 0.7em 0 0.7em;
+    background-color: #4d4d4d;
+    line-height: 1em;
+    position: relative;
+    left: -1px;
+    top: -4.5px;
+    height: 3.0em;
+    margin-right: .4em;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .strings .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .star-icon {
+    font-size: 22px;
+    color: darkgray;
+    margin-right: .4em;
+  }
+
+  .star-selected {
+    color: #ffd470 !important;
+    font-size: 22px;
+    padding-left: 1px;
+    border-color: #dfb470 !important;;
+    -webkit-text-stroke: 1px darkgray;
+  }
+
+  .star-selected:hover {
+    color: #ffda7b !important;
+  }
+
+  .cell-button:hover {
+    color: #484c4f;
+  }
+
+  .ng2, .blur {
+
+    .task-todo-container {
+      .todo-panel.panel {
+        color: white;
+        opacity: 0.9;
+      }
+      input.task-todo {
+        color: white;
+        width: calc(100% - 25px);
+        border-radius: 0;
+        border: none;
+        background: transparent;
+        &:focus {
+          outline: none;
+          background-color: transparent;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.12);
+        }
+      }
+      .add-item-icon {
+        display: block;
+        float: right;
+        margin-top: -37px;
+        margin-right: 5px;
+        font-size: 25px;
+        cursor: pointer;
+      }
+
+      ul.todo-list {
+        li {
+          margin: 0;
+          border: none;
+          font-weight: $font-light;
+
+          .blur-container {
+            height: 40px;
+            position: absolute;
+            width: calc(100% + 40px);;
+            top: 0;
+            left: -25px;
+            overflow-y: hidden;
+          }
+          &:hover {
+            .blur-container {
+              box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.12);
+            }
+            .blur-box {
+              height: 100%;
+              background: linear-gradient(to right, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+              -webkit-filter: blur(3px);
+            }
+          }
+          i.remove-todo {
+            color: white;
+            opacity: 0.4;
+            &:hover {
+              color: white;
+              opacity: 0.95;
+            }
+          }
+          i.mark {
+            min-width: 40px;
+            display: none;
+          }
+          label.todo-checkbox > span {
+            &:before {
+              position: absolute;
+              color: $content-text;
+              content: '\f10c';
+              float: none;
+              margin-right: 6px;
+              transition: none;
+            }
+          }
+          &.checked {
+            label.todo-checkbox > span {
+              &:before {
+                content: '\f00c';
+              }
+            }
+          }
+        }
+      }
+
+      .box-shadow-border {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.12);
+        width: calc(100% + 44px);
+        margin-left: -22px;
+      }
+    }
+  }
+  i.remove-todo {
+    position: absolute;
+    cursor: pointer;
+    top: -2px;
+    right: 12px;
+    font-size: 32px;
+    transition: color 0.2s;
+    color: rgba(0, 0, 0, 0.4);
+    visibility: visible;
+    line-height: 42px;
+    &:hover {
+      color: rgba(0, 0, 0, 1);
+    }
+  }
+
+  .input-box {
+    font-style: italic;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .limit-height {
+    height: calc(100vh - 270px);
+    overflow: auto;
+  }
+}
+.tooltipKKKKKK{
+  z-index: 1999;
+  top:-10px !important;
+  left:10px !important;
+  width: 200px;
+}
+
+.btn-circle {
+  border-radius: 30px;
+  color: rgba(0, 0, 0, 0.62);
+  background: transparent;
+  border-color: rgba(0, 0, 0, 0.42);
+  height: 100%;
+  width: 30px;
+  margin-right: 8px;
+}
+
+.btn-circle:hover {
+  border-color: rgba(0, 171, 255, 0.54);
+  color: white;
+}
+
+.action-dropdown {
+  height: 20px;
+}
+
+.action-button {
+
+}
+
+.dropdown-item {
+  width: auto !important;
+  a:hover {
+    background: transparent;
+  }
+}
+
+.top-dropdown-menu.profile-dropdown a:hover {
+   background: transparent;
+}
+
+.top-dropdown-menu.profile-dropdown a {
+  text-align: left;
+  border: none;
+  text-decoration: none;
+  color: black;
+  padding: 4px 16px 4px 20px;
+}
+
+.top-dropdown-menu.profile-dropdown {
+  width: 250px;
+  top: 35px;
+  right: -10px;
+  left: auto;
+  z-index: 9999999;
+}
+
+.top-dropdown-menu.profile-dropdown i.dropdown-arr {
+  right: 25px;
+}
+
+.maxWidth {
+  height: 100%;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.right-margin {
+  margin-right: 8px;
+}
+
+.noExpand {
+  .btn:hover {
+    transform: none !important;
+    background-color: #009ff3 !important;
+
+  }
+}
+
+li.dropdown-item {
+  width: 250px;
+}
+
+.production-indicator {
+  vertical-align: top;padding-top: 2px;
+}
+
+
+.flexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+.detail-background {
+  background: #3E506B;
+}
+
+.dropdown-li {
+  a {
+    color: yellow;
+  }
+  background-color: #7bf2f5;
+}
+li.dropdown-item {
+  a {
+    width: 100%;
+  }
+
+}
+
+.eyeIcon{
+  font-size: 10px;
+}
+
+.right-pad {
+  padding-right: 12px;
+}
+
+.limit-text-height {
+  max-height: 15px;
+}
+
+.stringLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 200px);
+  white-space: nowrap;
+}

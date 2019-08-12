@@ -1,0 +1,60 @@
+
+<modal #editInputSchemaModal id="editInputSchemaModal" class="editInputSchemaModal"  [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <ace-modal #paceInputSchemaModalContainerDialog
+                                        (outputEventInputSchemaUpdate)="inputSchemaUpdated($event)"
+
+    >
+    </ace-modal>
+    <show-message-modal #showMessageModal></show-message-modal>
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+        <modal-header [show-close]="false" *ngIf = "season != null">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+
+                <span >
+                     {{title}}
+                </span>
+
+            </h4>
+
+        </modal-header>
+        <modal-body>
+                    <div class="tabContentBackgroud tab-div-container" >
+                        <div class="box">
+                                                   <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_input_schema_leading_text_1')}}
+                                <button class="modalLink modalLinkButton" (click)="showConfigurationSchemaHelp()">{{getString('edit_feature_configuration_tab_details_link')}}</button>
+                                {{getString('edit_input_schema_leading_text_2')}}
+                                <br>
+                                <!--<a href="" class="modalLink" (click)="showRuleHelp()"> {{getString('edit_input_schema_learn_more')}}</a>-->
+                            </h5>
+                        </span>
+                            <div  class="form-group"  *ngIf = "season != null">
+                                <!--<label for="input59" class="control-label">Input schema</label>-->
+                                <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px" [content]="getString('edit_feature_output_config')" [title]="getString('edit_feature_output_config_title')"></airlock-tooltip>
+                                <button class="btn btn-expand btn-expand-down btn-icon" type="button" (click)="openAceEditorOutputConfigurationExpand()">
+                                    <i class="ion-arrow-expand"></i>
+                                </button>
+                                <div #mytesteditor3 ace-editor (onTextChanged)="inputSchemaUpdated($event)"
+                                     [markdown]="inputSchemaString" [readonly]="isOnlyDisplayMode" [sample]="" [heightSize]="aceEditorConfigurationHeight">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+            <input type="text" #plainVersion style="display: none;width: 860px;">
+
+        </modal-body>
+        <modal-footer *ngIf = "season != null">
+            <button *ngIf="!isOnlyDisplayMode" type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+            <button *ngIf="!isOnlyDisplayMode" type="button" class="btn btn-default"  (click)="validate()">Validate</button>
+            <button *ngIf="!isOnlyDisplayMode" type="button" class="btn btn-primary" (click)="save()" [disabled] = "isOnlyDisplayMode">Save</button>
+            <button *ngIf="isOnlyDisplayMode" type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+        </modal-footer>
+    </modal>

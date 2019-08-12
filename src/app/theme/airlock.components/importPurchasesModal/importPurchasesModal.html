@@ -1,0 +1,124 @@
+
+<modal #importModal id="importModal" class="importModal"  [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <show-message-modal #showMessageModal></show-message-modal>
+    <show-conflicts-modal #showConflictsModal></show-conflicts-modal>
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+        <modal-header [show-close]="false" *ngIf = "season != null">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+                <span >
+                     {{title}}
+                </span>
+
+            </h4>
+
+        </modal-header>
+        <modal-body style="max-height: 495px;overflow:auto">
+            <accordion >
+                <accordion-group #group [isOpen]="referenceOpen">
+                    <div accordion-heading class="accordionHead">
+                                    <span class="modal-title">
+                                        <span class="openIndicator">
+                                        <i  [class.ion-arrow-right-b]="!group.isOpen" [class.ion-arrow-down-b]="group.isOpen"></i>
+                                        </span>
+                                        {{getString('import_feature_details_accordion_title')}}
+                                    </span>
+                    </div>
+                    <div >
+                        <div class="box">
+                            <div class="row">
+                                <div class="col-md-6" >
+
+                                    <div class="row" style="display: table;width: 800px;">
+                                        <div class="col-md-6 no-padding-left"  style="display: table-row;width: 800px;">
+                                            <div  class="form-group"   *ngIf = "!isPaste && showImportFile" style="width: 500px; display: table-cell;">
+                                                <div  style="margin-bottom: 10px;width: 500px; display: table-caption;">
+                                                    <label for="input01" class="control-label" style="font-size: 15px">* Select a file to upload. Then, click <b>Validate.</b></label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_name')" [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                                                    <input type='file' accept='.json' multiple (change)='openFile($event)' style="width: 90%;border: 1px solid rgba(255, 255, 255, 0.6) !important;background: rgba(255, 255, 255, 0.1);">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="form-group"  style="padding-left: 18px;;width: 400px;vertical-align: top;">
+
+                                <label for="input07" class="control-label" style="font-size: 14px">Add a suffix to change the entitelment name</label>
+                                <i *ngIf="isShowSuffix" class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+
+                                <div style="display: table-row">
+                                    <div  style="width: 400px; display: table-cell;">
+                                        <input [class.mustType] = "isShowSuffix" type="text" id="input07" placeholder="" [(ngModel)]="suffix"  class="form-control blackText" style="max-width: 400px;" >
+                                    </div>
+                                    <div style="display: table-cell;padding-left: 10px;">
+                                        <airlock-tooltip class="endFlexContainer" [placement]="'right'"  [content]="getString('suffix_description_content_purchase')" [title]="getString('suffix_description_title')"></airlock-tooltip>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div  class="form-group" style="padding-left: 18px;width: 400px; vertical-align: top;">
+                                <label for="input07" class="control-label" style="font-size: 14px">Override the minimum app version </label>
+                                <i *ngIf="isShowMinApp" class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+
+                                <!--<input type="checkbox" id="input07" placeholder="" [(ngModel)]="isEditMinApp"  >-->
+                                <div style="display: table-row">
+                                    <div  style="width: 270px; display: table-cell;">
+                                <input  [class.mustType] = "isShowMinApp" type="text" id="input08" placeholder="" [(ngModel)]="minAppVersion"  class="form-control blackText" style="max-width: 400px;" >
+                                    </div>
+                                    <div style="display: table-cell;padding-left: 10px;">
+                                <airlock-tooltip class="endFlexContainer" [placement]="'right'"  [content]="getString('minapp_description_content_purchase')" [title]="getString('minapp_description_title')"></airlock-tooltip>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="form-group" style="padding-left: 18px;width: 400px; vertical-align: top;">
+                                <label for="input07" class="control-label" style="font-size: 14px">{{getString('import_required_help')}} </label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" (click)="validate()" style="float: right;margin-bottom: 10px;">Validate</button>
+                    </div>
+                </accordion-group>
+                <accordion-group #previewGroup [isDisabled]="!canShowPreview"  [isOpen]="previewOpen">
+                    <div accordion-heading class="accordionHead">
+                                    <span class="modal-title">
+                                        <span class="openIndicator">
+                                        <i  [class.ion-arrow-right-b]="!previewGroup.isOpen" [class.ion-arrow-down-b]="previewGroup.isOpen"></i>
+                                        </span>
+                                        {{getPreviewTitle()}}
+                                    </span>
+                        <button *ngIf ="isShowWarning" type="button" class="btn"  (click)="openWarning();$event.stopPropagation()" style="text-decoration:underline;box-shadow:none; padding-top: 2px;background-color: transparent;color: orange">
+                            <i class="ion-alert-circled" ></i>There are some conflicts. Click here for details.
+                        </button>
+
+                    </div>
+                    <div  class="form-group tab-div-container preview" *ngIf="canShowPreview">
+                        <hirarchy-tree [readonly]="true" [root]="previewRoot" [feature]="feature" [featurePath]="previewFeaturePath" [featureType]="'ENTITLEMENT'" [mtxType]="'ENTITLEMENT_MUTUAL_EXCLUSION_GROUP'"
+                                       [showAll]="true" [markedFeatureId]="newFeatureId" >
+
+                        </hirarchy-tree>
+                        <!--<hirarchy-tree [readonly]="true" [root]="previewRoot" [feature]="feature" [featurePath]="previewFeaturePath"-->
+                                       <!--[showAll] = "true" [markedFeatureId]="newFeatureId" >-->
+
+                        <!--</hirarchy-tree>-->
+                    </div>
+                </accordion-group>
+            </accordion>
+
+
+
+
+
+        </modal-body>
+        <modal-footer *ngIf = "season != null">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled] = "!canSave">{{saveText}}</button>
+        </modal-footer>
+    </modal>

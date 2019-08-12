@@ -1,0 +1,22 @@
+<!--<div class="row">-->
+    <!--<ba-card class="col-md-8" title="Strings">-->
+        <!--&lt;!&ndash;<group-list (featureSelected)="featureSelected($event)"></group-list>&ndash;&gt;-->
+        <!--<strings-list [_strings]="selectedStrings" (onStringsSelectionChanged)="stringSelectionChanged($event)"></strings-list>-->
+    <!--</ba-card>-->
+
+    <!--<ba-card class="col-md-4" title="Details">-->
+        <!--&lt;!&ndash;<group-detail *ngIf="selectedGroup" [group]="selectedGroup"></group-detail>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div *ngIf="!selectedGroup">&ndash;&gt;-->
+            <!--&lt;!&ndash;Select a group to see the features that are associated with it.&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</ba-card>-->
+<!--</div>-->
+
+<div class="row">
+    <div class="col-md-5" >
+        <strings-list  [verifyActionModal]="verifyActionModal"  [parentSubject]="parentSubject" [supportedLocales]="supportedLocales" [selectedSeason]="selectedSeason"   [_strings]="selectedStrings" (onStringsSelectionChanged)="stringSelectionChanged($event)" (reloadTranslations)="reloadParentTranslations($event)"></strings-list>
+    </div>
+    <div class="col-md-7">
+        <string-detail  [verifyActionModal]="verifyActionModal" [parentSubject]="parentSubject" [supportedLocales]="supportedLocales" [_selectedString]="selectedStringToTranslate" [selectedSeason]="selectedSeason"  (reloadTranslations)="reloadParentTranslations($event)" ></string-detail>
+    </div>
+</div>

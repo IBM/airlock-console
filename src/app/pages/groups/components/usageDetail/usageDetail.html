@@ -1,0 +1,31 @@
+
+<!--<group-node *ngIf="getFeatures()?.children==null || getFeatures().children.length <=0" [tree]="getFeatures()"></group-node>-->
+<!--<div *ngIf="getFeatures()?.children?.length > 0" class="myAcc">-->
+    <!--<group-node *ngFor="let child of getFeatures().children" [tree]="child"></group-node>-->
+<!--</div>-->
+<accordion *ngIf="usage">
+    <h3 *ngIf="usage.seasons?.length > 0">Features:</h3>
+    <accordion-group *ngFor="let season of usage.seasons" panelClass="myAcc" [isOpen]="true">
+        <div accordion-heading class="panel-warning">
+            {{getSeasonName(season)}}
+        </div>
+        <div *ngIf="season.features?.length > 0">
+            <li *ngFor="let feature of season.features" style="overflow: hidden !important;text-overflow: ellipsis !important;">{{feature.namespace}}.{{feature.name}}</li>
+        </div>
+        <accordion-group *ngFor="let branch of season.branches || []" panelClass="myAcc" [isOpen]="true">
+            <div accordion-heading class="panel-warning">
+                {{branch.name}}
+            </div>
+            <div *ngIf="branch.features?.length <= 0">
+                <li *ngFor="let feature of season.features" style="overflow: hidden !important;text-overflow: ellipsis !important;">{{feature.namespace}}.{{feature.name}}</li>
+            </div>
+        </accordion-group>
+    </accordion-group>
+    <h3 *ngIf="usage.experiments?.length > 0">Experiments:</h3>
+    <accordion-group *ngFor="let exp of usage.experiments || []" panelClass="myAcc" [isOpen]="true">
+        <div accordion-heading class="panel-warning">
+            {{exp.displayName || exp.name}}<span *ngIf="exp.inUse">(Used on experiment)</span>
+        </div>
+        <li *ngFor="let variant of exp.variants || []" style="overflow: hidden !important;text-overflow: ellipsis !important;">{{variant.displayName || variant.name}}</li>
+    </accordion-group>
+</accordion>
