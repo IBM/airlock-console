@@ -1,0 +1,41 @@
+
+<modal #showConflictsModal class="showConflictsModal">
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">
+            Create New Issue
+        </h4>
+    </modal-header>
+    <modal-body>
+        <div>
+            <div style="display: table-cell;">
+                <label for="dropdownBtn" class="control-label labels" (click)="$event.preventDefault()">Type:</label>
+            <div class="btn-group dropdown1" dropdown  style="vertical-align:baseline">
+                <button type="button" id="dropdownBtn" class="btn btn-default" dropdownToggle>
+                    {{newIssueSubTypeText}}
+                </button>
+                <ul class="dropdown-menu1" dropdownMenu>
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'TRANSLATION'" (click)="newIssueSubType = 'POOR_TRANSLATION';newIssueSubTypeText='Poor translation'">Poor translation</li>
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'TRANSLATION'" (click)="newIssueSubType = 'DOES_NOT_FIT_SPACE';newIssueSubTypeText='Does not fit space'">Does not fit space</li>
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'TRANSLATION'" (click)="newIssueSubType = 'PLACEHOLDER_ISSUE';newIssueSubTypeText='Placeholder issue'">Placeholder issue</li>
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'TRANSLATION'" (click)="newIssueSubType = 'REVIEW_TRANSLATION';newIssueSubTypeText='Review translation'">Review Translation</li>
+                    <!--<li class="dropdown-item" *ngIf="issueTypeCode == 'TRANSLATION'" (click)="newIssueSubType = 'GENERAL_ISSUE';newIssueSubTypeText='General issue'">General issue</li>-->
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'SOURCE'" (click)="newIssueSubType = 'CLARIFICATION';newIssueSubTypeText='Clarification'">Clarification</li>
+                    <li class="dropdown-item" *ngIf="issueTypeCode == 'SOURCE'" (click)="newIssueSubType = 'MISSPELLING';newIssueSubTypeText='Misspelling'">Misspelling</li>
+                </ul>
+            </div>
+            </div>
+                <div  class="form-group createIssueDiv">
+                    <label for="input05" class="control-label labels">Text:</label>
+                    <textarea type="text" id="input05"  [(ngModel)]="newIssueText"  class="form-control whiteText" tabindex="1" rows="3"></textarea>
+                    <br>
+                </div>
+        </div>
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="this.createNewIssue()" [disabled]="newIssueSubTypeText == 'Select type' || stripSpaces(newIssueText) == '' ">Create</button>
+    </modal-footer>
+</modal>

@@ -1,0 +1,155 @@
+.has-success .control-label {
+  //color: black;
+}
+.addStringModal{
+
+}
+.addStringModal .has-success .control-label {
+  color: #ffffff;
+}
+.addStringModal .box{
+  box-sizing:border-box;
+}
+
+.addStringModal .whiteText{
+  color: white !important;
+}
+
+.addStringModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.addStringModal .modal-title{
+  color:white !important;
+}
+
+
+.addStringModal .select2-container--default .select2-selection--multiple {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+.addStringModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.addStringModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+
+.addStringModal .tab-content {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+
+.addStringModal .select2{
+  display:block !important;
+}
+
+h6 .modal-title {
+  font-size: 12px;
+}
+.select2-selection__rendered
+{
+  height: 35px;
+  overflow: auto !important;
+}
+
+.instruction-field {
+  height: inherit;
+}
+
+.instruction-field {
+  height: 50px;
+}
+
+.addStringModal .whiteText {
+  height: 35px;
+}
+
+.IssueBody{
+  color: rgba(255, 255, 255, 0.9) !important;
+  padding-left: 20px;
+}
+
+.limit-height {
+  height: 400px;
+  overflow: auto;
+}
+
+.createIssue {
+  text-align: right;
+}
+
+#newCommentInput {
+  height: 35px;
+}
+
+.noExpand:hover {
+  transform: none !important;
+}
+
+.whiteText{
+  color: white !important;
+}
+
+.stateButton{
+  margin-right: 10px;
+}
+
+.flexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.issueList{
+  font-size: 14px;
+  width: 50%;
+}
+
+.createIssue{
+  width: 50%;
+}
+
+.issueData{
+  font-size: 14px;
+}
+
+.modal-title{
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.commentDate{
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.issueState{
+  font-weight: bolder;
+}
+
+.issueMetadata{
+  margin-bottom: 14px;
+}
+
+.dropdown button.btn.btn-default.dropdown-toggle:focus, .dropdown button.btn.btn-default.dropdown-toggle:active {
+  background-color: transparent;
+}
+
+li.dropdown-item:hover {
+  background-color: #DDD;
+}
+
+.hideIcon {
+  visibility: hidden;
+}
+
+.dropdown-item {
+  padding-left: 0.5rem !important;
+}

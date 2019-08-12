@@ -1,0 +1,41 @@
+.has-success .control-label {
+  color: black;
+}
+
+.control-label {
+  color: black;
+}
+
+.box{
+  box-sizing:border-box;
+}
+
+.blackText{
+  //color: black !important;
+  border: 1px solid #00abff !important;
+}
+
+.feature-name {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.createIssueDiv{
+  color: white !important;
+}
+
+.noExpand:hover {
+    transform: none !important;
+}
+
+.dropdown button.btn.btn-default.dropdown-toggle:focus, .dropdown button.btn.btn-default.dropdown-toggle:active {
+  background-color: transparent;
+}
+
+.labels {
+  color: rgba(255, 255, 255,1) !important;
+  font-size: 13px !important;
+}
+
+li.dropdown-item:hover {
+  background-color: #DDD;
+}

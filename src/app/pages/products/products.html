@@ -1,0 +1,36 @@
+
+<add-product-modal #addProductModal (onProductAdded)="productAdded($event)"></add-product-modal>
+
+<table class="table">
+    <tr>
+        <th style="width:100%; padding-right: 0px;" align="right">
+            <div style="display: table-cell; float: right">
+                <button type="button" class="btn btn-primary btn-with-icon" (click)="addProduct()" *ngIf="isShowAdd()">
+                    <i class="ion-plus"></i>
+                    Add Product
+                </button>
+            </div>
+        </th>
+    </tr>
+</table>
+
+<div>
+    <div>
+        <div id="tloader" [hidden]="!_loading">
+            <div></div>
+        </div>
+
+        <div class="row">
+            <!--<div class="col-md-3">-->
+                <!--<product-list [_products]="_products" [_selectedProduct]="_selectedProduct"-->
+                              <!--(onProductSelectionChanged)="productSelectionChanged($event)"></product-list>-->
+            <!--</div>-->
+            <div style="width: 100%">
+                <product-detail [product]="_selectedProduct"
+                                (onProductUpdated)="productUpdated($event)"
+                                (onSeasonsChanged)="seasonsChanged($event)"
+                ></product-detail>
+            </div>
+        </div>
+    </div>
+</div>

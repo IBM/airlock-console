@@ -1,0 +1,89 @@
+
+<modal #reorderExperimentsModal id="reorderExperimentsModal" class="reorderMXGroupModal" [backdrop]="'static'" data-keyboard="false" data-backdrop="static">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <modal-header [show-close]="true" *ngIf="_experimentsContainer != null" >
+        <h4 class="modal-title">
+            <span>
+                 Reorder Experiments
+            </span>
+            <span style="width:3em;float: right;"> </span>
+
+
+        </h4>
+
+        <div>
+            <h5 class="modal-title">
+                {{getString('reorder_experiments_subheader')}}
+            </h5>
+        </div>
+    </modal-header>
+    <modal-body  *ngIf="_experimentsContainer != null">
+        <div>
+        <div style="display: inline-block;width: 100%;">
+            <button (click)="moveUp()" class="moveButton  btn btn-primary" >
+                <i class = "ion-chevron-up"></i>
+            </button>
+            <button (click)="moveDown()" class="moveButton btn btn-primary marginrightbutton">
+                <i class = "ion-chevron-down"></i>
+            </button>
+        </div>
+        <div class="accordion" style="overflow: scroll;height: 300px;">
+            <span *ngFor="let item of getChildren(); let i = index;">
+                <section  class="accordion-item" [class.col-sm-12]="false"  [class.isOpen]="item==_selectedTarget">
+
+                    <div class="panel panel-success" >
+                        <span >
+                            <div class="panel-body targetItem">
+                                <ul class="list-group">
+                                    <li class="list-group-item" [class.selected]="item==_selectedTarget" (click)="selectTarget(item,i)">{{getName(item)}}
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </span>
+                    </div>
+
+                </section>
+            </span>
+            </div>
+
+            <div *ngIf="shouldShowMaxOnSection()">
+
+                <hr class="hr">
+
+                <label *ngIf="!isConfigMode()" for="maxOn" class="control-label">{{getString('reorder_max_features_on')}}</label>
+                <airlock-tooltip *ngIf="!isConfigMode()" class="endFlexContainer" [content]="getString('reorder_max_features_on_tooltip')" [title]=""></airlock-tooltip>
+
+                <label *ngIf="isConfigMode()" for="maxOn" class="control-label">{{getString('reorder_max_configs_on')}}</label>
+                <airlock-tooltip *ngIf="isConfigMode()" class="endFlexContainer" [content]="getString('reorder_max_configs_on_tooltip')" [title]=""></airlock-tooltip>
+
+                <input type="number" min="1" max="{{getChildren()?.length}}" id="maxOn" [(ngModel)]="_experimentsContainer.maxExperimentsOn"  class="form-control whiteText" >
+
+            </div>
+        </div>
+        <!--<table class="ordertable">-->
+            <!--<tr *ngFor="let mxItem of _mxGroup.features; let i = index">-->
+                <!--<td class="whiteText">-->
+                    <!--{{mxItem.name}}-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<button (click)="moveUp(i)">-->
+                        <!--<i class = "ion-chevron-up"></i>-->
+                    <!--</button>-->
+                    <!--<button (click)="moveDown(i)">-->
+                        <!--<i class = "ion-chevron-down"></i>-->
+                    <!--</button>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+    </modal-footer>
+</modal>

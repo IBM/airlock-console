@@ -1,0 +1,49 @@
+<modal #addStreamModal id="addStreamModal" class="addStreamModal" [backdrop]="'static'">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">
+            <span>
+                 Add Stream
+            </span>
+        </h4>
+    </modal-header>
+    <modal-body>
+        <div class="box">
+            <div  class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_name')" [title]="getString('add_stream_description_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_stream.name)"   type="text" id="input01" [(ngModel)]="_stream.name" class="form-control whiteText" tabindex="2" >
+            </div>
+            <div  class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_group')" [title]="getString('add_stream_group_title')"></airlock-tooltip>
+                <select id="select05"  class="js_example" multiple tabindex="3">
+                    <template ngFor let-item [ngForOf]="possibleGroupsList" [ngForTrackBy]="itemTrackBy">
+                        <option [value]="item">{{item}}</option>
+                    </template>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_min_app_version')" [title]="getString('edit_stream_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_stream.minAppVersion)"  type="text" id="input54" [(ngModel)]="_stream.minAppVersion" class="form-control whiteText" tabindex="4">
+            </div>
+
+            <div  class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_description')" [title]="getString('add_stream_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_stream.description" value="FEATURE" class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+        </div>
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+    </modal-footer>
+</modal>

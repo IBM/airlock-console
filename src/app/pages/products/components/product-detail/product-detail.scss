@@ -1,0 +1,149 @@
+.table > thead > tr > th:first-child {
+   text-align: left;
+  padding-left: 16px;
+}
+
+.table > tbody > tr > td:first-child {
+  text-align: left;
+  padding-left: 16px;
+}
+
+.table > tbody > tr > td {
+  text-align: left;
+  padding-left: 16px;
+}
+
+.productDetails{
+
+}
+
+.cell-button:hover {
+  color: #484c4f;
+}
+
+.cell-button {
+  color: #ddd;
+}
+.top-dropdown-menu.profile-dropdown {
+  width: 250px;
+  top: 45px;
+  right: -20px;
+  left: auto;
+  z-index: 9999999;
+}
+
+.top-dropdown-menu.profile-dropdown i.dropdown-arr {
+  right: 25px;
+}
+
+.productDetails .card-title{
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.followersListItem {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 2px;
+  padding-top: 3px;
+  background: #337ab7 !important;
+  font-size: 20px;
+  margin-right: 10px;
+  margin-top: 5px;
+
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  }
+.followersList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height:60px;
+    overflow: auto;
+  }
+
+  i.remove-todo {
+    cursor: pointer;
+    font-size: 15px;
+    visibility: visible;
+    margin-right: 5px;
+  }
+
+.actions-button {
+  margin-right: -10px;
+}
+.addFollower{
+  width: 90%;
+  margin-bottom: 10px;
+  display: inline;
+}
+
+.addFollowerDiv{
+  width: 50%;
+}
+
+.add-item-icon {
+  display: inline;
+  float: right;
+  margin-top: 3px;
+  margin-right: 15px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.btn-circle {
+  border-radius: 30px;
+  color: rgba(255, 255, 255, 0.84);
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.btn-circle:hover {
+  border-color: rgba(0, 171, 255, 0.54);
+  color: white;
+}
+
+.buttonMargin {
+  margin: 3px;
+}
+
+.btn:hover {
+  transform: none !important;
+  color: white;
+  background-color: rgba(9, 149, 255, 0.73) !important;
+}
+
+
+.star-icon{
+  //font-size: 22px;
+  color: darkgray;
+  //margin-right: .4em;
+  //vertical-align: text-top;
+}
+
+.star-selected{
+  color: #ffd470 !important;
+  //font-size: 22px;
+  //padding-left: 1px;
+  //border-color: #dfb470 !important;;
+  -webkit-text-stroke: 1px darkgray;
+}
+
+.star-selected:hover {
+  color: #ffda7b !important;
+}
+.selectedVersion{
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.showPointerOnHover{
+  cursor: pointer;
+}

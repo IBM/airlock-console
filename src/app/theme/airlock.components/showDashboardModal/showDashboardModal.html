@@ -1,0 +1,16 @@
+<modal #showDashboardModal id="showDashboardModal" class="showDashboardModal" [backdrop]="'static'">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">
+            <span>
+                 Dashboard
+            </span>
+        </h4>
+    </modal-header>
+    <modal-body id="showDashboardModalBody">
+        <iframe  *ngIf="urlForKibana != null" [src]="sanitize(urlForKibana)" height="90%" width="95%"></iframe>
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </modal-footer>
+</modal>

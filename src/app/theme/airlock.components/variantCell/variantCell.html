@@ -1,0 +1,88 @@
+<verify-action-modal  #verifyActionModal ></verify-action-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+    <div #variantCell [class.col-sm6]="true">
+        <div [class.not-in-branch]="!partOfBranch()" [class.panel]="shouldStyleCell()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.main-mx-group-background]="feature?.type=='CONFIG_MUTUAL_EXCLUSION_GROUP' && isMainConfigCell()" [class.mx-group-background]="false" style="margin-bottom: 2px; margin-top: 2px;">
+            <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                <ul class="list-group" style="margin: 0px; background-color: transparent">
+
+                    <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+
+                        <tr>
+
+                            <td style="width: 3%; vertical-align: middle;" (click)="cellClicked()" class="align-right" [style.color]="getNextColorStyle()">
+
+                            </td>
+                            <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                <div class="">
+                                    <i *ngIf="!isDefalut()" class="reported-to-analytics-icon ion-merge" [style.color]="getVariantColor()"></i>
+                                    <i *ngIf="isDefalut()" class="reported-to-analytics-icon ion-merge" [style.color]="getVariantColor()"></i>
+                                </div>
+                            </td>
+                            <td style="width: 20%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                <div class="descpDiv">
+                                    <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted">
+                                    </a>
+                                    <i *ngIf="variant.description && (variant?.description.length > 0)" class="ion-ios-information-outline info-icon" [tooltip]="getDescriptionTooltip(variant.description)" [isDisabled]="variant.description && (variant?.description.length <= 0)" ></i>
+                                    <i *ngIf="isDefalut()" class="new-icon" [tooltip]="getString('variant_cell_control_label_text')">Control</i>
+                                </div>
+                                <div class="subHeaderDiv" >
+                                    {{getActiveUsersMessage()}}
+                                </div>
+                            </td>
+                            <td style="width: 20%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                <span [innerHTML]="highlightedBranch"></span>
+                            </td>
+                            <td style="width: 20%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                <span class="capitalize">{{variant.stage | lowercase}}</span>
+                                <i *ngIf="shouldShowUserGroups()" class="ion-ios-people user-groups" [tooltip]="userGroupsText()" [isDisabled]="!(shouldShowUserGroups())" ></i>
+                            </td>
+                            <td style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                <!--<span class="">{{variant.minAppVersion}}</span>-->
+                            </td>
+                            <td style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                <div style="vertical-align: middle; height: 20px;">
+                                    <progressbar class="progress progress-striped" value="{{variant.rolloutPercentage}}" max="100" type="primary">
+                                        <div class="progress-text-align">
+                                            <span>{{variant.rolloutPercentage}}%</span>
+                                        </div>
+                                    </progressbar>
+                                </div>
+                            </td>
+                            <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                <div style="vertical-align: middle;" class="middle-align-element">
+                                    <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="variant.enabled"></i>
+                                    <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="!variant.enabled"></i>
+                                </div>
+                            </td>
+
+                            <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right" (click)="doNothing()">
+                                <div class="dropdown  buttonMargin noExpand maxWidth" dropdown>
+                                    <button dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd33" data-toggle="dropdown" aria-expanded="false" (click)="status.isopen = !status.isopen" title="Actions">
+                                        <i class="ion-settings"></i>
+                                    </button>
+                                    <ul dropdownMenu role="menu" class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd" dropdownMenu>
+                                        <li class="dropdown-item"><i class="dropdown-arr"></i></li>
+                                        <li class="dropdown-item" *ngIf="!isShowOptions()"><a (click)="openEditDialog()"><i class="fa ion-compose"></i>Details</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog()"><i class="fa ion-compose"></i>Edit</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions() && !isDefalut()"><a (click)="setVariantAsDefaultVariant()"><i class="fa fa-dot-circle-o"></i>Mark as control</a></li>
+                                        <li class="dropdown-divider"></li>
+
+                                        <li class="dropdown-item" *ngIf="isShowReleaseToProduction()"><a (click)="changeStage()"><i class="fa" [class.ion-code-working]="variant.stage!='DEVELOPMENT'" [class.fa-flag]="variant.stage=='DEVELOPMENT'"></i>{{variant.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                        <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+
+                                        <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

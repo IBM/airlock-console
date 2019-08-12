@@ -1,0 +1,33 @@
+.overrideStringModal .has-success .control-label {
+  color: white;
+}
+
+.overrideStringModal .control-label {
+  color: white;
+}
+
+.overrideStringModal .box{
+  box-sizing:border-box;
+}
+
+.overrideStringModal .blackText{
+  //color: black !important;
+  border: 1px solid #00abff !important;
+}
+
+.overrideStringModal .feature-name {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.overrideStringModal .revert-button {
+  margin: 15px;
+}
+
+.overrideStringModal .revert-button-div {
+  position: absolute;
+  left: 0px;
+}
+
+.overrideStringModal .endFlexContainer {
+  padding-top: 10px;
+}

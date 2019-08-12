@@ -1,0 +1,12 @@
+<div>
+  <div *ngIf="editing">
+    <input #inlineEditControl [required]="required" (blur)="onBlur($event)" [name]="value"  [(ngModel)]="value" [type]="type" [placeholder]="label" style="width: auto"/>
+  </div>
+  <div *ngIf="!editing">
+    <div title="{{tooltip()}}" (click)="edit(value)" (focus)="edit(value);" tabindex="0" class="inline-edit">{{value}}&nbsp;</div>
+    <div *ngIf="array()" class="control" (click)="editing=!editing" style="float:right;position:relative;top:0px;left: -2px; height: 7px"><i title="{{tooltip()}}" (click)="editing=editing" class="ion-edit" style="font-size: 10px;cursor: pointer;"></i></div>
+    <div *ngIf="custom()" class="control" (click)="editing=!editing" style="float:right;position:relative;top:0px;left: -2px; height: 7px"><i title="{{tooltip()}}" (click)="editing=editing" class="ion-edit" style="font-size: 10px;cursor: pointer;"></i></div>
+  </div>
+</div>
+
+

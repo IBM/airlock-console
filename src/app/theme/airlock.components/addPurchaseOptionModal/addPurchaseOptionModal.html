@@ -1,0 +1,87 @@
+<modal #addPurchaseOptionModal id="addPurchaseModal" class="addPurchaseModalOptions" [backdrop]="'static'">
+    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <modal-header [show-close]="true">
+        <h4 class="modal-title">
+            <span>
+                 Add Purchase Option
+            </span>
+        </h4>
+    </modal-header>
+    <modal-body>
+        <div class="box">
+            <div  class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_purchase_option_name')" [title]="getString('add_experiment_name_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_purchaseOption.name)" type="text" id="input01" [(ngModel)]="_purchaseOption.name" class="form-control whiteText" tabindex="2" >
+            </div>
+            <div  class="form-group">
+                <label for="input01" class="control-label">Display Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_displayname')" [title]="getString('add_experiment_displayname_title')"></airlock-tooltip>
+                <input type="text" id="input101" [(ngModel)]="_purchaseOption.displayName" class="form-control whiteText" tabindex="3" >
+            </div>
+            <div  class="form-group">
+                <table  style="width: 100%;">
+                    <tr>
+                        <td style="width: 25%" class="align-left no-pa-top"> <label class="control-label" style="padding-right: 2px;">Store Type</label>
+                            <airlock-tooltip class="" [content]="getString('edit_purchase_option_store_type')" [title]="getString('edit_purchase_option_store_type_title')"></airlock-tooltip>
+                        </td>
+                        <td></td>
+                        <td style="width: 75%" class="align-left no-pa-top"> <label class="control-label" style="padding-right: 2px;">Product ID</label>
+                            <airlock-tooltip class="" [content]="getString('edit_purchase_option_product_id')" [title]="getString('edit_purchase_option_product_id_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 25%" class="align-left">
+                            <div style="display: table-cell;">
+                                <ng-select *ngIf="!loading" [allowClear]="false"
+                                           [items]="getStoreTypeForSelect()"
+                                           (selected)="selectStoreTypeFromSelect($event)"
+                                           [placeholder]="storeProduct"
+                                >
+                                </ng-select>
+                            </div>
+                        </td>
+                        <td style="width: 10%" class="align-left">
+                        </td>
+                        <td style="width: 65%" class="align-left">
+                            <input  type="text"[disabled] = "isOnlyDisplayMode" id="input110" placeholder="" [(ngModel)]="productId"  class="form-control blackText" tabindex="1">
+                        </td>
+                    </tr>
+                </table>
+                <!--<label for="input104" class="control-label">Product Id</label>-->
+                <!--<airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_displayname')" [title]="getString('add_experiment_displayname_title')"></airlock-tooltip>-->
+                <!--<input type="text" id="input104" [(ngModel)]="procuctId" class="form-control whiteText" tabindex="3" >-->
+            </div>
+            <div  class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_purchase_option_group')" [title]="getString('add_experiment_group_title')"></airlock-tooltip>
+                <select id="select05"  class="js_example" multiple tabindex="4">
+                    <template ngFor let-item [ngForOf]="possibleGroupsList" [ngForTrackBy]="itemTrackBy">
+                        <option [value]="item">{{item}}</option>
+                    </template>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_purchase_option_min_app_version')" [title]="getString('edit_experiment_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_purchaseOption.minAppVersion)" type="text" id="input54" [(ngModel)]="_purchaseOption.minAppVersion" class="form-control whiteText" tabindex="5">
+            </div>
+
+            <div  class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_description')" [title]="getString('add_experiment_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_purchaseOption.description" value="FEATURE" class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+        </div>
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+    </modal-footer>
+</modal>

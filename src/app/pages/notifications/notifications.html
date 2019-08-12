@@ -1,0 +1,61 @@
+<verify-action-modal  #verifyActionModal ></verify-action-modal>
+<add-notification-modal #addNotificationModal [configurationSchema]="notifications?.configurationSchema" [seasonId]="selectedSeason?.uniqueId" [possibleGroupsList]="possibleUserGroupsList" (onNotificationAdded)="loadNotifications()"></add-notification-modal>
+<edit-notification-modal [verifyActionModal]="verifyActionModal" (onEditNotification)="updateNotifications($event)" [possibleGroupsList]="possibleUserGroupsList" #editNotificationModal></edit-notification-modal>
+<reorder-notifications-modal #reorderNotificationsModal (onReorderNotifications)="notificationsReordered($event)"></reorder-notifications-modal>
+<limit-notifications-modal #limitNotificationsModal (onChangeNotificationsLimit)="updateNotifications($event)"></limit-notifications-modal>
+<div class="container_not">
+    <div>
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div style="float: right;    display: flex;">
+            <button  style="margin-right: 10px;" type="button" class="btn btn-primary" (click)="limitNotifications()" *ngIf="canLimitNotifications()">
+                Limitations
+            </button>
+            <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addNotification()" *ngIf="canAddNotification()">
+                <i class="ion-plus"></i>
+                Add Notification
+            </button>
+
+        </div>
+        <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                               [showSearch]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
+                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showNotifications]="true"
+                               ></custom-airlock-header>
+
+        <div *ngIf="notifications?.notifications?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
+            <div [class.panel]="true" [class.hide]="!(notifications?.notifications?.length > 0)" [class.panel-warning]="true" [class.mx-group-background]="true" [class.full-width]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="false">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <div *ngIf="true" class="mx-group-panel">
+                            <p class="configTitle">{{getString('notifications_header_text')}}</p>
+                            <span class="flexContainer">
+                                <button *ngIf="true" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="reorder()">
+                                    <i class="fa fa fa-sort"></i>
+                                    Reorder
+                                </button>
+                            </span>
+                        </div>
+                        <notification-cell *ngFor="let notification of notifications.notifications; let i = index"
+                                         [notification]="notification" [level]="0"
+                                         [searchTerm]="searchQueryString"
+                                         [verifyActionModal]="verifyActionModal"
+                                         [showDevFeatures]="showDevFeatures"
+                                         [filterlistDict]="filterlistDict"
+                                         [shouldOpenCell]="isCellOpen(notification.uniqueId)"
+                                         [selectedId]="selectedId"
+                                         [schema]="notifications.configurationSchema"
+                                         [editNotificationModal]="editNotificationModal"
+                                         (onSearchHit)="notificationIsInFilter($event)"
+                                         (onCellClick)="notificationChangedStatus($event)"
+                                         (onUpdate)="refreshTable($event)"
+                                         (hideIndicator)="afterUpdate()"
+                                         (beforeUpdate)="beforeUpdate($event)"
+                                         (onSelected)="itemIsSelected($event)"
+                        ></notification-cell>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

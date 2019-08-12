@@ -1,0 +1,6 @@
+node_modules/
+id_rsa
+.gradle
+.idea/
+dist/
+/bin/

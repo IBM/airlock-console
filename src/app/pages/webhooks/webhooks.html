@@ -1,0 +1,48 @@
+<verify-action-modal  #verifyActionModal ></verify-action-modal>
+<add-webhook-modal #addWebhookModal (onWebhookAdded)="refreshTable($event)"></add-webhook-modal>
+<edit-webhook-modal #editWebhookModal (onEditWebhook)="refreshTable($event)"></edit-webhook-modal>
+<div class="container_not authorization-page">
+    <div>
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div style="float: right;    display: flex;">
+            <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addWebhook()">
+                <i class="ion-plus"></i>
+                Add Webhook
+            </button>
+
+        </div>
+        <custom-airlock-header [showAddAuthUser]="false" [showDisplayOptions]="false" [hideColumns]="true" [simpleSearch]="false"
+                               [showSearch]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="getNumItems()"
+                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex"
+                               ></custom-airlock-header>
+
+        <div *ngIf="webhooks?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
+            <div [class.panel]="true" [class.hide]="!(webhooks?.length > 0)" [class.panel-warning]="true" [class.mx-group-background]="true" [class.full-width]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="false">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <webhook-cell *ngFor="let webhook of webhooks; let i = index"
+                                           [webhook]="webhook"
+                                           [level]="0"
+                                           [searchTerm]="searchQueryString"
+                                           [verifyActionModal]="verifyActionModal"
+                                           [showDevFeatures]="showDevFeatures"
+                                           [filterlistDict]="filterlistDict"
+                                           [shouldOpenCell]="isCellOpen(webhook.uniqueId)"
+                                           [editWebhookModal]="editWebhookModal"
+                                           [selectedId]="selectedId"
+                                           (onSearchHit)="webhookIsInFilter($event)"
+                                           (onCellClick)="webhookChangedStatus($event)"
+                                           (onUpdate)="refreshTable($event)"
+                                           (hideIndicator)="afterUpdate()"
+                                           (beforeUpdate)="beforeUpdate($event)"
+                                           (onSelected)="itemIsSelected($event)"
+                        ></webhook-cell>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,6 @@
+{
+  "auth": {
+    "entryPoint": "put_your_entry_point_here",
+    "cert": "_put_your_cert_here"
+  }
+}

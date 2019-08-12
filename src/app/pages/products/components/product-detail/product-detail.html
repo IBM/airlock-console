@@ -1,0 +1,180 @@
+<div  class="productDetails" >
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <season-modal #seasonModal [product]="_product" [season]="_season"
+                  (onSeasonAdded)="seasonAdded($event)"
+                  (onSeasonEdited)="seasonEdited($event)"
+                  (onSeasonDeleted)="seasonDeleted($event)"></season-modal>
+    <document-links-Modal #documentLinksModal></document-links-Modal>
+    <edit-input-schema-modal #editInputSchemaModal></edit-input-schema-modal>
+    <edit-branch-modal (onBranchEdited) = "branchEdited($event)" #editBranchModal></edit-branch-modal>
+    <ba-card *ngIf="_product" title="{{_product.name}}" baCardClass="with-scroll">
+        <div style="margin-bottom: 20px">
+            <form>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="" required
+                               [(ngModel)]="_productCopy.name" name="name" #name="ngModel" [disabled] = "_isDisaplyOnly" (keydown.enter)="$event.preventDefault()">
+                    </div>
+                    <!--<div class="form-group col-md-6">-->
+                        <!--<label for="codeIdentifier">Code Identifier</label>-->
+                        <!--<input type="text" class="form-control" id="codeIdentifier" placeholder="" required-->
+                               <!--[(ngModel)]="_productCopy.codeIdentifier" name="codeIdentifier" [disabled] = "_isDisaplyOnly">-->
+                    <!--</div>-->
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" style="height: 60px" placeholder=""
+                                  [(ngModel)]="_productCopy.description" name="description"  [disabled] = "_isDisaplyOnly" ></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <button type="submit" class="btn btn-default btn-with-icon" style="float: right"
+                                (click)="onSave()" [disabled]="!didProductChange()">
+                            <i class="ion-ios-checkmark-outline"></i>
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-default btn-with-icon" style="float: right; margin-right: 12px"
+                                (click)="onReset()" [disabled]="!didProductChange()">
+                            <i class="ion-ios-undo"></i>
+                            Reset
+                        </button>
+                        <button type="submit" class="btn btn-default btn-with-icon" style="float: right; margin-right: 12px"
+                                (click)="loading || starClicked($event,_product)" [tooltip]="getProductFollowTooltip(_product.isCurrentUserFollower)">
+                            <i class="star-icon" container="body"  [ngClass]="{'ion-ios-star-outline':!_product.isCurrentUserFollower,'cell-button':!_product.isCurrentUserFollower, 'ion-ios-star':_product.isCurrentUserFollower, 'star-selected':_product.isCurrentUserFollower}"></i>
+                            {{(_product.isCurrentUserFollower?"Unfollow":"Follow")}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <ba-card *ngIf="_product" baCardClass="with-scroll" title="">
+
+            <div class="row" style="margin-bottom: 15px">
+                <div class="col-md-3" style="vertical-align: middle">
+                    <h3>Version Ranges</h3>
+                </div>
+                <div class="col-md-9">
+                    <button type="button" class="btn btn-primary btn-icon" style="float: right"
+                            (click)="onAddSeason()" *ngIf="isShowAddSeason()">
+                        <i class="ion-plus" style="margin-right: 10px;"></i>
+                            Add Version Range
+
+                    </button>
+                    <!--<div class="dropdown al-user-profile" dropdown [isOpen]="status.openId === _season.uniqueId" *ngIf="false && _season != null">-->
+                        <!--<button class="profile-toggle-link btn btn-primary btn-icon btn-circle " id="user-profile-dd" data-toggle="dropdown" aria-expanded="false" (click)="openMenu(_season.uniqueId)">-->
+                            <!--<i class="ion-settings"></i>-->
+                        <!--</button>-->
+                        <!--<div class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd" dropdownMenu>-->
+                            <!--<li class="dropdown-item"><i class="dropdown-arr"></i></li>-->
+                            <!--<li class="dropdown-item" *ngIf="!_isHideDowloadLinks"><a (click)="onShowDocumentLinks(_season)"><i class="fa ion-ios-download-outline"></i>Download Defaults File</a></li>-->
+                            <!--<li class="dropdown-item" *ngIf="isShowEditSeason()"><a (click)="onEditSeason(_season)"><i class="fa ion-edit"></i>Edit version range</a></li>-->
+                            <!--<li class="dropdown-item" *ngIf="!_isDisaplyOnly"><a (click)="onEditInputSchema(_season)"><i class="fa ion-compose"></i>Edit input schema</a></li>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                <div class="horizontal-scroll">
+                    <ba-card>
+                    <table class="table table-hover" style="margin-bottom: 100px;">
+                        <!--<thead>-->
+                        <!--<tr style="background-color: rgba(0, 0, 0, 0.2);"  class="no-top-border">-->
+                            <!--&lt;!&ndash;<th style="width: 40%">Name</th>&ndash;&gt;-->
+                            <!--<th  align="left" style="vertical-align: baseline;">Minimum Version</th>-->
+                            <!--<th  align="left">Maximum Version <br />(up to, but not including, this version)</th>-->
+                            <!--&lt;!&ndash;<th style="width: 25%"></th>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<th></th>&ndash;&gt;-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <tbody>
+                        <tr  style="background-color: rgba(0, 0, 0, 0.2);" >
+                            <td  align="left" style="vertical-align: baseline;">Minimum</td>
+                            <td  align="left">Maximum (up to, but not including)</td>
+                            <td  style="width: 40px;max-width: 40px"></td>
+                        </tr>
+                        <tr *ngFor="let s of _product.seasons" class="no-top-border" (click)="selectSeason(s)" [class.selectedVersion] = "_season != null && s.uniqueId == _season.uniqueId" style="cursor: pointer;">
+                            <!--<td>{{s.name}}</td>-->
+                            <td style="padding-top: 6px;padding-bottom: 6px;" align="left">{{s.minVersion}}</td>
+                            <td style="padding-top: 6px;padding-bottom: 6px;" align="left">{{s.maxVersion}}</td>
+                            <td style="width: 40px;max-width: 40px;padding-top: 6px;padding-bottom: 6px;">
+                                <div class="dropdown al-user-profile actions-button" dropdown [isOpen]="status.openId === s.uniqueId" *ngIf="s != null && !_isHideDowloadLinks" style="">
+                                    <button class="profile-toggle-link btn btn-primary btn-icon btn-circle " id="user-profile-dd" data-toggle="dropdown" aria-expanded="false" (click)="openMenu($event,s.uniqueId)" style="width: 38px;">
+                                        <i class="ion-settings" style="left: -3px;position: relative;"></i>
+                                    </button>
+                                    <div class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd" dropdownMenu>
+                                        <li class="dropdown-item"><i class="dropdown-arr"></i></li>
+                                        <li class="dropdown-item" *ngIf="!_isHideDowloadLinks"><a (click)="onShowDocumentLinks(s)"><i class="fa ion-ios-download-outline"></i>Download Defaults File</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowEditSeason()"><a (click)="onEditSeason(s)"><i class="fa ion-edit"></i>Edit version range</a></li>
+                                        <li class="dropdown-item" *ngIf="!_isDisaplyOnly && !staticMode"><a (click)="onEditInputSchema(s)"><i class="fa ion-compose"></i>Edit input schema</a></li>
+                                    </div>
+                                </div>
+                            </td>
+                            <!--<td></td>-->
+                            <!--<td>-->
+                                <!--<div class="dropdown al-user-profile buttonMargin" dropdown [isOpen]="status.openId === s.uniqueId">-->
+                                    <!--<button class="profile-toggle-link btn btn-primary btn-icon btn-circle" id="user-profile-dd" data-toggle="dropdown" aria-expanded="false" (click)="openMenu(s.uniqueId)">-->
+                                        <!--<i class="ion-settings"></i>-->
+                                    <!--</button>-->
+                                    <!--<div class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd" dropdownMenu>-->
+                                        <!--<li class="dropdown-item"><i class="dropdown-arr"></i></li>-->
+                                        <!--<li class="dropdown-item" *ngIf="!_isHideDowloadLinks"><a (click)="onShowDocumentLinks(s)"><i class="fa ion-ios-download-outline"></i>Download Defaults File</a></li>-->
+                                        <!--<li class="dropdown-item" *ngIf="!_isHideDowloadLinks"><a (click)="downloadSeason(s)"><i class="fa ion-ios-cloud-download-outline"></i>Export</a></li>-->
+                                        <!--<li class="dropdown-item" *ngIf="isShowEditSeason()"><a (click)="onEditSeason(s)"><i class="fa ion-edit"></i>Edit</a></li>-->
+                                        <!--<li class="dropdown-item" *ngIf="!_isDisaplyOnly"><a (click)="onEditInputSchema(s)"><i class="fa ion-compose"></i>Edit input schema</a></li>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</td>-->
+                        </tr>
+                        </tbody>
+                    </table>
+                    </ba-card>
+                </div>
+
+                    </div>
+                <div class="col-md-7">
+
+                    <div *ngIf="canUseBranches" class="form-group col-md-12">
+                        <ba-card>
+                        <h3>Branches</h3>
+                        <div class="horizontal-scroll" *ngIf="_season != null && branches != null">
+                            <table class="table table-hover">
+                                <!--<thead>-->
+                                <!--<td>Branch</td>-->
+                                <!--<td></td>-->
+                                <!--</thead>-->
+                                <tbody>
+                                <tr *ngFor="let b of branches" style="border-top: 1px solid rgba(255, 255, 255, 0.3);">
+                                    <!--<td>{{s.name}}</td>-->
+                                    <td align="left"><a (click)="canShowEditBranch(b) && onEditBranch(b)" [class.showPointerOnHover] = "canShowEditBranch(b)" >{{b.name}}</a></td>
+                                    <td align="left" style="float: right;border-top:0px;">
+                                        <i *ngIf="canShowEditBranch(b)" class="fa ion-edit cell-button" (click)="onEditBranch(b)" style="margin-right: 6px;;font-size:16px;vertical-align: text-bottom;padding-right: 4px;cursor: pointer;"></i>
+                                        <i *ngIf="canShowDeleteBranch(b)" class="remove-todo ion-trash-a cell-button" (click)="deleteBranch(b)" style="font-size: 22px;cursor: pointer;vertical-align: sub;"></i>
+
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </ba-card>
+                    </div>
+                    </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 15px;height: 150px;"  *ngIf="_season != null">
+
+            </div>
+        </ba-card>
+    </ba-card>
+    <ba-card *ngIf="!_product" title="" baCardClass="with-scroll">
+        <div>Select a product from the list to show its details.</div>
+    </ba-card>
+</div>

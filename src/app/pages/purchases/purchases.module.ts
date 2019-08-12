@@ -1,0 +1,101 @@
+/**
+ * Created by elikkatz on 19/01/2017.
+ */
+import { NgModule }      from '@angular/core';
+import { CommonModule }  from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgaModule } from '../../theme/nga.module';
+
+import { routing }       from './purchases.routing';
+import { ProgressbarModule } from 'ng2-bootstrap';
+import { TabsModule } from 'ng2-bootstrap/tabs';
+import {PurchasesPage} from "./purchases.component";
+//import {UiSwitchComponent} from "angular2-ui-switch/dist/ui-switch.component";
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
+import {ModalModule} from "angular2-modal/";
+import {ConfigurationCell} from "../../theme/airlock.components/configurationCell/configurationCell.component";
+import { DropdownModule } from 'ng2-bootstrap';
+import { TooltipModule } from 'ng2-bootstrap';
+import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
+import { AccordionModule } from 'ng2-bootstrap';
+import { ButtonsModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap';
+import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
+import ALCommonsModule from "../common.module";
+import { PopoverModule } from 'ng2-bootstrap';
+import {InputTextModule} from 'primeng/primeng';
+import {ListboxModule} from 'primeng/primeng';
+import {DataTableModule,SharedModule} from 'primeng/primeng';
+import {SelectModule} from "ng2-select";
+
+import {ImportFeaturesModal} from "../../theme/airlock.components/importFeaturesModal/importFeaturesModal.component";
+import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
+import { BrowserModule } from '@angular/platform-browser';
+import {WhitelistSummary} from "../wlpreview/wlsummary.component";
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import {wlAttributesModal} from "../../theme/airlock.components/wlAttributesModal/wlAttributesModal.component";
+import {wlContextModal} from "../../theme/airlock.components/wlContextModal/wlContextModal.component";
+import {TreeModule,TreeNode} from 'primeng/primeng';
+import {ShowDashboardModal} from "../../theme/airlock.components/showDashboardModal/showDashboardModal.component";
+import {PurchaseCell} from "../../theme/airlock.components/purchaseCell/purchaseCell.component";
+import {AddPurchaseModal} from "../../theme/airlock.components/addPurchaseModal";
+import FeaturesCommonModule from "../features.common.module";
+import {AddPurchaseConfigurationModal} from "../../theme/airlock.components/addPurchaseConfigurationModal";
+import {PurchaseOptionsCell} from "../../theme/airlock.components/purchaseOptionsCell/purchaseOptionsCell.component";
+import {EditPurchaseModal} from "../../theme/airlock.components/editPurchaseModal";
+import {AddPurchaseOptionModal} from "../../theme/airlock.components/addPurchaseOptionModal";
+import {ReorderPurchaseMXGroupModal} from "../../theme/airlock.components/reorderPurchaseMXGroupModal";
+import {SelectIncludedPurchases} from "../../theme/airlock.components/selectIncludedPurchases/selectIncludedPurchases.component";
+import {IncludedPurchasesNode} from "../../theme/airlock.components/selectIncludedPurchases/includedPurchasesNode/includedPurchasesNode.component";
+import {EditPurchaseOptionsModal} from "../../theme/airlock.components/editPurchaseOptionsModal";
+import { ImportPurchasesModal } from '../../theme/airlock.components/importPurchasesModal/importPurchasesModal.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgaModule,
+        Ng2Bs3ModalModule,
+        PopoverModule.forRoot(),
+        ProgressbarModule.forRoot(),
+        DropdownModule.forRoot(),
+        TooltipModule.forRoot(),
+        TabsModule.forRoot(),
+        AccordionModule.forRoot(),
+        ButtonsModule.forRoot(),
+        AlertModule.forRoot(),
+        ModalModule.forRoot(),
+        SimpleNotificationsModule,
+        DropdownMultiselectModule,
+        PushNotificationsModule,ALCommonsModule,
+        routing,
+        InputTextModule,
+        ListboxModule,
+        DataTableModule,
+        TreeModule,
+        SelectModule,
+        FeaturesCommonModule,
+    ],
+    declarations: [
+        PurchasesPage,
+        PurchaseCell,
+        PurchaseOptionsCell,
+        AddPurchaseModal,
+        AddPurchaseConfigurationModal,
+        EditPurchaseModal,
+        AddPurchaseOptionModal,
+        ReorderPurchaseMXGroupModal,
+        SelectIncludedPurchases,
+        IncludedPurchasesNode,
+        ImportPurchasesModal,
+        EditPurchaseOptionsModal
+    ],
+    providers: [
+        // TransparentSpinner,
+        // NotificationsService,
+        // FeatureUtilsService,
+
+    ]
+})
+export default class PurchasesModule {}

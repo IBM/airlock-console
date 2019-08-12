@@ -1,0 +1,130 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<override-string-modal #overrideStringModal (stringOverridden)="reloadString($event)"></override-string-modal>
+<edit-string-modal #editStringModal (onEditString)="reloadString($event)"></edit-string-modal>
+
+    <ba-card class="stringsTableCard">
+        <div class="limit-height dark-background">
+                    <table class="table stringsTable fixed_headers" [mfRowsOnPage]="25" [mfData]="data" #mf="mfDataTable"
+                           [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                        <thead>
+                        <tr>
+                            <th class="firstTwoColumns">
+                                <span [ngClass]="{'stringIdHeader': canShowActionsMenu()}">
+                                <mfDefaultSorter by="key">
+                                    String ID
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == 'key' && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == 'key' && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                                </span>
+                            </th>
+                            <th class="firstTwoColumns">
+                                <mfDefaultSorter by="value">
+                                    String Value
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == 'value' && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == 'value' && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                            </th>
+                            <th class="statusHeader">
+                                <mfDefaultSorter [by]="sortByTranslated">
+                                    Translated
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == sortByTranslated && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == sortByTranslated && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                            </th>
+                            <th class="statusHeader">
+                                <mfDefaultSorter by="stage">
+                                    Stage
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == 'stage' && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == 'stage' && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                            </th>
+                            <th class="statusHeader">
+                                <mfDefaultSorter [by]="sortByStatus">
+                                    Status
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == sortByStatus && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == sortByStatus && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                            </th>
+                            <th *ngFor="let locale of this.supportedLocales" class="localeHeaderCell">
+                                <span (click)="localeClicked(locale)" class="localeHeader" title="{{getLocaleTitle(locale)}}">
+                                    {{locale}}
+                                    <i *ngIf="isShowingTranslation(locale)" aria-hidden="true" class="ion-ios-list-outline"></i>
+                                </span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let t of mf.data" (click)="rowSelected(t.uniqueId)" [ngClass]="{'selected': isRowSelected(t.uniqueId)}">
+                            <td class="firstTwoColumns">
+                            <span class="flexcontainer">
+                                <div *ngIf="canShowActionsMenu()" class="dropdown buttonMargin noExpand maxWidth actionsMenu" dropdown >
+                                    <button dropdownToggle class="btn btn-primary right-margin" id="user-profile-dd" aria-expanded="false" [disabled]="!canUserOpenActions(t)">
+                                        <i class="ion-settings"></i>
+                                    </button>
+                                    <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">
+                                        <!--<li class="dropdown-item"><i class="dropdown-arr"></i></li>-->
+                                        <i class="dropdown-arr"></i>
+                                        <li style="height: 22px" (click)="showEditString(t)" class="dropdown-item"  *ngIf="canUserEditString(t)"><a><i class="fa ion-compose"></i>Edit</a></li>
+                                        <li style="height: 22px" (click)="markStringForTranslation(t)" class="dropdown-item" *ngIf="canMarkForTranslation(t)"><a><i class="fa ion-checkmark-round"></i>Mark for review</a></li>
+                                        <li style="height: 22px" (click)="reviewStringForTranslation(t)" class="dropdown-item dropdown-li" *ngIf="canReviewForTranslation(t)"><a><i class="fa ion-ios-book"></i>Complete review</a></li>
+                                        <li style="height: 22px" (click)="sendStringForTranslation(t)" class="dropdown-item" *ngIf="canSendForTranslation(t)"><a><i class="fa ion-android-send"></i>Send to translation</a></li>
+                                        <li style="height: 22px" (click)="copyString(t)" class="dropdown-item"  *ngIf="canUserCopyString()"><a><i class="fa ion-ios-copy-outline"></i>Copy string</a></li>
+                                        <li style="height: 22px" (click)="exportString(t)" class="dropdown-item"  *ngIf="canUserExportString()"><a><i class="fa ion-share"></i>Export string</a></li>
+                                        <li style="height: 22px" class="dropdown-item dropdown-li" *ngIf="canViewUsage(t)" (click)="viewStringUsage(t)"><a><i class="eyeIcon fa fa-eye"></i>View usage</a></li>
+                                        <li style="height: 22px" (click)="changeStage(t)" class="dropdown-item" *ngIf="canUserChangeProduction()"><a><i class="fa" [class.ion-code-working]="t?.stage!='DEVELOPMENT'" [class.fa-flag]="t?.stage=='DEVELOPMENT'"></i>{{t?.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                        <li style="height: 22px" (click)="deleteString(t)" class="dropdown-item"  *ngIf="canUserDeleteString(t)"><a  class="signout destructive" [style.color]="getDeleteColor(t)" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                    </ul>
+                                    <string-usage-modal #stringUsageModal></string-usage-modal>
+                                </div>
+                                <span *ngIf="canUserEditString(t)"  class= "cut-with-dots" title="{{t.key}}"><span class="stringIdSpan stringId" (click)="showEditString(t)">{{t.key}}</span></span>
+                                <span *ngIf="!canUserEditString(t)" class= "cut-with-dots stringId" title="{{t.key}}">{{t.key}}</span>
+                            </span>
+                            </td>
+                            <td class="firstTwoColumns">
+                                <span *ngIf="canUserEditString(t)"  class="cut-with-dots" title="{{t.value}}"><span class="stringIdSpan" (click)="showEditString(t)">{{t.value}}</span></span>
+                                <span *ngIf="!canUserEditString(t)" class="cut-with-dots" title="{{t.value}}">{{t.value}}</span>
+                            </td>
+                            <td align="center">
+                                <span class="stringDetailsSpan">
+                                    <div>
+                                    ({{getNumberOfTranslatedLocales(t)}}/{{getNumberOfSupportedLocales(t)}})
+                                    </div>
+                                </span>
+                            </td>
+                            <td align="center">
+                                <span class="stringDetailsProd" *ngIf="t.stage=='PRODUCTION'">
+                                   Production
+                                </span>
+                                <span class="stringDetailsDev" *ngIf="t.stage=='DEVELOPMENT'">
+                                   Development
+                                </span>
+                            </td>
+                            <td align="center">
+                                <div class="string-status-div">
+                                    <string-status [status]="t.status" [tooltip]="getStringStatus(t.status)" [addPadding]="true"></string-status>
+                                </div>
+                            </td>
+                            <template ngFor let-item [ngForOf]="t.translations" [ngForTrackBy]="itemTrackBy" let-i="index" >
+                             <td align="center" *ngIf="isSupportedLocale(item.locale)">
+                                <!--{{l.translationStatus}}-->
+                                 <span *ngIf="isShowingTranslation(item.locale) && (item.translationStatus == 'TRANSLATED' || item.translationStatus == 'OVERRIDE')"
+                                 class="tranlateStatusIcon cut-with-dots" (click)="overrideTranslation(t.uniqueId,item,t.key,t.stage)" title="{{getTranslationTooltip(item.translation,t.stage,item.locale)}}">
+                                     {{item.translation}}
+                                 </span>
+                                    <i aria-hidden="true" class="ion-checkmark-round tranlateStatusIcon status-icon-translated" *ngIf="!isShowingTranslation(item.locale) && (item.translationStatus == 'TRANSLATED')"
+                                        title="{{getTranslationTooltip(item.translation,t.stage,item.locale)}}" (click)="overrideTranslation(t.uniqueId,item,t.key,t.stage)"></i>
+                                    <i aria-hidden="true" class="ion-compose tranlateStatusIcon status-icon-overriden" *ngIf="!isShowingTranslation(item.locale) && (item.translationStatus == 'OVERRIDE')"
+                                        title="{{getTranslationTooltip(item.translation,t.stage,item.locale)}}" (click)="overrideTranslation(t.uniqueId,item,t.key,t.stage)"></i>
+                                    <i aria-hidden="true" class="ion-close-round tranlateStatusIcon status-icon-not-translated" *ngIf="item.translationStatus != 'TRANSLATED' && item.translationStatus != 'OVERRIDE'"
+                                        (click)="overrideTranslation(t.uniqueId,item,t.key,t.stage)" title="{{getTranslationTooltip('',t.stage,item.locale)}}"></i>
+                            </td>
+                            </template>
+                        </tr>
+                        </tbody>
+                        <div class="tablePaginator"><mfBootstrapPaginator></mfBootstrapPaginator></div>
+
+                    </table>
+        </div>
+    </ba-card>

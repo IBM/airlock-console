@@ -1,0 +1,110 @@
+
+    <modal #myModal  class="addConfigurationModal"  [backdrop]="'static'">
+        <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <modal-header [show-close]="true"  *ngIf="feature != null">
+            <h4 class="modal-title" *ngIf="feature != null">
+                <span *ngIf="showNameSpaceInTitle && feature.namespace.length > 0">
+                     {{title}} - {{feature.namespace}}.{{feature.name}}
+                </span>
+                <span *ngIf="!showNameSpaceInTitle || feature.namespace.length == 0">
+                     {{title}}
+                </span>
+            </h4>
+            <h5 class="modal-title" *ngIf="mxGroupToAdd == null">
+                {{getString('add_configuration_subheader')}}
+            </h5>
+            <h6 class="modal-title" style="font-size: 15px;" *ngIf="mxGroupToAdd != null && !isOrderRule">
+                {{getString('add_configuration_to_mx_group_subheader')}}
+            </h6>
+            <h6 class="modal-title" style="font-size: 15px;" *ngIf="mxGroupToAdd != null && isOrderRule">
+                {{getString('add_ordering_rule_to_mx_group_subheader')}}
+            </h6>
+        </modal-header>
+        <modal-body  *ngIf="feature != null" >
+            <div class="box">
+                <div  class="form-group" *ngIf="mxGroupToAdd != null">
+                    <div  class="form-group tab-div-container">
+                        <label class="control-label">Add After</label>
+                        <div style="display: table-cell;">
+                            <div class="btn-group" dropdown style="vertical-align:baseline">
+                                <button type="button" class="btn btn-primary" dropdownToggle >
+                                    {{mxItemNames[newItemInMXIndex]}}
+                                </button>
+                                <ul class="dropdown-menu" dropdownMenu>
+                                    <template ngFor let-item [ngForOf]="mxItemNames" [ngForTrackBy]="itemTrackBy" let-i="index" >
+                                        <li class="dropdown-item" (click)="selectItemToBeAfter(i)" style="cursor: pointer">{{item}}</li>
+                                    </template>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div  class="form-group" *ngIf="subFeatureParentName != null">
+                    <label  class="control-label">Parent Feature</label>
+                    <!--<input type="text" id="input0288" disabled  [(ngModel)]="subFeatureParentName"  class="form-control  whiteText" >-->
+                    <div style="display: table-cell;">
+                        <div class="btn-group" dropdown style="vertical-align:baseline">
+                            <button type="button" class="btn btn-default" disabled style="max-width: 560px;width: 100%;overflow: hidden;text-overflow: ellipsis;">
+                                {{subFeatureParentName}}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <div  class="form-group" *ngIf="isOrderRule">
+                    <label for="input02" class="control-label">Namespace</label>
+                    <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_ordering_rule_namespace')" [title]="getString('add_configuration_namespace_title')"></airlock-tooltip>
+                    <input [class.mustType] = "isInputWarningOn(feature.namespace)" type="text"  id="input02"  [(ngModel)]="feature.namespace"  class="form-control  whiteText" >
+                </div>
+            <div  class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_configuration_name')" [title]="getString('add_configuration_name_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(feature.name)" type="text" id="input01"  [(ngModel)]="feature.name"  class="form-control whiteText" tabindex="1">
+            </div>
+
+                <div  class="form-group">
+                    <label for="select05" class="control-label">Groups</label>
+                    <airlock-tooltip *ngIf = "isOrderRule" class="endFlexContainer" [content]="getString('add_ordering_rule_group')" [title]="getString('add_configuration_group_title')"></airlock-tooltip>
+                    <airlock-tooltip *ngIf = "!isOrderRule" class="endFlexContainer" [content]="getString('add_configuration_group')" [title]="getString('add_configuration_group_title')"></airlock-tooltip>
+                    <select id="select05"  class="js_example" multiple tabindex="2">
+                        <template ngFor let-item [ngForOf]="possibleGroupsList" [ngForTrackBy]="itemTrackBy">
+                            <option [value]="item">{{item}}</option>
+                        </template>
+                    </select>
+                </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>
+                <airlock-tooltip *ngIf = "isOrderRule" class="endFlexContainer" [content]="getString('add_ordering_rule_min_app_version')" [title]="getString('add_configuration_min_app_version_title')"></airlock-tooltip>
+                <airlock-tooltip *ngIf = "!isOrderRule" class="endFlexContainer" [content]="getString('add_configuration_min_app_version')" [title]="getString('add_configuration_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(feature.minAppVersion)" type="text" id="input54"  [(ngModel)]="feature.minAppVersion"  class="form-control whiteText" tabindex="3">
+            </div>
+            <div  class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_configuration_description')" [title]="getString('add_configuration_description_title')"></airlock-tooltip>
+                <textarea id="input55"  [(ngModel)]="feature.description" value="FEATURE" class="form-control  whiteText" tabindex="4"></textarea>
+            </div>
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td> <label class="control-label">Enabled</label> <airlock-tooltip [content]="getString('add_configuration_enabled')" [title]="getString('add_configuration_enabled_title')"></airlock-tooltip></td>
+                    </tr>
+                    <tr>
+                        <td><ui-switch [checked]="feature.enabled" (change)="feature.enabled = $event"></ui-switch></td>
+
+                    </tr>
+                </table>                <!--<ba-checkbox [(ngModel)]="feature.enabled" ></ba-checkbox>-->
+            </div>
+            </div>
+        </modal-body>
+        <modal-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        </modal-footer>
+    </modal>

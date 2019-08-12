@@ -1,0 +1,63 @@
+<verify-action-modal  #verifyActionModal ></verify-action-modal>
+<add-user-modal #addUserModal (onUserAdded)="refreshTable($event)"></add-user-modal>
+<div class="container_not authorization-page">
+    <div>
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div style="float: left;    display: flex;">
+            <div class="buttonTitle" [class.grayed-out]="!enableProduct">Product:</div>
+            <div style="display: table-cell;">
+                <ng-select *ngIf="!loading" [allowClear]="false"
+                           [items]="getProductsForSelect()"
+                           (selected)="selectProductFromSelect($event)"
+                           [placeholder]="selectedProduct?.name"
+                >
+                </ng-select>
+            </div>
+        </div>
+        <custom-airlock-header [showAddAuthUser]="true" [showDisplayOptions]="true" [hideColumns]="true" [simpleSearch]="true"
+                               [showSearch]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="getNumItems()"
+                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex"
+                               (onAddUserClicked)="addUser($event)"
+                               ></custom-airlock-header>
+
+        <!--<ba-card class="table-card">-->
+            <div class="dark-background limit-width">
+                <table class="table stringsTable fixed_headers" [mfData]="data" #mf="mfDataTable"
+                       [(mfSortBy)]="sortBy" [(mfSortOrder)]="sortOrder">
+                    <thead>
+                        <tr>
+                            <th class="left-aligned-column">
+                                <mfDefaultSorter by="identifier">
+                                    ID
+                                    <i aria-hidden="true" class="ion-arrow-up-b" *ngIf="sortBy == 'identifier' && sortOrder == 'asc'"></i>
+                                    <i aria-hidden="true" class="ion-arrow-down-b" *ngIf="sortBy == 'identifier' && sortOrder !== 'asc'"></i>
+                                </mfDefaultSorter>
+                            </th>
+                            <th *ngFor="let role of roles || []" class="center-aligned-column">
+                                {{role.name}}
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of mf.data">
+
+                            <td class="left-aligned-column" [class.group-user]="user.isGroupRepresentation">{{user.identifier}}</td>
+                            <td *ngFor="let role of roles || []" class="center-aligned-column">
+                                <input type="checkbox" [checked]="hasRole(user,role)" [disabled]="!canUncheckRole(user,role)" (click)="setRole(user, role, $event)">
+                            </td>
+                            <td class="center-aligned-column" (click)="deleteUser(user)">
+                                <button class="btn btn-outline-secondary">
+                                    <i class="ion ion-trash-a"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <!--</ba-card>-->
+
+    </div>
+</div>

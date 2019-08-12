@@ -1,0 +1,121 @@
+.has-success .control-label {
+  //color: black;
+}
+
+
+.addVariantModal{
+  .btn:hover {
+    transform: none !important;
+    color: white;
+    background-color: #337ab7 !important;
+  }
+}
+.addVariantModal .has-success .control-label {
+  color: #ffffff;
+}
+.addVariantModal .box{
+  box-sizing:border-box;
+}
+
+.addVariantModal .whiteText{
+  color: white !important;
+  //color: black !important;
+  //border: 1px solid #00abff !important;
+}
+
+.addVariantModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+
+
+.addVariantModal .modal-title{
+  color:white !important;
+  text-overflow: ellipsis;
+}
+//.select2-container--default{
+//  border: solid white 1px;
+//  background-color: currentColor;
+//}
+//
+
+.addVariantModal .select2-container--default .select2-selection--multiple {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+.addVariantModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+//.addVariantModal .select2-container--default .select2-selection--multiple {
+//  background-color: currentColor !important;
+//  color: currentColor !important;
+//}
+.addVariantModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+
+.addVariantModal .tab-content {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.1);
+}
+
+.addVariantModal .select2{
+  display:block !important;
+  width:100% !important;
+}
+
+.addVariantModal .select2-selection{
+  //display:block !important;
+  //width:100% !important;
+}
+
+h6 .modal-title {
+  font-size: 12px;
+}
+
+/*
+.addVariantModal .btn {
+  display: inline-block;
+  padding: 6px 12px;
+  width: 600px;
+  text-align: left;
+}*/
+.select2-selection__rendered
+{
+  height: 35px;
+  overflow: auto !important;
+}
+
+/*
+.select2-hidden-accessible {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 100%!important;
+}
+
+*/
+.select2-container .select2-selection--multiple {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  min-height: 32px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.modal-dialog span.select2-selection.select2-selection--multiple {
+  height: 35px;
+}
+
+#showDashboardModalBody{
+  text-align: center;
+  height: 95%;
+  width: 95%;
+}
+

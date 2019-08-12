@@ -1,0 +1,17 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<div>
+    <ba-card baCardClass="with-scroll">
+        <ul class="products limit-height">
+            <li *ngFor="let p of _products"
+                [class.selected]="p === _selectedProduct"
+                (click)="onSelect(p)"
+                class="truncate">
+                <span class="badge">|</span>
+                <i class="star-icon" container="body" [tooltip]="getProductFollowTooltip(p.isCurrentUserFollower)" (click)="loading || starClicked($event,p)" [ngClass]="{'ion-ios-star-outline':!p.isCurrentUserFollower,'cell-button':!p.isCurrentUserFollower, 'ion-ios-star':p.isCurrentUserFollower, 'star-selected':p.isCurrentUserFollower}"></i>
+                <span class="productName">{{p.name}}</span>
+            </li>
+        </ul>
+    </ba-card>
+</div>
