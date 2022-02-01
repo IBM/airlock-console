@@ -1,0 +1,384 @@
+
+$default: #ffffff; // default colors for layout
+$body-bg: #F0F3F4; // default bg color
+
+$default-text: $default; // default text color layout (usually is the same as $default)
+$content-text: $default-text; // content text color on card, panels, form, etc
+$help-text: $default-text; // additional text color for hits
+
+$label-text: $default-text; // labels color
+$disabled: rgba(255, 255, 255, 0.4); // color for disabled state
+$disabled-bg: tint($disabled, 15%); // background color for disable state
+$border: rgba(255, 255, 255, 0.5); // border color
+$border-light: rgba(255, 255, 255, 0.3); // lighter version of border color (for hovers)
+$input-border: rgba(255, 255, 255, 0.6); // input border color
+$input-background: rgba(255, 255, 255, 0.1); // input border color for hover
+$dropdown-text: #7d7d7d; // dropdown text color
+
+// sidebar colors
+$sidebar: #282828;
+$sidebar-text: #ffffff;
+
+// specific components colors
+$mail-box: whitesmoke;
+$auth-panel-background: #ffffff;
+$progress-background: rgba(0, 0, 0, 0.15);
+$progress-default: rgba($default-text, 0.95);
+
+// bootstrap card panel styles
+$bootstrap-panel-radius: 3px;
+$bootstrap-panel-text: #ffffff;
+$bootstrap-panel-bg: rgba(255, 255, 255, 0.1);
+$bootstrap-panel-header-bg: transparent;
+$bootstrap-panel-header-border: 1px solid $border-light;
+$bootstrap-panel-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+
+// color scheme
+
+$primary: #00abff !default;
+$info: #40daf1 !default;
+$success: #8bd22f !default;
+$warning: #e7ba08 !default;
+$danger: #f95372 !default;
+
+$primary-light: tint($primary, 30%);
+$info-light: tint($info, 30%);
+$success-light: tint($success, 30%);
+$warning-light: tint($warning, 30%);
+$danger-light: tint($danger, 30%);
+
+$primary-dark: shade($primary, 15%);
+$info-dark: shade($info, 15%);
+$success-dark: shade($success, 15%);
+$warning-dark: shade($warning, 15%);
+$danger-dark: shade($danger, 15%);
+
+$primary-bg: tint($primary, 20%);
+$info-bg: tint($info, 20%);
+$success-bg: tint($success, 20%);
+$warning-bg: tint($warning, 20%);
+$danger-bg: tint($danger, 20%);
+
+// link colors
+$activelink: #285eb8;
+$hoverlink: darken($activelink, 20%);
+
+// main background
+@mixin body-bg() {
+  background-color: $body-bg;
+
+  $mainBgUrl: $images-root + 'sky-bg.jpg';
+
+  &::before {
+    content: '';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url($mainBgUrl) no-repeat center center;
+    background-size: cover;
+    will-change: transform;
+    z-index: 0;
+  }
+}
+
+// additional background if you want another layer
+@mixin additional-bg() {
+  //display: block; // additional background layer, hidden by default
+}
+
+@mixin nb-context-menu-theme() {
+
+  .context-menu-host {
+    /*
+      Fixes click not being bubbled to the body in Safari.
+      https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+    */
+    cursor: pointer;
+  }
+
+  nb-context-menu {
+    background-color: whitesmoke;
+
+    nb-menu {
+      overflow: hidden;
+      text-align: left;
+      .menu-item {
+        a {
+          color: black;
+        }
+      }
+    }
+  }
+
+  .nb-menu {
+    font-size: 0.9375rem;
+  }
+
+  nb-popover {
+    .arrow {
+      color: whitesmoke;
+    }
+    .arrow:after {
+      color: whitesmoke;
+      border-top-color: whitesmoke;
+      border-bottom: 0.6875rem solid #e5e7e8;
+    }
+    ul {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+    li:hover {
+      background-color: lightskyblue;
+      cursor: pointer;
+    }
+    background-color: whitesmoke;
+    .dropdown-item {
+      color: black;
+      li {
+        a {
+          color: black;
+        }
+      }
+        overflow: hidden;
+        text-align: left;
+          a {
+            color: black;
+            i {
+              padding-right: 5px;
+            }
+          }
+    }
+    .dropdown-divider {
+      border-top: 1px solid black;
+    }
+  }
+
+  .big-toast{
+    width: 100vw;
+  }
+
+  .aceModal{
+    position: fixed;
+    left: 20%;
+    top: 20%;
+  }
+
+}
+#tloader {
+  @-webkit-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+  @-moz-keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+  @keyframes spin{
+    0%{
+      transform:rotate(0)
+    }
+    50% {
+      transform:rotate(180deg)
+    }
+    75% {
+      transform:rotate(200deg)
+    }
+    100%{
+      transform:rotate(360deg)
+    }
+  }
+
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1003;
+  background: rgba(0, 0, 0, 0.51);
+  overflow:hidden;
+
+  div:first-child{
+    display:block;
+    position:relative;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:150px;
+    margin:-75px 0 0 -75px;
+    border-radius:50%;
+    box-shadow:0 3px 3px 0 rgb(151, 255, 141);
+    transform:translate3d(0,0,0);
+    animation:spin 2s linear infinite
+  }
+  div:first-child:after, div:first-child:before{
+    content:'';
+    position:absolute;
+    border-radius:50%
+  }
+  div:first-child:before{
+    top:5px;
+    left:5px;
+    right:5px;
+    bottom:5px;
+    box-shadow:0 3px 3px 0 rgb(34, 43, 255);
+    -webkit-animation:spin 3s linear infinite;
+    animation:spin 3s linear infinite
+  }
+  div:first-child:after{
+    top:15px;
+    left:15px;
+    right:15px;
+    bottom:15px;
+    box-shadow:0 3px 3px 0 rgb(255, 59, 51);
+    animation:spin 1.5s linear infinite
+  }
+
+  span {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1003;
+    background: rgba(61, 183, 76, 0.72);
+    overflow:hidden;
+    img {
+      position:relative;
+      left:calc(50% - 25px);
+      top:calc(50% - 25px);
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+.full-no-padding {
+  max-width: none !important;
+  padding: 0px !important;
+  width: 100% !important;
+}
+
+.close {
+  color: white;
+  font-size: xx-large;
+}
+
+.ng-select .ng-select-container {
+  background-color: transparent;
+  color: white;
+}
+
+.header-select-box {
+  margin-left: 5px;
+  display: flex;
+
+  .ng-select-container {
+    min-width: 130px;
+    width: auto;
+  }
+
+  .ng-dropdown-panel {
+    width: auto;
+  }
+  color: yellow !important;
+}
+
+.modalLink {
+  background-color: #285e71;
+}
+
+.tabButton {
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.edit-inline {
+  position: fixed;
+  height: calc(100vh - 76px);
+  width: 42%;
+  top: 76px;
+  right: 0px;
+}
+
+.flexMiddleContainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.align-button-left {
+  position: absolute;
+  left: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.align-button-right {
+  position: absolute;
+  right: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.menu-title {
+  font-size: 0.9375rem;
+}
+
+.dropdown-item {
+  min-width: 100px;
+  font-size: medium;
+  padding-bottom: 2px;
+}
+
+.btn-circle {
+  padding-left:9px;
+  padding-right:9px;
+  padding-top:5px;
+  padding-bottom:5px;
+  border-radius: 100%;
+  color: rgba(0, 0, 0, 0.62);
+  background: transparent;
+  border-color: rgba(0, 0, 0, 0.42);
+}
+
+.btn-circle:hover {
+  border-color: rgba(0, 171, 255, 0.54);
+  color: white;
+}
+
+.nb-theme-dark nb-select.appearance-outline.status-basic .select-button[disabled] {
+  background-color: darkgrey !important;
+}
+
+.tree-container {
+  height: max-content !important;
+}
+

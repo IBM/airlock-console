@@ -4,11 +4,12 @@
 
 export class Rule {
     ruleString: string;
-    static clone(rule: Rule) : Rule {
-        if(rule == null){
+
+    static clone(rule: Rule): Rule {
+        if (rule == null) {
             return null;
         }
-        let toRet:Rule = new Rule();
+        let toRet: Rule = new Rule();
         toRet.ruleString = rule.ruleString;
         return toRet;
     }

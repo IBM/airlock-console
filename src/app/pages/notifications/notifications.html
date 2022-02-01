@@ -1,9 +1,10 @@
-<verify-action-modal  #verifyActionModal ></verify-action-modal>
-<add-notification-modal #addNotificationModal [configurationSchema]="notifications?.configurationSchema" [seasonId]="selectedSeason?.uniqueId" [possibleGroupsList]="possibleUserGroupsList" (onNotificationAdded)="loadNotifications()"></add-notification-modal>
-<edit-notification-modal [verifyActionModal]="verifyActionModal" (onEditNotification)="updateNotifications($event)" [possibleGroupsList]="possibleUserGroupsList" #editNotificationModal></edit-notification-modal>
-<reorder-notifications-modal #reorderNotificationsModal (onReorderNotifications)="notificationsReordered($event)"></reorder-notifications-modal>
-<limit-notifications-modal #limitNotificationsModal (onChangeNotificationsLimit)="updateNotifications($event)"></limit-notifications-modal>
-<div class="container_not">
+<!--<verify-action-modal  #verifyActionModal ></verify-action-modal>-->
+<!--<add-notification-modal #addNotificationModal [configurationSchema]="notifications?.configurationSchema" [seasonId]="selectedSeason?.uniqueId" [possibleGroupsList]="possibleUserGroupsList" (onNotificationAdded)="loadNotifications()"></add-notification-modal>-->
+<!--<edit-notification-modal [verifyActionModal]="verifyActionModal" (onEditNotification)="updateNotifications($event)" [possibleGroupsList]="possibleUserGroupsList" #editNotificationModal></edit-notification-modal>-->
+<!--<reorder-notifications-modal #reorderNotificationsModal (onReorderNotifications)="notificationsReordered($event)"></reorder-notifications-modal>-->
+<!--<limit-notifications-modal #limitNotificationsModal (onChangeNotificationsLimit)="updateNotifications($event)"></limit-notifications-modal>-->
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">
     <div>
         <div id="tloader" [hidden]="!loading">
             <div></div>
@@ -20,7 +21,7 @@
         </div>
         <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
                                [showSearch]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
-                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showNotifications]="true"
+                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showNotifications]="true" [showTableHeader]="!inlineMode"
                                ></custom-airlock-header>
 
         <div *ngIf="notifications?.notifications?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
@@ -39,23 +40,27 @@
                         <notification-cell *ngFor="let notification of notifications.notifications; let i = index"
                                          [notification]="notification" [level]="0"
                                          [searchTerm]="searchQueryString"
-                                         [verifyActionModal]="verifyActionModal"
                                          [showDevFeatures]="showDevFeatures"
                                          [filterlistDict]="filterlistDict"
+                                         [inlineMode]="inlineMode"
                                          [shouldOpenCell]="isCellOpen(notification.uniqueId)"
                                          [selectedId]="selectedId"
                                          [schema]="notifications.configurationSchema"
-                                         [editNotificationModal]="editNotificationModal"
                                          (onSearchHit)="notificationIsInFilter($event)"
+                                         (onEditInline)="showEditInline(notification, notifications.configurationSchema)"
                                          (onCellClick)="notificationChangedStatus($event)"
-                                         (onUpdate)="refreshTable($event)"
+                                         (onUpdate)="refreshTable()"
                                          (hideIndicator)="afterUpdate()"
-                                         (beforeUpdate)="beforeUpdate($event)"
+                                         (beforeUpdate)="beforeUpdate()"
                                          (onSelected)="itemIsSelected($event)"
                         ></notification-cell>
                     </ul>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+    <div [class.col-md-6]="editInline">
+        <edit-notification-modal #editInline (onClose)="closeEditInline('')" (onEditNotification)="updateNotifications()" [visible]="inlineMode"></edit-notification-modal>
     </div>
 </div>

@@ -1,0 +1,267 @@
+<div [class.col-sm-12]="true" *ngIf="(feature?.type=='FEATURE' || feature.features?.length > 0) && !isDoubleEmptyMTX() && !isFilteredOut()">
+        <div #featureCell [class.col-sm6]="true">
+            <div [class.panel]="shouldStyleCell()"  [class.in-branch]="partOfBranch()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.mx-group-background]="feature?.type=='MUTUAL_EXCLUSION_GROUP'  && feature.features?.length > 1 " style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <div *ngIf="feature?.type=='MUTUAL_EXCLUSION_GROUP' && feature.features?.length > 1" class="mx-group-panel" [class.not-in-branch]="!partOfBranch()">
+                            <p class="configTitle">{{getMXTitle()}}</p>
+                            <span class="flexContainer">
+
+                                <button *ngIf="isShowReorder()" [disabled]="!partOfBranch()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="reorder()">
+                                    <i class="fa fa fa-sort"></i>
+                                    Reorder
+                                </button>
+                                <span class="btn-group" dropdown>
+                                    <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" dropdownToggle class="profile-toggle-link btn btn-default btn-icon reorder-button" id="user-profile-dd" [style.border-width]="0" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="ion-settings"></i>
+                                    </button >
+                                    <ng-template #templateRef>
+                                            <ul class="menu-items">
+<!--                                    <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">-->
+                                        <li class="dropdown-item" *ngIf="isShowAddToGroup() && partOfBranch()"><a (click)="addNewFeatureToMXGroup()"><i class="fa ion-plus-round"></i>Add feature to group</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions() && partOfBranch() && canImportExport"><a (click)="importFeature()"><i class="fa ion-log-in"></i>Import</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions() && partOfBranch()"><a  [class.disabled]= "!isShowPaste()"  (click)="isShowPaste() && pasteFeature()"><i class="fa fa-clipboard"></i>Paste</a></li>
+                                        <li class="dropdown-item" *ngIf="isAddDevelopmentSubFeature()"><a (click)="openAddOrderingRuleDialog()"><i class="fa ion-shuffle"></i>Add ordering rule</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowAddToBranch()" ><a (click)="addToBranch()"><i class="fa ion-plus-circled"></i>Check out</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowRemoveFromBranch()" ><a (click)="removeFromBranch()" class="signout destructive"><i class="fa ion-minus-circled"></i>Cancel checkout</a></li>
+                                    </ul>
+                                    </ng-template>
+                                </span>
+                            </span>
+
+                        </div>
+                        <table class="table table-hover feature-cell" [class.not-in-branch]="!partOfBranch()" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                           <span  *ngIf="feature?.type=='MUTUAL_EXCLUSION_GROUP' && shouldShowOrderRules()"  >
+                            <span >
+                            <order-cell style="margin-bottom: 0px" class=""
+                                        [feature]="getParentOrderRule()" [level]="(level + 1)"  [insideMX]="false"
+                                        (onUpdate)="myOnUpdate($event)"
+                                        (hideIndicator)="myHideIndicator($event)"
+                                        (beforeUpdate)="myBeforeUpdate($event)"
+                                        (onCellClick)="myFeatureChangedStatus($event)"
+                                        (onSearchHit)="mySearchHit($event)"
+                                        (onSelected)="mySelected($event)"
+                                        (onEditFeature)="myEditFeature($event)"
+                                        [shouldOpenCell]="isCellOpen(getParentOrderRule().uniqueId)"
+                                        [openFeatures]="openFeatures"
+                                        [parentFeatureId]="feature.uniqueId"
+                                        [contextFeatureId]="parentFeatureId"
+                                        [mainConfigCell]="true"
+                                        [sourceFeature]="feature"
+                                        [featuresPath]="getNextFeaturePath()"
+                                        [configurationSchema]="feature.configurationSchema"
+                                        [defaultConfiguration]="feature.defaultConfiguration"
+                                        [showDevFeatures]="showDevFeatures"
+                                        [filterlistDict]="filterlistDict"
+                                        [searchTerm]="searchTerm"
+                                        [branch]="branch"
+                                        [partOfBranch]="partOfBranch()"
+                                        [selectedFeatureId]="selectedFeatureId"
+                                        [editMode]="inlineMode"
+                            ></order-cell>
+                        </span>
+                        </span>
+                            <tr *ngIf="feature?.type=='FEATURE'">
+
+                                <td style="width: 3%; vertical-align: middle;" (click)="cellClicked()" class="align-right" [style.color]="getNextColorStyle()">
+                                    <i *ngIf="feature.features?.length > 0 || ((shouldShowConfig() || shouldShowOrderRules()))" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>
+                                </td>
+                                <td style="width: 2%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="">
+                                        <i  *ngIf="feature.premium" class="premium-icon ion-ios-pricetags" [tooltip]="getPremiumTooltip()" ></i>
+                                    </div>
+                                </td>
+                                <td style="text-align: start;  vertical-align: middle;" class="align-left" align="left" [ngClass]="{'star-width-regular': !inlineMode, 'star-width-compact' : inlineMode }">
+                                    <div class="starDiv">
+                                        <i class="star-icon" (click)="_featuresPage.loading || starClicked($event,feature)" [tooltip]="getFeatureFollowTooltip(feature.isCurrentUserFollower)" [isDisabled]="false"  [ngClass]="{'ion-ios-star-outline':!feature.isCurrentUserFollower,'cell-button':!feature.isCurrentUserFollower && !isNewFeature(), 'ion-ios-star':feature.isCurrentUserFollower, 'star-selected':feature.isCurrentUserFollower, 'star-disabled':isNewFeature()}"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 44%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                    <div class="descpDiv">
+                                        <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted">
+
+                                        </a>
+                                        <i *ngIf="(feature?.description?.length > 0)" class="ion-ios-information-outline info-icon" [tooltip]="getDescriptionTooltip(feature.description)" [isDisabled]="(feature?.description?.length <= 0)" ></i>
+                                        <i *ngIf="isNewFeature()" class="new-icon" [tooltip]="getString('feature_cell_new_in_branch_tooltip')">NEW</i>
+                                    </div>
+                                </td>
+                                <td style="text-align: start; vertical-align: middle;" [ngClass]="{'stage-width-regular': !inlineMode, 'stage-width-compact' : inlineMode }" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                    <span class="capitalize">{{feature.stage | lowercase}}</span>
+                                    <i *ngIf="shouldShowUserGroups()" class="ion-ios-people user-groups" [tooltip]="userGroupsText()" [isDisabled]="!(shouldShowUserGroups())" ></i>
+                                </td>
+                                <td *ngIf="!inlineMode" style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left"><span>{{feature.minAppVersion}}</span></td>
+                                <td style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left"  *ngIf="!inlineMode" >
+                                    <div style="vertical-align: middle; height: 20px;">
+                                        <progressbar class="progress progress-striped" value="{{feature.rolloutPercentage}}" max="100" type="primary">
+                                            <div class="progress-text-align">
+                                                <span>{{feature.rolloutPercentage}}%</span>
+                                            </div>
+                                        </progressbar>
+                                    </div>
+                                </td>
+                                <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                    <div style="vertical-align: middle;" class="middle-align-element">
+                                        <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="feature.enabled"></i>
+                                        <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="!feature.enabled"></i>
+                                    </div>
+                                </td>
+                                <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right">
+                                    <div class="dropdown noExpand maxWidth" dropdown >
+                                        <button [nbPopover]="actionsRef" nbPopoverPlacement="bottom" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd1" data-toggle="dropdown" aria-expanded="false" title="Actions">
+                                            <i class="ion-settings"></i>
+                                        </button>
+                                        <ng-template #actionsRef>
+                                            <ul class="menu-items">
+                                                <li class="dropdown-item"  *ngIf="true"><i class="dropdown-arr"></i></li>
+                                                <li class="dropdown-item" *ngIf="!isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Details</a></li>
+                                                <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Edit</a></li>
+                                                <li class="dropdown-item" *ngIf="isAddDevelopmentSubFeature()"><a (click)="openAddDialog()"><i class="fa ion-android-funnel"></i>Add subfeature</a></li>
+                                                <li class="dropdown-item" *ngIf="isAddDevelopmentSubFeature()"><a (click)="openAddConfigurationDialog()"><i class="fa ion-android-settings"></i>Add configuration</a></li>
+                                                <li class="dropdown-item" *ngIf="isAddDevelopmentSubFeature()"><a (click)="openAddOrderingRuleDialog()"><i class="fa ion-shuffle"></i>Add ordering rule</a></li>
+                                                <li class="dropdown-item"  *ngIf="isShowOptions()"><a (click)="addFeatureToMXGroup()" class="signout"><i class="fa fa-bullseye"></i>Configure mutual exclusion</a></li>
+                                                <li class="dropdown-item"  *ngIf="isShowOptions() && isShowReorderForCell()"><a (click)="reorder()" ><i class="fa fa-sort"></i>Reorder</a></li>
+                                                <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                                <li class="dropdown-item" *ngIf="isShowReleaseToProduction()"><a (click)="changeStage()"><i class="fa" [class.ion-code-working]="feature.stage!='DEVELOPMENT'" [class.fa-flag]="feature.stage=='DEVELOPMENT'"></i>{{feature.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                                <li class="dropdown-divider" *ngIf="isShowCopy()"></li>
+                                                <li class="dropdown-item" *ngIf="isShowCopy()"><a (click)="copyFeature()"><i class="fa ion-ios-copy-outline"></i>Copy</a></li>
+                                                <li class="dropdown-item" *ngIf="canShowPaste()"><a [class.disabled]="!isShowPaste()" (click)="isShowPaste() && pasteFeature()"><i class="fa fa-clipboard"></i>Paste</a></li>
+                                                <li class="dropdown-item" *ngIf="isShowCopy() && canImportExport"><a (click)="exportFeature()"><i class="fa ion-share"></i>Export</a></li>
+                                                <li class="dropdown-item" *ngIf="canShowPaste() && canImportExport"><a (click)="importFeature()"><i class="fa ion-log-in"></i>Import</a></li>
+                                                <li class="dropdown-divider"  *ngIf="isShowOptions()"></li>
+                                                <li class="dropdown-item" *ngIf="isShowOptions() && seasonSupportAnalytics"><a (click)="openAnalyticAttributesDialog()"><i class="fa ion-radio-waves"></i>Report attributes</a></li>
+                                                <li class="dropdown-divider" *ngIf="isShowOptions() && seasonSupportAnalytics"></li>
+                                                <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                                <li class="dropdown-divider" *ngIf="isShowAddToBranch()"></li>
+                                                <li class="dropdown-item" *ngIf="isShowAddToBranch()" ><a (click)="addToBranch()"><i class="fa ion-plus-circled"></i>Check out</a></li>
+                                                <li class="dropdown-item" *ngIf="isShowRemoveFromBranch()" ><a (click)="removeFromBranch()" class="signout destructive"><i class="fa ion-minus-circled"></i>Cancel checkout</a></li>
+                                            </ul>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <span  *ngIf="isOpen " class="transition" [ngClass]="{'transitionActive':isOpen}" (transitionend)="transitionEnd()" [hidden]="remove">
+                            <span *ngIf="shouldShowConfig()">
+                            <configuration-cell style="margin-bottom: 0px" class=""
+                                                [feature]="getParentConfiguration()" [level]="(level + 1)"  [insideMX]="false"
+                                                (onUpdate)="myOnUpdate($event)"
+                                                (hideIndicator)="myHideIndicator($event)"
+                                                (beforeUpdate)="myBeforeUpdate($event)"
+                                                (onCellClick)="myFeatureChangedStatus($event)"
+                                                (onSearchHit)="mySearchHit($event)"
+                                                (onSelected)="mySelected($event)"
+                                                (onEditFeature)="myEditFeature($event)"
+                                                [shouldOpenCell]="isCellOpen(getParentConfiguration().uniqueId)"
+                                                [openFeatures]="openFeatures"
+                                                [editInline]=""
+                                                [parentFeatureId]="feature.uniqueId"
+                                                [contextFeatureId]="parentFeatureId"
+                                                [mainConfigCell]="true"
+                                                [sourceFeature]="feature"
+                                                [featuresPath]="getNextFeaturePath()"
+                                                [configurationSchema]="feature.configurationSchema"
+                                                [defaultConfiguration]="feature.defaultConfiguration"
+                                                [showDevFeatures]="showDevFeatures"
+                                                [filterlistDict]="filterlistDict"
+                                                [searchTerm]="searchTerm"
+                                                [branch]="branch"
+                                                [partOfBranch]="partOfBranch()"
+                                                [selectedFeatureId]="selectedFeatureId"
+                                                [seasonSupportAnalytics]="seasonSupportAnalytics"
+                                                [inlineMode]="inlineMode"
+                            ></configuration-cell>
+                        </span>
+                              <span  *ngIf="isOpen" class="transition" [ngClass]="{'transitionActive':isOpen}" (transitionend)="transitionEnd()" [hidden]="remove">
+                            <span *ngIf="shouldShowOrderRules()">
+                            <order-cell style="margin-bottom: 0px" class=""
+                                                [feature]="getParentOrderRule()" [level]="(level + 1)" [insideMX]="false"
+                                                (onUpdate)="myOnUpdate($event)"
+                                                (hideIndicator)="myHideIndicator($event)"
+                                                (beforeUpdate)="myBeforeUpdate($event)"
+                                                (onCellClick)="myFeatureChangedStatus($event)"
+                                                (onSearchHit)="mySearchHit($event)"
+                                                (onSelected)="mySelected($event)"
+                                                (onEditFeature)="myEditFeature($event)"
+                                                [shouldOpenCell]="isCellOpen(getParentOrderRule().uniqueId)"
+                                                [openFeatures]="openFeatures"
+                                                [parentFeatureId]="feature.uniqueId"
+                                                [contextFeatureId]="parentFeatureId"
+                                                [mainConfigCell]="true"
+                                                [sourceFeature]="feature"
+                                                [featuresPath]="getNextFeaturePath()"
+                                                [configurationSchema]="feature.configurationSchema"
+                                                [defaultConfiguration]="feature.defaultConfiguration"
+                                                [showDevFeatures]="showDevFeatures"
+                                                [filterlistDict]="filterlistDict"
+                                                [searchTerm]="searchTerm"
+                                                [branch]="branch"
+                                                [partOfBranch]="partOfBranch()"
+                                                [selectedFeatureId]="selectedFeatureId"
+                                                [editMode]="inlineMode"
+                            ></order-cell>
+                        </span>
+</span>
+                            <span  *ngIf="isOpen" >
+                            <feature-cell style="margin-bottom: 0px" *ngFor="let subFeature of getSubFeatures(); let idx = index" class=""
+                            [feature]="subFeature" [level]="(level+1)" [insideMX]="false"
+                                          (onUpdate)="myOnUpdate($event)"
+                                          (hideIndicator)="myHideIndicator($event)"
+                                          (beforeUpdate)="myBeforeUpdate($event)"
+                                          (onCellClick)="myFeatureChangedStatus($event)"
+                                          (onSearchHit)="mySearchHit($event)"
+                                          (onSelected)="mySelected($event)"
+                                          (onEditInline)="myEditFeature($event)"
+                                          [shouldOpenCell]="isCellOpen(subFeature.uniqueId)"
+                                          [openFeatures]="openFeatures"
+                                          [parentFeatureId]="feature.uniqueId"
+                                          [contextFeatureId]="feature.uniqueId"
+                                          [featuresPath]="getNextFeaturePath()"
+                                          [showConfig]="showConfig"
+                                          [showNotInBranch]="showNotInBranch"
+                                          [showDevFeatures]="showDevFeatures"
+                                          [filterlistDict]="filterlistDict"
+                                          [searchTerm]="searchTerm"
+                                          [branch]="branch"
+                                          [selectedFeatureId]="selectedFeatureId"
+                                          [seasonSupportAnalytics]="seasonSupportAnalytics"
+                                          [canImportExport]="canImportExport"
+                                          [inlineMode]="inlineMode"
+                            ></feature-cell>
+                                </span>
+                        </span>
+                        <span *ngIf="feature?.type=='MUTUAL_EXCLUSION_GROUP'">
+                            <feature-cell style="margin-bottom: 0px" *ngFor="let subFeature of getSubFeatures(); let idx = index" class=""
+                                          [feature]="subFeature" [level]="(level + 1)" [insideMX]="true"
+                                          (onUpdate)="myOnUpdate($event)"
+                                          (hideIndicator)="myHideIndicator($event)"
+                                          (beforeUpdate)="myBeforeUpdate($event)"
+                                          (onCellClick)="myFeatureChangedStatus($event)"
+                                          (onSearchHit)="mySearchHit($event)"
+                                          (onSelected)="mySelected($event)"
+                                          (onEditInline)="myEditFeature($event)"
+                                          [shouldOpenCell]="isCellOpen(subFeature.uniqueId)"
+                                          [openFeatures]="openFeatures"
+                                          [parentFeatureId]="feature.uniqueId"
+                                          [contextFeatureId]="parentFeatureId"
+                                          [featuresPath]="getNextFeaturePath()"
+                                          [showConfig]="showConfig"
+                                          [showNotInBranch]="showNotInBranch"
+                                          [showDevFeatures]="showDevFeatures"
+                                          [filterlistDict]="filterlistDict"
+                                          [searchTerm]="searchTerm"
+                                          [branch]="branch"
+                                          [selectedFeatureId]="selectedFeatureId"
+                                          [seasonSupportAnalytics]="seasonSupportAnalytics"
+                                          [canImportExport]="canImportExport"
+                                          [inlineMode]="inlineMode"
+                            ></feature-cell>
+                        </span>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <!--</div>-->
+
+</div>

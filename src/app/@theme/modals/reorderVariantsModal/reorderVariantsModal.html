@@ -1,0 +1,76 @@
+
+<nb-card #reorderVariantsModal id="reorderVariantsModal" class="reorderMXGroupModal fixed-size-modal" data-keyboard="false" data-backdrop="static">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header [show-close]="true" *ngIf="_experiment != null">
+        <h4 class="modal-title">
+            <span>
+                 Reorder Variants
+            </span>
+            <span style="width:3em;float: right;"> </span>
+
+
+        </h4>
+
+        <div>
+            <h5 class="modal-title">
+                {{getString('reorder_variants_subheader')}}
+            </h5>
+        </div>
+    </nb-card-header>
+    <nb-card-body  *ngIf="_experiment != null">
+        <div>
+        <div style="display: inline-block;width: 100%;">
+            <button (click)="moveUp()" class="moveButton  btn btn-primary" >
+                <i class = "ion-chevron-up"></i>
+            </button>
+            <button (click)="moveDown()" class="moveButton btn btn-primary marginrightbutton">
+                <i class = "ion-chevron-down"></i>
+            </button>
+        </div>
+        <div class="accordion"  style="overflow: scroll;height: 300px;">
+            <span *ngFor="let item of getChildren(); let i = index;">
+                <section  class="accordion-item" [class.col-sm-12]="false"  [class.isOpen]="item==_selectedTarget">
+
+                    <div class="panel panel-success" >
+                        <span >
+                            <div class="panel-body targetItem">
+                                <ul class="list-group">
+                                    <li class="list-group-item" [class.selected]="item==_selectedTarget" (click)="selectTarget(item,i)">{{getName(item)}}
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </span>
+                    </div>
+
+                </section>
+            </span>
+            </div>
+
+        </div>
+        <!--<table class="ordertable">-->
+            <!--<tr *ngFor="let mxItem of _mxGroup.features; let i = index">-->
+                <!--<td class="whiteText">-->
+                    <!--{{mxItem.name}}-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<button (click)="moveUp(i)">-->
+                        <!--<i class = "ion-chevron-up"></i>-->
+                    <!--</button>-->
+                    <!--<button (click)="moveDown(i)">-->
+                        <!--<i class = "ion-chevron-down"></i>-->
+                    <!--</button>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

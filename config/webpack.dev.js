@@ -110,6 +110,8 @@ module.exports = function (options) {
           process.env.AIRLOCK_ANALYTICS_URL : 'https://analytics1.airlock.twcmobile.weather.com'),
           'AIRLOCK_STATIC_FEATURE_MODE': JSON.stringify((process.env.AIRLOCK_STATIC_FEATURE_MODE) ?
               process.env.AIRLOCK_STATIC_FEATURE_MODE : 'FALSE'),
+          'AIRLOCK_COHORTS_MODE': JSON.stringify((process.env.AIRLOCK_COHORTS_MODE) ?
+              process.env.AIRLOCK_COHORTS_MODE : 'FALSE'),
             'AIRLOCK_OKTA_URL': JSON.stringify((process.env.AIRLOCK_OKTA_URL) ?
                 process.env.AIRLOCK_OKTA_URL : 'https://weather.oktapreview.com/app/theweatherchannel_airlockconsole_1/exk88tv0rqXF16Ef70h7/sso/saml'),
         }

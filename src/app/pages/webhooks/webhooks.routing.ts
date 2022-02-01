@@ -1,7 +1,7 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { Routes, RouterModule }  from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {WebhooksPage} from "./webhooks.component";
 import {AuthGuard} from "../../services/auth-guard.service";
 

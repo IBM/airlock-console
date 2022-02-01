@@ -1,4 +1,4 @@
-@import "../../../../theme/sass/conf/conf";
+@import "../../../../@theme/sass/conf/conf";
 
 
 .selectedGroup {
@@ -152,13 +152,12 @@ input.task-todo {
   display: inline-block;
   font-size: small;
   color: transparent;
-  padding: 0.8em 0.7em 0 0.7em;
   background-color: #4d4d4d;
   line-height: 1em;
   position: relative;
-  left: -1px;
-  top: -4.5px;
-  height: 2.65em;
+  left: -2px;
+  top: -18.0px;
+  height: inherit;
   margin-right: .8em;
   border-radius: 4px 0 0 4px;
 }

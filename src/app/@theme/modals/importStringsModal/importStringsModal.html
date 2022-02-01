@@ -1,0 +1,70 @@
+<div id="tloader2" [hidden]="!isPaste || !loading">
+    <div></div>
+</div>
+<nb-card #importStringsModal id="importStringsModal" class="importStringsModal fixed-size-modal" data-keyboard="false" data-backdrop="static" [hidden]=shouldHideModal>
+    <div id="tloader" [hidden]="isPaste || !loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span >
+                     {{title}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body style="max-height: 495px;overflow:auto">
+        <div >
+            <div class="box">
+                <div class="row">
+                    <div class="col-md-12" >
+                        <div class="row" style="display: table;width: 100%;">
+                            <div class="col-md-12 no-padding-left"  style="display: table-row;width: 100%;">
+                                <div  class="form-group"   *ngIf = "!isPaste && showImportFile" style="width: 100%; display: table-cell;">
+                                    <div  style="margin-bottom: 10px;width: 100%; margin-left: 20px;">
+                                        <label class="control-label" style="font-size: 15px">Select a file to import and the file format (Android, iOS, or JSON). </label>
+                                        <span><button class="modalLink modalLinkButton" (click)="showRuleHelp()">{{getString('analytics_summary_context_learn_more')}}</button></span>
+                                        <br><br>
+                                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_name')" [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                                        <div class="row">
+                                            <div class="col-md-6" *ngIf = "isFileChooserJSONFormat()">
+                                                <input type='file' accept='.json' (change)='openFile($event)'  [disabled]="isOpenFileDisabled()" style="width: 90%;border: 1px solid rgba(255, 255, 255, 0.6) !important;background: rgba(255, 255, 255, 0.1);">
+                                            </div>
+                                            <div class="col-md-6" *ngIf = "!isFileChooserJSONFormat()">
+                                                <input type='file' accept='.zip' (click)='clickOpenFile($event)' (change)='openFile($event)'  [disabled]="isOpenFileDisabled()" style="width: 90%;border: 1px solid rgba(255, 255, 255, 0.6) !important;background: rgba(255, 255, 255, 0.1);">
+                                            </div>
+                                            <div [ngClass]="{'col-md-2': isIosOrAndroidFormat(), 'col-md-6': !isIosOrAndroidFormat()}">
+                                                <button [nbPopover]="templateRef" nbPopoverPlacement="bottom"  type="button" class="btn btn-primary" dropdownToggle>
+                                                    {{buttonText}}
+                                                </button>
+                                                <ul class="dropdown-menu" dropdownMenu>
+                                                    <ng-template #templateRef>
+                                                        <li class="dropdown-item" (click)="selectItem(0)" style="cursor: pointer">Android</li>
+                                                        <li class="dropdown-item" (click)="selectItem(1)" style="cursor: pointer">iOS</li>
+                                                        <li class="dropdown-item" (click)="selectItem(2)" style="cursor: pointer">JSON</li>
+                                                    </ng-template>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-4" style="padding-right: 10px" *ngIf="isIosOrAndroidFormat()">
+                                                <input type="checkbox" [(ngModel)]="preserveFormat">
+                                                <span class="control-label">{{getString('import_strings_format_label')}}</span>
+                                                <airlock-tooltip [content]="getString('import_strings_format')" [title]="getString('import_strings_format_title')"></airlock-tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save(false)" [disabled] = "!canSave">{{saveText}}</button>
+        <button style="margin-right: 7px;" type="button" class="btn btn-primary" (click)="save(true)" [hidden]= "!hasConflict" [disabled] = "!canSave">{{saveTextOverwrite}}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

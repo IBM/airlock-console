@@ -4,9 +4,13 @@
 
 var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var config = require('./auth.conf.json');
 var users = [];
 var http = require('http');
+var express = require('express');
+var router = express.Router()
+var regeneratorRuntime = require("regenerator-runtime");
 
 
 function findByEmail(email, fn) {
@@ -39,7 +43,7 @@ if (authType == '"OKTA"') {
             done(err, user);
         });
     });
-    var entryPoint = "okta_entry_point_goes_here";
+    var entryPoint = "https://weather.oktapreview.com/app/theweatherchannel_airlockconsole_1/exk88tv0rqXF16Ef70h7/sso/saml";
     console.log("before url given:"+process.env.AIRLOCK_OKTA_URL);
     if(JSON.stringify(process.env.AIRLOCK_OKTA_URL)){
         console.log(process.env.AIRLOCK_OKTA_URL);
@@ -79,7 +83,113 @@ if (authType == '"OKTA"') {
         }
         res.redirect('/login');
     };
-}else if (authType == '"AZURE"'){
+} else if (authType == '"GOOGLE"' ) {
+    console.log("using google auth");
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+    passport.deserializeUser(function(obj, done) {
+        done(null, obj);
+    });
+    // router.get('/google', passport.authenticate('google', { scope: ['profile','email'] }))
+    router.get('/google', passport.authenticate('google',{scope:['profile', 'email']}))
+
+    router.get('/google/callback', passport.authenticate('google', {failureRedirect:"/"}),
+        (req, res) => {
+            res.redirect('/')
+        })
+
+    router.get('/logout', (req, res) => {
+        req.logout()
+        res.redirect('/')
+    })
+    var clientID = "undefined";
+    if(JSON.stringify(process.env.GOOGLE_CLIENT_ID)){
+        clientID = process.env.GOOGLE_CLIENT_ID;
+    }
+    console.log("clientID:"+clientID);
+    var clientSecret = "undefined";
+    if(JSON.stringify(process.env.GOOGLE_CLIENT_SECRET)){
+        clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    }
+    var localPrefix = ""; //https://localhost:3000
+    if(JSON.stringify(process.env.LOCAL_URL_PREFIX)){
+        localPrefix = process.env.LOCAL_URL_PREFIX;
+    }
+    console.log("clientSecret:"+clientSecret);
+    console.log("localPrefix:"+localPrefix);
+
+    passport.use(
+        new GoogleStrategy(
+            {
+                clientID: clientID,
+                clientSecret: clientSecret,
+                callbackURL: localPrefix+'/auth/google/callback',
+            },
+            async (accessToken, refreshToken, openid, profile, done) => {
+                console.log("insindepassport /auth/google/callback");
+                console.log("accessToken:"+accessToken);
+                console.log("refreshToken:"+refreshToken);
+                console.log("-------------profile-------------");
+                console.log(profile);
+                console.log("------------profile end----------");
+                console.log("done:"+done);
+                console.log(done);
+                console.log("-----------done end-----------");
+                console.log("-------------openid-----------------");
+                console.log(openid);
+                console.log("--------------openid end----------------");
+                // console.log("---------profile-----------");
+                // console.log(profile);
+                const newUser = {
+                    googleId: profile.id,
+                    displayName: profile.displayName,
+                    firstName: profile.name.givenName,
+                    lastName: profile.name.familyName,
+                    image: profile.photos[0].value,
+                    email: profile.emails[0].value,
+                    accessToken:accessToken,
+                    refreshToken:refreshToken,
+                    id_token:openid.id_token
+                }
+                console.log(newUser);
+                done(null, newUser);
+                // findByEmail(profile.emails[0].value, function(err, user) {
+                //     console.log("user:"+user);
+                //     if (err) {
+                //         return done(err);
+                //     }
+                //     if (!user) {
+                //         users.push(newUser);
+                //         return done(null, newUser);
+                //     }
+                //     return done(null, user);
+                // })
+                //get the user data from google
+
+
+                try {
+
+                    //find the user in our database
+                    // let user = await User.findOne({ googleId: profile.id })
+                    // done(null, user);
+                    //
+                    // if (user) {
+                    //     //If user present in our database.
+                    //     done(null, user)
+                    // } else {
+                    //     // if user is not preset in our database save user data to database.
+                    //     user = await User.create(newUser)
+                    //     done(null, user)
+                    // }
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+        )
+    )
+}
+else if (authType == '"AZURE"'){
 
 } else {
     console.log("BLUE Auth");

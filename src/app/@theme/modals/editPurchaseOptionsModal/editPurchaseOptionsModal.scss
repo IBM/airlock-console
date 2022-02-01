@@ -1,0 +1,390 @@
+  .editModal .has-success .control-label {
+    color: white;
+  }
+
+  .editModal .box{
+    box-sizing:border-box;
+
+  }
+  .editModal .has-success .control-label {
+    color: #ffffff;
+  }
+  .editModal .blackText{
+    //color: white !important;
+    //border: 1px solid #00abff !important;
+    //  background-color: white;
+  }
+  .editModal .nav-tabs{
+    /*background-color: #a9aaab !important;*/
+    background-color: #337ab7 !important;
+  }
+  .editModal .tab-content {
+    //background: rgba(255,255,255,0.1);
+    //color: rgba(255,255,255,0.1);
+  }
+  .editModal .nav-tabs .nav-item {
+    float: left;
+    margin-bottom: 0px;
+    margin-top: 1px;
+    margin-right: 0px;
+    margin-left: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .editModal .leftPad {
+    padding-left: 3px;
+  }
+  .editModal .nav.nav-tabs > li > a:hover {
+    border: none;
+    /*background-color: #dcdcdc;*/
+    background-color: #e2e2e2;
+    color: #484c4f;
+  }
+  .editModal .nav.nav-tabs > li.active > a{
+    color: #55595c;
+    background-color: #fff;
+  }
+  .editModal .modal-backdrop{
+    background-color: #eee;
+  }
+  .editModal .tab-div-container{
+    height: 400px;
+    max-height: 400px;
+    overflow-y: hidden;
+  }
+
+  .editModal .no-pa-top {
+    padding-top: 0px;
+  }
+  .editModal .modal-content{
+    background: currentColor;//url("assets/img/sky-bg.jpg");
+  }
+
+  .editModal .select2-container--default .select2-selection--multiple {
+    background-color: currentColor !important;
+    color: currentColor !important;;
+  }
+  .editModal .select2-selection__choice{
+    color: white;
+    background-color: #337ab7 !important;
+  }
+
+  .editModal .select2{
+    display:block !important;
+    width:400px !important;
+  }
+  .editModal .modal-title{
+    color:white !important;
+    text-overflow: ellipsis;
+
+  }
+
+  .box.row {
+    margin-left: 0em;
+    margin-right: 0em;
+  }
+
+  .notSelected {
+    opacity: 0.5;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .half-button {
+    width: 50%;
+  }
+
+  small-right-padding {
+    padding-right: 1px;
+  }
+  .no-padding-left {
+    padding-left: 0px;
+    padding-right: 4px;
+  }
+
+  .no-padding-right {
+    padding-left: 4px;
+    padding-right: 0px;
+  }
+
+  .no-padding-middle {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .description-text {
+    height: 125px;
+  }
+  .editModalStatic .nav-tabs .nav-item {
+    text-align: center;
+    width: 33.3% !important;
+  }
+  .editModalDescriptnioLarge{
+    height: 110px !important;
+  }
+  .editModalDescriptnioSmall{
+    height: 68px !important;
+  }
+
+  .editModal .nav-tabs .nav-item {
+    text-align: center;
+    width: 24.8%;
+  }
+
+  .editModal .btn:hover {
+    transform: none !important;
+    background-color: #009ff3 !important;
+
+  }
+  .editModal .upper-padding {
+    padding-top: 8px;
+  }
+  .editModal .ui-select-toggle.btn:hover {
+    transform: none !important;
+    color: white;
+  }
+  .editModal .subFeatureCombo li {
+    list-style-position:inside;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  .editUtilityModal .subFeatureCombo .btn{
+    list-style-position:inside;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
+  .editModal .config-state .nav-tabs .nav-item {
+    width: 33.2%;
+  }
+  .editModal .order-state .nav-tabs .nav-item {
+    width: 33.2%;
+  }
+  .flexcontainer {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    //-webkit-justify-content: flex-start;
+    //justify-content: flex-start;
+  }
+
+  .flexRightcontainer {
+    padding-top: 4px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+  }
+
+  .spreadFlexcontainer {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+  .modalLink {
+    color: lightblue;
+
+  }
+  .modalLink:hover {
+    color: #00abff;
+    cursor: pointer;
+
+  }
+
+  .modalLinkButton {
+    background: transparent;
+    border: 0px solid transparent;
+    padding-left: 0px;
+    padding-right: 0px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .accordionHead {
+    color: white;
+  }
+
+  .openIndicator {
+    min-width: 12px;
+  }
+
+  .openIndicator-reorder {
+    .reorder-chevron {
+      min-width: 15px;
+    }
+
+
+  }
+
+  .semi-transparent {
+    opacity: 0.6;
+  }
+
+  .padTop {
+    padding-top: 4px;
+  }
+
+  .btn-expand {
+    font-size: 1.3rem;
+    margin: 10px;
+    margin-top: 0px;
+    /* margin-right: 0; */
+    float: right;
+    border-width: 1px;
+    color: #484c4f;
+    background: #e2e2e2;
+    border-color: #f5f5f5;
+    padding: 0.1rem 1rem;
+    position: absolute;
+    right: 0;
+    z-index: 100;
+    margin-right: 16px;
+    opacity: 0.4;
+  }
+
+  .btn-expand:hover {
+    opacity: 1.0;
+  }
+  .btn-expand-down {
+    margin-top: 30px;
+  }
+  .editModal .select2-selection__rendered
+  {
+    height: 77px;
+    overflow: auto !important;
+  }
+  .editModal .select2-selection
+  {
+    height: 77px !important;
+  }
+
+  .rollout {
+    height: 35px;
+  }
+
+  .form-group {
+    margin-top: 0px;
+  }
+
+  .no-margin {
+    margin-top: 0px;
+    margin-bottom: 1rem;
+  }
+
+  .no-margin-reorder {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .numberInput{
+
+  }
+
+  .shouldOpen{
+
+  }
+
+  .shouldOpen .panel-collapse{
+    display: block !important;
+  }
+
+  .editModal .sub-feature-order-rule {
+    .panel.card.panel-default {
+      margin-bottom: 0px;
+      margin-top: 8px;
+    }
+    .panel-heading.card-header {
+      border-bottom: 0px solid rgba(255, 255, 255, 0.3);
+    }
+    .remove-order-icon {
+      float: right;
+      font-size: 22px;
+    }
+    .add-subfeature-button {
+      float: right;
+    }
+
+    .button-behavior:hover {
+      color: #93a0ab;
+    }
+
+    .panel-collapse.collapse {
+      .panel-body.card-block {
+        display: none;
+      }
+    }
+
+    .panel-collapse.collapse.in.show {
+      .panel-body.card-block {
+        display: block;
+      }
+    }
+    .order-trans {
+      opacity:0.01;
+    }
+
+    .panel-heading.card-header {
+      padding-left: 7px;
+    }
+
+    .panel-body.card-block {
+      padding-bottom: 0rem;
+      padding-top: 0.5rem;
+    }
+
+    span.openIndicator-reorder {
+      padding-left: 2px;
+    }
+    .panel.card.panel-default.no-reorder {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    .card-header {
+      padding: 0.75rem 1.25rem;
+      padding-top: 0.75rem;
+      padding-right: 1.25rem;
+      padding-bottom: 0.75rem;
+    }
+    span.modal-title-not {
+      text-transform: none;
+    }
+    .no-reorder span.modal-title-not {
+      opacity: 0.75;
+    }
+    .limit-text-width {
+      max-width: calc(100% - 50px);
+      display: inline-flex;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .limit-text-width-div {
+      margin-right: 8px;
+    }
+  }
+
+  .editFeatureModal .modal-body{
+    font-size: 0.9rem;
+  }
+  .btn {
+    float: right;
+    margin-left: 8px;
+  }
+  .btn.btn-default {
+    border-color: white;
+    color: white;
+  }
+
+  .btn-expand-down-deeplink {
+    margin-right: 45px !important;
+  }

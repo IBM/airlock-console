@@ -1,28 +1,30 @@
-
-import { Rule } from './rule';
+import {Rule} from './rule';
 import {Feature} from "./feature";
 import {PurchaseOptions} from "./purchaseOptions";
 
-export class InAppPurchase extends Feature{
+export class InAppPurchase extends Feature {
     includedEntitlements: string[];
     purchaseOptions: PurchaseOptions[];
     entitlements: InAppPurchase[];
-    static cloneToFeature(feat: InAppPurchase,target:InAppPurchase){
+
+    static cloneToFeature(feat: InAppPurchase, target: InAppPurchase) {
         Feature.cloneToFeature(feat, target);
         target.includedEntitlements = Feature.duplicateArrayString(feat.includedEntitlements);
         target.purchaseOptions = Feature.duplicateArray(feat.purchaseOptions);
         target.entitlements = Feature.duplicateArray(feat.entitlements);
 
     }
-    static clone(feat: InAppPurchase) : InAppPurchase {
-        let toRet:InAppPurchase = new InAppPurchase();//(InAppPurchase)Feature.clone(feat);
+
+    static clone(feat: InAppPurchase): InAppPurchase {
+        let toRet: InAppPurchase = new InAppPurchase(); //(InAppPurchase)Feature.clone(feat);
         toRet.setFromFeature(feat);
         toRet.includedEntitlements = Feature.duplicateArrayString(feat.includedEntitlements);
         toRet.purchaseOptions = Feature.duplicateArray(feat.purchaseOptions);
         toRet.entitlements = Feature.duplicateArray(feat.entitlements);
         return toRet;
     }
-    setFromFeature(feat: InAppPurchase){
+
+    setFromFeature(feat: InAppPurchase) {
         this.uniqueId = feat.uniqueId;
         this.enabled = feat.enabled;
         this.lastModified = feat.lastModified;
@@ -42,7 +44,7 @@ export class InAppPurchase extends Feature{
         this.configurationRules = Feature.duplicateArray(feat.configurationRules);
         this.orderingRules = Feature.duplicateArray(feat.orderingRules);
         this.owner = feat.owner;
-        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown)?false:feat.defaultIfAirlockSystemIsDown;
+        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown) ? false : feat.defaultIfAirlockSystemIsDown;
         this.rolloutPercentage = feat.rolloutPercentage;
         this.rolloutPercentageBitmap = feat.rolloutPercentageBitmap;
         this.uniqueId = feat.uniqueId;

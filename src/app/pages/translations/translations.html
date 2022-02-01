@@ -3,48 +3,60 @@
         <div id="tloader" [hidden]="!loading">
             <div></div>
         </div>
+        <table class="translations-table">
+            <tr style="width: 100%">
+        <div class="btn-group" style="float:left; display: flex; max-width: 50%">
+            <nb-select multiple placeholder="Choose locales" [(selected)]="filteredLocales" style="margin-right: 10px">
+                <nb-select-label>Selected locales</nb-select-label>
+                <nb-option hero *ngFor="let localeOption of supportedLocales" value="{{localeOption.name}}"> {{localeOption.name}} </nb-option>
+            </nb-select>
+            <nb-select placeholder="Filter by Feature..." style="margin-bottom: 10px; margin-right: 10px;">
+                <nb-option hero *ngFor="let feature of featuresList" (selectionChange)="featureSelected(feature.id)" value="{{feature.id}}"> {{feature.text}} </nb-option>
+            </nb-select>
+            <input *ngIf="currentLayout=='master-detail'" style="margin-bottom: 12px;" class="form-control smallPad feature-filter free-text-filter"
+                   [(ngModel)]="filterQuery" placeholder="Filter by String..." (ngModelChange)="filterStrings()"
+                   type="text">
+        </div>
         <div style="float:right; display: flex;">
-
-
-
-            <button  style="margin-right: 8px;" *ngIf="valid &&  isShowAddString()" type="button" (click)="showAddString()" class="btn btn-primary">
+            <div class="btn-group layout-select padding-left">
+                <label class="btn" (click)="setTranslationsLayout('table')"
+                       [class.layout-selected]="currentLayout=='table'"
+                       [class.layout-not-selected]="currentLayout!=='table'"
+                       btnCheckbox>Table</label>
+                <label class="btn" (click)="setTranslationsLayout('master-detail')"
+                       [class.layout-selected]="currentLayout=='master-detail'"
+                       [class.layout-not-selected]="currentLayout!=='master-detail'" btnCheckbox>List</label>
+            </div>
+            <button  style="margin-right: 8px;" type="button" (click)="showAddString()" class="btn btn-primary">
                 <i class="ion-plus"></i>
                 Add String
             </button>
-            <div class="dropdown" *ngIf="valid && !isViewer()" dropdown style="margin-right: 8px;" [hidden]="selectedSeason == null">
-                <button id="single-button" type="button" class="btn btn-primary" dropdownToggle title="Actions">
+            <div *ngIf="valid && !isViewer()" dropdown style="margin-right: 8px;" [hidden]="selectedSeason == null">
+                <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" id="single-button" type="button" class="btn btn-primary" dropdownToggle title="Actions">
                     <i class="ion-settings"></i>
                 </button>
-                <ul dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu-right">
-                    <li role="menuitem"  *ngIf="canUserMarkForTranslation()"><a class="dropdown-item" (click)="markForTranslation()" style=""><i class="fa ion-checkmark-round" style="width:10px;margin-right: 5px;"></i>Mark for review</a></li>
-                    <li role="menuitem"  *ngIf="canUserReviewForTranslation()"><a class="dropdown-item" (click)="reviewForTranslation()" style=""><i class="fa ion-ios-book" style="width:10px;margin-right: 5px;"></i>Complete review</a></li>
-                    <li role="menuitem"  *ngIf="canUserSendForTranslation()"><a class="dropdown-item" (click)="sendForTranslation()" style=""><i class="fa ion-android-send" style="width:10px;margin-right: 5px;"></i>Send for translation</a></li>
-                    <li class="dropdown-divider"></li>
-                    <li role="menuitem"  *ngIf="canUserExportStrings()"><a class="dropdown-item" (click)="exportStrings()" style=""><i class="fa ion-share" style="width:10px; margin-right: 5px;"></i>Export strings</a></li>
-                    <li role="menuitem"  *ngIf="canUserImportStrings()"><a class="dropdown-item" (click)="importStrings()" style=""><i class="fa ion-log-in" style="width:10px;margin-right: 5px;"></i>Import strings</a></li>
-                    <li role="menuitem"  *ngIf="canUserCopyStrings()"><a class="dropdown-item" (click)="copyStrings()" style=""><i class="fa ion-ios-copy-outline" style="width:10px;margin-right: 5px;"></i>Copy strings</a></li>
-                    <li role="menuitem"  *ngIf="canUserPasteStrings()"><a class="dropdown-item" [class.disabled]= "!isShowPaste()"  (click)="isShowPaste() && pasteStrings()" style=""><i class="fa fa-clipboard" style="width:10px;margin-right: 5px;"></i>Paste strings</a></li>
-
-                </ul>
+                <ng-template #templateRef>
+                    <ul class="menu-items">
+                        <li class="dropdown-item"  *ngIf="canUserSendForTranslation()"><a (click)="addRemoveLocales()" style="">Add/Remove locales</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item"  *ngIf="canUserMarkForTranslation()"><a (click)="markForTranslation()" style=""><i class="fa ion-checkmark-round" style="width:10px;margin-right: 5px;"></i>Mark for review</a></li>
+                        <li class="dropdown-item"  *ngIf="canUserReviewForTranslation()"><a (click)="reviewForTranslation()" style=""><i class="fa ion-ios-book" style="width:10px;margin-right: 5px;"></i>Complete review</a></li>
+                        <li class="dropdown-item"  *ngIf="canUserSendForTranslation()"><a (click)="sendForTranslation()" style=""><i class="fa ion-android-send" style="width:10px;margin-right: 5px;"></i>Send for translation</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item"  *ngIf="canUserExportStrings()"><a (click)="exportStrings()" style=""><i class="fa ion-share" style="width:10px; margin-right: 5px;"></i>Export strings</a></li>
+                        <li class="dropdown-item"  *ngIf="canUserImportStrings()"><a (click)="importStrings()" style=""><i class="fa ion-log-in" style="width:10px;margin-right: 5px;"></i>Import strings</a></li>
+                        <li class="dropdown-item"  *ngIf="canUserCopyStrings()"><a (click)="copyStrings()" style=""><i class="fa ion-ios-copy-outline" style="width:10px;margin-right: 5px;"></i>Copy strings</a></li>
+                        <li class="dropdown-item"  *ngIf="canUserPasteStrings()"><a [class.disabled]= "!isShowPaste()"  (click)="isShowPaste() && pasteStrings()" style=""><i class="fa fa-clipboard" style="width:10px;margin-right: 5px;"></i>Paste strings</a></li>
+                    </ul>
+                </ng-template>
             </div>
-
         </div>
-        <verify-action-modal  #verifyActionModal ></verify-action-modal>
-        <edit-string-modal  #editStringModal ></edit-string-modal>
-        <mark-for-translation-modal #markForTranslationModal (outputStatusChanged)="reloadTranslations($event)" ></mark-for-translation-modal>
-        <custom-airlock-header [products]="products" [seasons]="seasons" [selectedProduct]="selectedProduct" [selectedSeason]="selectedSeason"
-                               [showDisplayOptions]=false [showTableHeader]=false [showModeSelector]="true"
-                               [availableLocales]="supportedLocales" (onLocalesChanged)="localesFiltered($event)"
-                               [showTranslationFilters]="true" [featuresList]="featuresList"  [selectedLocales]="defaultLocales" (onFeatureSelected)="featureSelected($event)"
-                               (onProductSelected)="onProductSelection($event)" (onSeasonSelected)="onSeasonSelection($event)"
-                               (onQueryChanged)="queryChanged($event)"
-                               [currentLayout]="currentLayout" (onLayoutSelected)="setTranslationsLayout($event)"></custom-airlock-header>
-        <show-message-modal #showMessageModal></show-message-modal>
-        <import-strings-modal (onCopyStrings)="reloadTranslations($event)" #importStringsModal></import-strings-modal>
-        <add-string-modal #addStringModal [seasonId]="selectedSeason?.uniqueId" (onAddString)="onAddString()"></add-string-modal>
-
+            </tr>
         <ba-card [title]="'Loading Strings'" *ngIf="currentLayout=='loading'"></ba-card>
-        <strings-master-detail [verifyActionModal]="verifyActionModal" *ngIf="currentLayout=='master-detail'" [selectedStrings]="filteredStrings" [supportedLocales]="filteredLocales" [selectedSeason]="selectedSeason" (reloadTranslations)="reloadTranslations($event)" [parentSubject]="reloadPageSubject"></strings-master-detail>
-        <strings-table *ngIf="currentLayout=='table'"  [verifyActionModal]="verifyActionModal" [selectedStrings]="filteredStrings" [supportedLocales]="filteredLocales" [selectedSeason]="selectedSeason" (reloadTranslations)="reloadTranslations($event)" (onSelectedChanged)="selectedRowsChanged($event)"></strings-table>
+            <tr>
+        <strings-master-detail *ngIf="currentLayout=='master-detail'" [selectedStrings]="filteredStrings" [supportedLocales]="filteredLocales" [selectedSeason]="selectedSeason" (reloadTranslations)="reloadTranslations($event)" [parentSubject]="reloadPageSubject"></strings-master-detail>
+        <strings-table *ngIf="currentLayout=='table'" [selectedStrings]="filteredStrings" [supportedLocales]="filteredLocales" [selectedSeason]="selectedSeason" (reloadTranslations)="reloadTranslations($event)" (onSelectedChanged)="selectedRowsChanged($event)"></strings-table>
+            </tr>
+        </table>
     </div>
 </div>

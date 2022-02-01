@@ -1,27 +1,30 @@
 <div class="">
-<div class="task-todo-container">
-  <div id="tloader" [hidden]="!loading">
-    <div></div>
-  </div>
-  <input *ngIf="!isViewer" maxlength="25" type="text" value="" style="background: rgba(0,0,0,0.1);" class="form-control task-todo input-box" placeholder="Enter new user group name here and click +"  (keyup)="addGroupItem($event)" [(ngModel)]="newTodoText"/>
-  <i *ngIf="!isViewer" (click)="_addGroupItem()" class="add-item-icon ion-plus-round"></i>
-  <div class="box-shadow-border"></div>
-
-  <ul class="products limit-height">
-    <li *ngFor="let item of itemsList" [ngClass]="{checked: item.hasFeatures, active: item.isActive}"
-        (mouseenter)="item.isActive=true" (mouseleave)="item.isActive=false" (click)="cellClicked(item)"
-        [class.selected]="selectedGroup==item">
-
-      <!--<div class="blur-container"><div class="blur-box"></div></div>-->
-      <!--<i class="mark" [ngStyle]="{ 'background-color': item.color }"></i>-->
-        <span class="badge">*</span>
-      <label class="custom-input-success">
-
-        <span class="cut-with-dots" >{{ item.name }}</span>
-      </label>
-      <!--<i *ngIf="item.hasFeatures" class="has-more" [class.ion-arrow-right-b]="!item.isOpen" [class.ion-arrow-down-b]="item.isOpen"></i>-->
-      <i *ngIf="!isViewer" class="remove-todo ion-trash-a" (click)="deleteGroup($event,item)"></i>
-    </li>
-  </ul>
-</div>
+    <button type="button" class="btn btn-primary" (click)="addGroupItem()" *ngIf="!isViewer">
+        <i class="ion-plus"></i>
+        Add Group
+    </button>
+    <div class="task-todo-container">
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div>
+            <input maxlength="25" type="text" value="" style="background: rgba(0,0,0,0.1);width: 60%"
+                   class="form-control task-todo input-box" placeholder="Filter groups...."
+                   [(ngModel)]="searchQuery" (ngModelChange)="filterGroups()">
+        </div>
+        <div class="box-shadow-border"></div>
+        <div>
+        <ul class="products limit-height">
+            <li *ngFor="let item of itemsList" [ngClass]="{checked: item.hasFeatures}"
+                (click)="cellClicked(item)"
+                [class.selected]="selectedGroup==item">
+                <span class="badge">*</span>
+                <label class="custom-input-success" style="padding-top: 8px;padding-left: 8px">
+                    <span class="cut-with-dots">{{ item.name }}</span>
+                </label>
+                <i *ngIf="!isViewer" class="remove-todo ion-trash-a" (click)="deleteGroup($event,item)"></i>
+            </li>
+        </ul>
+        </div>
+    </div>
 </div>

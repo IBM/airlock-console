@@ -1,0 +1,98 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 {{title}}
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_purchase_option_name')"
+                                 [title]="getString('add_experiment_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_purchaseOption.name)" type="text" id="input01"
+                       [(ngModel)]="_purchaseOption.name" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">Display Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_displayname')"
+                                 [title]="getString('add_experiment_displayname_title')"></airlock-tooltip>
+                <input type="text" id="input101" [(ngModel)]="_purchaseOption.displayName"
+                       class="form-control whiteText" tabindex="3">
+            </div>
+            <div class="form-group">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 25%" class="align-left no-pa-top"><label class="control-label"
+                                                                                   style="padding-right: 2px;">Store Type</label>
+                            <airlock-tooltip class="" [content]="getString('edit_purchase_option_store_type')"
+                                             [title]="getString('edit_purchase_option_store_type_title')"></airlock-tooltip>
+                        </td>
+                        <td></td>
+                        <td style="width: 75%" class="align-left no-pa-top"><label class="control-label"
+                                                                                   style="padding-right: 2px;">Product ID</label>
+                            <airlock-tooltip class="" [content]="getString('edit_purchase_option_product_id')"
+                                             [title]="getString('edit_purchase_option_product_id_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 25%" class="align-left">
+                            <div style="display: table-cell;">
+                                <nb-select *ngIf="!loading" style="width: 400px"
+                                           [(selected)]="selectedItem"
+                                           [placeholder]="storeProduct">
+                                        <nb-option hero *ngFor="let option of storeType" value="{{option}}"> {{ option }} </nb-option>
+                                </nb-select>
+                            </div>
+                        </td>
+                        <td style="width: 10%" class="align-left">
+                        </td>
+                        <td style="width: 65%" class="align-left">
+                            <input type="text" id="input110" placeholder="" [(ngModel)]="productId"
+                                   class="form-control blackText" tabindex="1">
+                        </td>
+                    </tr>
+                </table>
+                <!--<label for="input104" class="control-label">Product Id</label>-->
+                <!--<airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_displayname')" [title]="getString('add_experiment_displayname_title')"></airlock-tooltip>-->
+                <!--<input type="text" id="input104" [(ngModel)]="procuctId" class="form-control whiteText" tabindex="3" >-->
+            </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_purchase_option_group')"
+                                 [title]="getString('add_experiment_group_title')"></airlock-tooltip>
+                <br>
+                <user-groups-input id="select05" [(internalUserGroups)]="_purchaseOption.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_purchase_option_min_app_version')"
+                                 [title]="getString('edit_experiment_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_purchaseOption.minAppVersion)" type="text" id="input54"
+                       [(ngModel)]="_purchaseOption.minAppVersion" class="form-control whiteText" tabindex="5">
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_description')"
+                                 [title]="getString('add_experiment_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_purchaseOption.description" value="FEATURE"
+                          class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

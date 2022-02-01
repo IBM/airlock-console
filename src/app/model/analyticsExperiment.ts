@@ -1,11 +1,10 @@
-
 export class AnalyticsExperiment {
     analyticsDataCollectionByFeatureNames: AnalyticsDataCollectionByFeatureNames[];
     inputFieldsForAnalytics: InputFieldsForAnalytics[];
     developmentItemsReportedToAnalytics: number;
     productionItemsReportedToAnalytics: number;
 
-    constructor(){
+    constructor() {
         this.analyticsDataCollectionByFeatureNames = [];
         this.inputFieldsForAnalytics = [];
     }
@@ -24,7 +23,7 @@ export class AnalyticsDataCollectionByFeatureNames {
     orderingRules: OrderingRule[];
     attributes: string[];
 
-    constructor(){
+    constructor() {
         this.configurationRules = [];
         this.attributes = [];
         this.orderingRules = [];
@@ -35,6 +34,7 @@ export class ConfigurationRules {
     name: string;
     branches: Branches[];
 }
+
 export class OrderingRule {
     name: string;
     branches: Branches[];

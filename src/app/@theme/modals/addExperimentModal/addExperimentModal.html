@@ -1,0 +1,69 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+
+<nb-card class="fixed-size-modal">
+    <!--<modal #addExperimentModal id="addExperimentModal" class="addExperimentModal" [backdrop]="'static'">-->
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Experiment
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Short Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_name')"
+                                 [title]="getString('add_experiment_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_experiment.name)" type="text" id="input01"
+                       [(ngModel)]="_experiment.name" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">Display Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_displayname')"
+                                 [title]="getString('add_experiment_displayname_title')"></airlock-tooltip>
+                <input type="text" id="input101" [(ngModel)]="_experiment.displayName" class="form-control whiteText"
+                       tabindex="3">
+            </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_group')"
+                                 [title]="getString('add_experiment_group_title')"></airlock-tooltip>
+<!--                <select id="select05" class="js_example" multiple tabindex="4">-->
+<!--                    <ng-template ngFor let-item [ngForOf]="possibleGroupsList">-->
+<!--                        <option [value]="item">{{item}}</option>-->
+<!--                    </ng-template>-->
+<!--                </select>-->
+                <user-groups-input id="select05" [(internalUserGroups)]="_experiment.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_experiment_min_app_version')"
+                                 [title]="getString('edit_experiment_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_experiment.minVersion)" type="text" id="input54"
+                       [(ngModel)]="_experiment.minVersion" class="form-control whiteText" tabindex="5">
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_description')"
+                                 [title]="getString('add_experiment_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_experiment.description" value="FEATURE"
+                          class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

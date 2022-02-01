@@ -1,0 +1,444 @@
+
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+                                     (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+                                    (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+                                    (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{question.questionId}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                <span>
+                    <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                    <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                </span>
+                <span *ngIf="question != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_variant_rule_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_variant_rule_tab_heading')}}</button>
+                </span>
+                <span *ngIf="question != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="settingsTabActive" (click)="selectTab('Settings')">Settings</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!settingsTabActive" (click)="selectTab('Settings')">Settings</button>
+                </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin" *ngIf="question != null">
+                                                    <label for="input05" class="control-label">Id</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_question_id')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input05" placeholder=""
+                                                           [(ngModel)]="question.questionId" class="form-control blackText" tabindex="1" disabled>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin " *ngIf="question != null">
+                                                        <label for="input02" class="control-label">Stage</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_stage')"></airlock-tooltip>
+                                                        <input type="text" id="input02" placeholder="" [(ngModel)]="question.stage"
+                                                               class="form-control blackText" disabled>
+                                                </div>
+                                            </div>
+                                    </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="no-margin " *ngIf="question != null">
+                                                    <label for="input07" class="control-label">Rollout percentage</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_question_rollout')"></airlock-tooltip>
+                                                    <div class="input-group rollout">
+                                                        <input id="input07" [disabled]="isOnlyDisplayMode"
+                                                               aria-label="Rollout percentage"
+                                                               class="form-control with-success-addon numberInput" type="number"
+                                                               step="0.0001" min="0" max="100"
+                                                               [(ngModel)]="question.rolloutPercentage" tabindex="3"
+                                                               style="width: 100px;height: 35px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="no-margin " *ngIf="question != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="align-right no-pa-top"><label class="control-label">Enabled</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_question_enabled')"
+                                                                                 [title]="getString('edit_question_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="align-right">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="question.enabled"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+                                    </div>
+                                        <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="no-margin" *ngIf="question!=null">
+                                                <label for="select05" class="control-label">User groups</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('add_question_group')"></airlock-tooltip>
+                                                <br>
+                                                <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="question.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                            </div>
+                                            <div class="no-margin" *ngIf="question != null">
+                                                <label for="input09" class="control-label">Description</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_question_description')"
+                                                                 [title]="getString('edit_question_description_title')"></airlock-tooltip>
+                                                <textarea id="input09" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                          [(ngModel)]="question.description" value="question"
+                                                          class="form-control description-text blackText"
+                                                          style="height: 68px;resize:none" tabindex="8"></textarea>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="no-margin " *ngIf="question != null">
+                                                        <label for="input11" class="control-label">Creator</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_question_creator')"
+                                                                         [title]="getString('edit_question_creator_title')"></airlock-tooltip>
+                                                        <input type="text" id="input11" disabled placeholder=""
+                                                               [(ngModel)]="question.creator" class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="no-margin" *ngIf="question != null">
+                                                        <label for="input12" class="control-label">Creation date</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_question_creation_date')"
+                                                                         [title]="getString('edit_question_creation_date_title')"></airlock-tooltip>
+                                                        <input type="text" id="input12" disabled placeholder=""
+                                                               [value]="creationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="no-margin " *ngIf="question != null">
+                                                        <label for="input13" class="control-label">Last modified</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_question_last_modified')"
+                                                                         [title]="getString('edit_question_last_modified_title')"></airlock-tooltip>
+                                                        <input type="text" id="input13" disabled placeholder=""
+                                                               [value]="lastModificationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </span>
+                </div>
+                <div #ruleTab *ngIf="ruleTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                                    <div class="no-margin  tab-div-container">
+                                                        <span class="flexcontainer">
+                                                            <h5 class="modal-title">
+                                                                {{getString('edit_variant_rule_tab_details')}}
+                                                                <br>
+                                                                <button class="modalLink modalLinkButton"
+                                                                        (click)="showRuleHelp()">{{getString('edit_variant_rule_tab_learn_more')}}</button>
+                                                            </h5>
+                                                        </span>
+                                                    <span>
+                                                            <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorRuleExpand()">
+                                                            <i class="ion-arrow-expand"></i>
+                                                        </button>
+                                                        <div *ngIf="!loading" #mytesteditor ace-editor id="input56" (onTextChanged)="ruleUpdated($event)"
+                                                             [markdown]="question.rule.ruleString" [readonly]="isOnlyDisplayMode"
+                                                             [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo"
+                                                             [mode]="'javascript'"
+                                                             [heightSize]="aceEditorRuleHeight">
+                                                        </div>
+                                                        </span>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                </div>
+                <div #descriptionTab *ngIf="settingsTabActive">
+                    <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin"
+                                                     *ngIf="question != null">
+                                                    <label for="input06" class="control-label" style="padding-top: 4px;">Title</label>
+                                                    <button id="input16" style="margin-right: 0; margin-left: 0; margin-bottom: 4px" type="button" class="btn btn-primary btn-dynamic-generate" (click)="generateDynamic()" [disabled]="!question.title || question.title.length == 0" *ngIf="!isOnlyDisplayMode">
+                                                            <i class="ion-language-outline"></i>
+                                                            Generate translation
+                                                        </button>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_question_title')"></airlock-tooltip>
+                                                    <div class="input-group">
+                                                        <textarea id="input06" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                                  [(ngModel)]="question.title" value="question"
+                                                                  class="form-control description-text blackText"
+                                                                  style="height: 68px;resize:none" tabindex="1"></textarea>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row1">
+                                            <div class="no-margin dashFlexContainer"
+                                                 *ngIf="question != null">
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_question_dynamic_title')"></airlock-tooltip>
+                                                <input type="checkbox" id="checkboxname" class="form-checkbox blackText check-all"
+                                                       [(ngModel)]="useDynamicText" (ngModelChange)="dynamicTextChanged($event)" name="checkboxname">
+                                                <label for="input16" class="control-label answer-label">Dynamic title</label>
+                                            </div>
+                                            <div *ngIf="useDynamicText" class="no-margin">
+                                                <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorExpandForDynamicTitle()"
+                                                        style="margin-top: 5px; margin-right: 24px">
+                                                    <i class="ion-arrow-expand" style="height: 12px;width: 12px;"></i>
+                                                </button>
+                                                <div *ngIf="!loading" #mytesteditor5 ace-editor
+                                                     (onTextChanged)="dynamicTextUpdated($event)"
+                                                     [markdown]="question.dynamicTitle"
+                                                     [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample"
+                                                     [heightSize]="aceEditorConfigurationHeight"
+                                                     [mode]="'javascript'"
+                                                     [utilitiesinfo]="ruleUtilitiesInfo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row1">
+                                            <div class="no-margin dashFlexContainer"
+                                                 *ngIf="question != null">
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_question_dynamic_title')"></airlock-tooltip>
+                                                <input type="checkbox" id="checkboxname1" class="form-checkbox blackText check-all"
+                                                       [(ngModel)]="useDynamicSubmitText" (ngModelChange)="dynamicSubmitButtonTextChanged($event)" name="checkboxname1">
+                                                <label for="input16" class="control-label answer-label">Dynamic submit button text</label>
+                                            </div>
+                                            <div *ngIf="useDynamicSubmitText" class="no-margin">
+                                                <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorExpandForDynamicSubmitButtonTitle()"
+                                                        style="margin-top: 5px; margin-right: 24px">
+                                                    <i class="ion-arrow-expand" style="height: 12px;width: 12px;"></i>
+                                                </button>
+                                                <div *ngIf="!loading" #mytesteditor6 ace-editor
+                                                     (onTextChanged)="dynamicSubmitButtonTextUpdated($event)"
+                                                     [markdown]="question.dynamicQuestionSubmitText"
+                                                     [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample"
+                                                     [heightSize]="aceEditorConfigurationHeight"
+                                                     [mode]="'javascript'"
+                                                     [utilitiesinfo]="ruleUtilitiesInfo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="no-margin"
+                                                 *ngIf="question != null">
+                                                <label class="control-label">Answer data type</label>
+                                                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_answer_data_type')"
+                                                                 [title]="getString('add_variant_name_title')"></airlock-tooltip>
+                                                <div>
+                                                    <nb-select *ngIf="!loading"
+                                                               [(selected)]="question.type" class="full-no-padding">
+                                                        <nb-option hero *ngFor="let option of types" value="{{option.id}}"> {{option.name}} </nb-option>
+                                                    </nb-select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="no-margin " *ngIf="question != null">
+                                                    <label for="userattr1" class="control-label">User attribute</label>
+                                                    <airlock-tooltip
+                                                            class="endFlexContainer"
+                                                            [content]="getString('edit_question_user_attribute')"
+                                                            ></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="userattr1"
+                                                           placeholder="" [(ngModel)]="question.userAttribute"
+                                                           class="form-control blackText " tabindex="5">
+                                                </div>
+                                            </div>
+                                        <div class="col-md-6">
+                                                <div class="no-margin " *ngIf="question != null">
+                                                    <label for="input29" class="control-label">Max answers</label>
+                                                    <airlock-tooltip
+                                                            class="endFlexContainer"
+                                                            [content]="getString('edit_question_max_answers')"
+                                                            [title]="getString('edit_question_min_app_version_title')"></airlock-tooltip>
+                                                    <input type="number" [disabled]="isOnlyDisplayMode" id="input29"
+                                                           placeholder="Unlimited" [(ngModel)]="question.maxAnswers"
+                                                           class="form-control blackText " tabindex="5">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                                <div class="no-margin"
+                                                     *ngIf="question != null">
+                                                    <label for="additionalMarkupId" class="control-label">Visualisation additional markup</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_question_vis_add_markup')"
+                                                                     [title]="getString('edit_question_display_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="additionalMarkupId" placeholder=""
+                                                           [(ngModel)]="question.visualization.additionalMarkup" class="form-control blackText"
+                                                           tabindex="1">
+                                                </div>
+                                            </div>
+                                        <div class="col-md-6">
+                                            <div class="no-margin"
+                                                 *ngIf="question != null">
+                                                <table style="width: 100%;">
+                                                    <tr>
+                                                        <td><label>Visualisation type</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_question_vis_type')"
+                                                                             [title]="getString('edit_question_display_name_title')"></airlock-tooltip>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">
+                                                            <nb-select *ngIf="!loading"
+                                                                       [(selected)]="question.visualization.type" class="full-no-padding">
+                                                                <nb-option hero *ngFor="let visualizationType of visualizationTypes" value="{{visualizationType.id}}" [disabled]="visualizationType.id === 'PIE' && question.multipleAnswers"> {{visualizationType.name}} </nb-option>
+                                                            </nb-select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="row">
+                                            <div class="col-md-6 no-margin " *ngIf="question != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="no-pa-top"><label class="control-label">Shuffle answers</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_question_shuffle_answers')"
+                                                                                 [title]="getString('edit_question_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="question.shuffleAnswers"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                            <div class="no-margin col-md-6" *ngIf="question != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="no-pa-top"><label class="control-label">Multiple answers</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_question_multiple_answers')"
+                                                                                 [title]="getString('edit_question_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="question.multipleAnswers"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="no-margin col-md-6" *ngIf="question != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class=" no-pa-top"><label class="control-label">PI</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_question_pi')"
+                                                                                 [title]="getString('edit_question_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="question.pi"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                            <div class="no-margin col-md-6" *ngIf="question != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class=" no-pa-top"><label class="control-label">Trivia style</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_question_trivia_style')"
+                                                                                 [title]="getString('edit_question_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="question.correctIncorrect"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                        </div>
+                                        <div class="row">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="question != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

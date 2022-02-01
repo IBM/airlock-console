@@ -1,0 +1,420 @@
+.limitNotificationsModal .has-success .control-label {
+  color: white;
+}
+
+//.limitNotificationsModal button.btn.btn-primary.dropdown-toggle {
+//  background-color: transparent;
+//  border: 1px solid rgba(255, 255, 255, 0.6);
+//  color: white;
+//}
+
+.limitNotificationsModal {
+  //.open > .btn.dropdown-toggle.btn.btn-primary {
+  //  background: rgba(0, 145, 217, 0.25);
+  //  border-color: rgba(255, 255, 255, 0.6);
+  //}
+
+  width: 800px;
+  height: 480px;
+  ul.dropdown-menu {
+    width: 100%;
+    text-align: -moz-center;
+    text-align: -webkit-center;
+  }
+}
+
+.limitNotificationsModal .padding-leftB {
+  padding-left: 3px;
+}
+
+
+.limitNotificationsModal .notif-padding {
+  padding-left: 8px;
+  padding-right: 60px;
+}
+.warning-no-intellisense {
+  color: orange;
+  font-weight: 400;
+  padding-bottom: 4px;
+}
+.limitNotificationsModal .box{
+  box-sizing:border-box;
+
+}
+
+.limitNotificationsModal .nav-tabs{
+  /*background-color: #a9aaab !important;*/
+  background-color: #337ab7 !important;
+}
+.limitNotificationsModal .tab-content {
+  //background: rgba(255,255,255,0.1);
+  //color: rgba(255,255,255,0.1);
+}
+.limitNotificationsModal .nav-tabs .nav-item {
+  float: left;
+  margin-bottom: 0px;
+  margin-top: 1px;
+  margin-right: 0px;
+  margin-left: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.limitNotificationsModal .nav.nav-tabs > li > a:hover {
+  border: none;
+  /*background-color: #dcdcdc;*/
+  background-color: #e2e2e2;
+  color: #484c4f;
+}
+.limitNotificationsModal .nav.nav-tabs > li.active > a{
+  color: #55595c;
+  background-color: #fff;
+}
+.limitNotificationsModal .modal-backdrop{
+  background-color: #eee;
+}
+.limitNotificationsModal .tab-div-container{
+  //height: 500px;
+  max-height: 500px;
+}
+
+.limitNotificationsModal .tab-div-container-analytics{
+  height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.limitNotificationsModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.limitNotificationsModal .select2-container--default .select2-selection--multiple {
+  background-color: currentColor !important;
+  color: currentColor !important;;
+}
+.limitNotificationsModal .select2-selection__choice{
+  color: white;
+  background-color: #337ab7 !important;
+}
+
+.limitNotificationsModal .select2{
+  display:block !important;
+  width:400px !important;
+}
+.limitNotificationsModal .modal-title{
+  color:white !important;
+  text-overflow: ellipsis;
+
+}
+
+.limitNotificationsModal .box.row {
+  margin-left: 0em;
+  margin-right: 0em;
+}
+
+.limitNotificationsModal .notSelected {
+  opacity: 0.5;
+}
+
+.limitNotificationsModal .btn-group {
+  width: 100%;
+}
+
+.limitNotificationsModal .half-button {
+  width: 50%;
+}
+
+.limitNotificationsModal small-right-padding {
+  padding-right: 1px;
+}
+.limitNotificationsModal .no-padding-left {
+  padding-left: 0px;
+  padding-right: 4px;
+}
+
+.limitNotificationsModal .no-padding-right {
+  padding-left: 4px;
+  padding-right: 0px;
+}
+
+.limitNotificationsModal .no-padding-middle {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.limitNotificationsModal .description-text {
+  height: 125px;
+}
+
+.limitNotificationsModal .nav-tabs .nav-item {
+  text-align: center;
+  width: 33.3333%;
+}
+
+.limitNotificationsModal .config-state .nav-tabs .nav-item {
+  width: 33.2%;
+}
+
+.limitNotificationsModal .myFlexcontainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: -moz-available;          /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  //-webkit-justify-content: flex-start;
+  //justify-content: flex-start;
+}
+
+.limitNotificationsModal .flexRightcontainer {
+  padding-top: 4px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.limitNotificationsModal .spreadFlexcontainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+.limitNotificationsModal .modalLink {
+  color: lightblue;
+
+}
+.limitNotificationsModal .modalLink:hover {
+  color: #00abff;
+  cursor: pointer;
+
+}
+
+.limitNotificationsModal .modalLinkButton {
+  background: transparent;
+  border: 0px solid transparent;
+  padding-left: 0px;
+  padding-right: 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.limitNotificationsModal .accordionHead {
+  color: white;
+}
+
+.limitNotificationsModal .openIndicator {
+  min-width: 12px;
+}
+
+.limitNotificationsModal .semi-transparent {
+  opacity: 0.6;
+}
+
+.limitNotificationsModal .padTop {
+  padding-top: 4px;
+}
+
+.limitNotificationsModal .btn-expand {
+  font-size: 1.3rem;
+  margin: 10px;
+  margin-top: 0px;
+  /* margin-right: 0; */
+  float: right;
+  border-width: 1px;
+  color: #484c4f;
+  background: #e2e2e2;
+  border-color: #f5f5f5;
+  padding: 0.1rem 1rem;
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  margin-right: 16px;
+  opacity: 0.4;
+}
+
+.limitNotificationsModal .btn-expand:hover {
+  opacity: 1.0;
+}
+.limitNotificationsModal .btn-expand-down {
+  margin-top: 30px;
+}
+.limitNotificationsModal .select2-selection__rendered
+{
+  height: 77px;
+  overflow: auto !important;
+}
+.limitNotificationsModal .select2-selection
+{
+  height: 111px !important;
+}
+
+.limitNotificationsModal .rollout {
+  height: 35px;
+}
+
+.limitNotificationsModal .form-group {
+  margin-top: 0px;
+}
+
+.limitNotificationsModal .no-margin {
+  margin-top: 0px;
+  margin-bottom: 1rem;
+}
+
+.limitNotificationsModal .small_pading{
+  padding-left: 10px;
+}
+
+.limitNotificationsModal .descpPopover{
+  color: black;
+}
+
+.limitNotificationsModal .grayout {
+  opacity: 0.6; /* Real browsers */
+  filter: alpha(opacity = 60); /* MSIE */
+}
+
+.limitNotificationsModal .grayout-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+.limitNotificationsModal span.btn:hover{
+  transform: none;
+  color: gray;
+}
+
+.limitNotificationsModal .ui-select-container .ui-select-search {
+  //display: none;
+  //visibility: hidden;
+  pointer-events: none;
+}
+
+.limitNotificationsModal .check-all{
+  width: 20px;
+  height: 17px;
+}
+
+.limitNotificationsModal #limitLabel{
+  display: inline-block;
+}
+
+.limitNotificationsModal #limitInput{
+  display: inline-block;
+}
+
+.limitNotificationsModal .limitClass{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.limitNotificationsModal .padding-right{
+  padding-right: 10px;
+}
+
+.limitNotificationsModal .padding-rightB{
+  /*padding-right: 13px;*/
+  padding-top: 4px;
+}
+
+.limitNotificationsModal .padding-left{
+  padding-left: 10px;
+}
+
+.limitNotificationsModal .remove-padding-left{
+  padding-left: 0px;
+}
+
+.limitNotificationsModal .remove-padding{
+  padding: 0px;
+}
+
+.limitNotificationsModal .intervalPickerBtn:disabled {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.limitNotificationsModal .notif-limit-disabled {
+  opacity: 0.4;
+}
+
+//.limitNotificationsModal .notifs-limit {
+//  padding: 4px;
+//}
+
+.limitNotificationsModal .dropdown-menu{
+  min-width: auto;
+}
+
+.limitNotificationsModal .maxNotificationsDiv{
+  width: 20%;
+}
+.limitNotificationsModal .intervalPicker{
+  width: 22%;
+  //padding-right: 15px;
+}
+.limitNotificationsModal .intervalPickerBtn{
+  width: 100%;
+  background-color: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.6)!important;
+  color: white !important;
+}
+.limitNotificationsModal .removeLimitationDiv .removeLimitationButton{
+  color: white;
+  opacity: 0.7;
+  &:hover {
+    color: white;
+    opacity: 1;
+  }
+  font-size: 25px;
+}
+
+.limitNotificationsModal .addLimitationDiv{
+  text-align: right;
+}
+
+.limitNotificationsModal .addLimitationDiv i {
+  color: white;
+  opacity: 0.7;
+  &:hover {
+    color: white;
+    opacity: 1;
+    cursor: pointer;
+  }
+  font-size: 25px;
+}
+.limitNotificationsModal .removeLimitationLink:hover{
+  cursor: pointer;
+}
+
+.limitNotificationsModal .modal-dialog{
+  width: 720px;
+}
+
+.limitNotificationsModal .modal-body{
+  height: 400px;
+  font-size: 0.9rem;
+}
+.limitNotificationsModal .limitationList{
+  -webkit-padding-start: 25px;
+}
+.limitationList li{
+  padding-bottom: 10px;
+}
+
+.fixed-size-modal {
+  width: 800px;
+  height: auto;
+}
+
+.label-disabled {
+  color: gray;
+  font-style: italic;
+}
+
+.border-gray {
+  border-style: solid;
+  border-color: darkgrey;
+  border-width: 1px;
+  padding-top: 5px;
+}

@@ -1,24 +1,26 @@
-
-import { Rule } from './rule';
+import {Rule} from './rule';
 import {Feature} from "./feature";
 import {StoreProductId} from "./storeProductId";
 
-export class PurchaseOptions extends Feature{
+export class PurchaseOptions extends Feature {
     storeProductIds: StoreProductId[];
     purchaseOptions: PurchaseOptions[];
-    static cloneToFeature(feat: PurchaseOptions,target:PurchaseOptions){
+
+    static cloneToFeature(feat: PurchaseOptions, target: PurchaseOptions) {
         Feature.cloneToFeature(feat, target);
         target.storeProductIds = Feature.duplicateArray(feat.storeProductIds);
         target.purchaseOptions = Feature.duplicateArray(feat.purchaseOptions);
     }
-    static clone(feat: PurchaseOptions) : PurchaseOptions {
-        let toRet:PurchaseOptions = new PurchaseOptions();
+
+    static clone(feat: PurchaseOptions): PurchaseOptions {
+        let toRet: PurchaseOptions = new PurchaseOptions();
         toRet.setFromFeature(feat);
         toRet.storeProductIds = Feature.duplicateArray(feat.storeProductIds);
         toRet.purchaseOptions = Feature.duplicateArray(feat.purchaseOptions);
         return toRet;
     }
-    setFromFeature(feat: PurchaseOptions){
+
+    setFromFeature(feat: PurchaseOptions) {
         this.uniqueId = feat.uniqueId;
         this.enabled = feat.enabled;
         this.lastModified = feat.lastModified;
@@ -38,7 +40,7 @@ export class PurchaseOptions extends Feature{
         this.configurationRules = Feature.duplicateArray(feat.configurationRules);
         this.orderingRules = Feature.duplicateArray(feat.orderingRules);
         this.owner = feat.owner;
-        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown)?false:feat.defaultIfAirlockSystemIsDown;
+        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown) ? false : feat.defaultIfAirlockSystemIsDown;
         this.rolloutPercentage = feat.rolloutPercentage;
         this.rolloutPercentageBitmap = feat.rolloutPercentageBitmap;
         this.uniqueId = feat.uniqueId;

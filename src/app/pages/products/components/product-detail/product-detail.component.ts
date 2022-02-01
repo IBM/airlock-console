@@ -2,130 +2,145 @@
  * Created by yoavmac on 17/08/2016.
  */
 
-import {Component, ViewEncapsulation, Input, Output, EventEmitter} from '@angular/core';
-import {ViewChild} from "@angular/core";
-
-
-import {SeasonModal} from "../../../../theme/airlock.components/seasonModal";
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AirlockService} from "../../../../services/airlock.service";
 import {Product} from "../../../../model/product";
 import {Season} from "../../../../model/season";
-import {Analytic} from "../../../../model/analytic"
 import {AuthorizationService} from "../../../../services/authorization.service";
-import {DocumentlinksModal} from "../../../../theme/airlock.components/documentlinksModal/documentlinksModal.component";
-import {Modal} from "angular2-modal/plugins/bootstrap/modal";
-import {EditInputSchemaModal} from "../../../../theme/airlock.components/editInputSchemaModal/editInputSchemaModal.component";
 import {StringsService} from "../../../../services/strings.service";
 import {Branch} from "../../../../model/branch";
-import {EditBranchModal} from "../../../../theme/airlock.components/editBranchModal/editBranchModal.component";
+import {DomSanitizer} from "@angular/platform-browser";
+import {FeatureUtilsService} from "../../../../services/featureUtils.service";
+import {NbDialogService, NbGlobalLogicalPosition, NbPopoverDirective, NbToastrService} from "@nebular/theme";
+import {CohortsSettingsModal} from "../../../../@theme/modals/cohortsSettingsModal";
+import {CohortsData} from "../../../../model/cohortsData";
+import {SeasonModal} from "../../../../@theme/modals/seasonModal";
+import {ConfirmActionModal} from "../../../../@theme/modals/confirmActionModal";
+import {EditBranchModal} from "../../../../@theme/modals/editBranchModal";
+import {DocumentlinksModal} from "../../../../@theme/airlock.components/documentlinksModal";
+import {EditInputSchemaModal} from "../../../../@theme/modals/editInputSchemaModal";
+import {BranchUsageModal} from "../../../../@theme/modals/branchUsageModal";
 
 @Component({
     selector: 'product-detail',
-    styles: [require('./product-detail.scss')],
-    template: require('./product-detail.html')
+    styleUrls: ['./product-detail.scss'],
+    templateUrl: './product-detail.html'
 })
 export class ProductDetail {
-
-    @ViewChild('seasonModal') _seasonModal : SeasonModal;
-    @ViewChild('documentLinksModal') _documentLinksModal : DocumentlinksModal;
-
-    @ViewChild('editInputSchemaModal') _editInputSchemaModal : EditInputSchemaModal;
-    @ViewChild('editBranchModal') _editBranchModal : EditBranchModal;
-    _product : Product;
-    _season : Season;
-    _productCopy : Product;
-    _isDisaplyOnly:boolean = false;
-    _isHideDowloadLinks:boolean = false;
+    _product: Product;
+    _season: Season;
+    _productCopy: Product;
+    _isDisaplyOnly: boolean = false;
+    _isHideDowloadLinks: boolean = false;
     loading: boolean = false;
-    branches:Branch[] = null;
-    canUseBranches:boolean;
-    staticMode:boolean = false;
+    branches: Branch[] = null;
+    canUseBranches: boolean;
+    @ViewChild(NbPopoverDirective) popover: NbPopoverDirective;
     @Output() onProductUpdated = new EventEmitter();
     @Output() onSeasonsChanged = new EventEmitter();
     ruleUtilitieInfo: string;
-    ruleInputSchemaSample : string;
-    public status: {openId: string} = {openId: null};
+    ruleInputSchemaSample: string;
+    public status: { openId: string } = {openId: null};
 
-    constructor(private _airlockService : AirlockService,private authorizationService:AuthorizationService,
-        public modal: Modal, private _stringsSrevice: StringsService) {
+    constructor(private _airlockService: AirlockService,
+                private authorizationService: AuthorizationService,
+                private _stringsSrevice: StringsService,
+                private sanitizer: DomSanitizer,
+                private toastrService: NbToastrService,
+                private modalService: NbDialogService) {
         this.setUserCreds();
-        this.staticMode = this._airlockService.isStaticMode();
     }
-    setUserCreds(){
-        console.log("setUserCreds");
-        console.log(this._airlockService.getUserRole());
+
+    setUserCreds() {
         this._isDisaplyOnly = (this._airlockService.isEditor() || this._airlockService.isViewer());
         this._isHideDowloadLinks = this._airlockService.isViewer();
+    }
 
+    isShowOptions() {
+        return (!this._airlockService.isViewer());
     }
-    isShowOptions(){
-            return (!this._airlockService.isViewer()) ;
-    }
-    isShowAddSeason(){
-        return this._airlockService.isAdministrator() || this._airlockService.isProductLead() ;
-    }
-    isShowEditSeason(){
+
+    isShowAddSeason() {
         return this._airlockService.isAdministrator() || this._airlockService.isProductLead();
     }
+
+    refreshTable() {
+    }
+
+    isShowCohortsSettings() {
+        let hasCohorts = this._product.capabilities.includes("COHORTS");
+        let canSeeCohorts = this._airlockService.isUserHasAnalyticsViewerRole() || this._airlockService.isUserHasAnalyticsEditorRole();
+        let isProductLead = this._airlockService.isProductLead() || this._airlockService.isAdministrator();
+        return hasCohorts && canSeeCohorts && isProductLead;
+    }
+
+    showCohortsSettings() {
+        this._airlockService.getCohorts(this._product.uniqueId).then((container) => {
+            this.modalService.open(CohortsSettingsModal, {
+                closeOnBackdropClick: false,
+                context: {
+                    cohortsData: CohortsData.clone(container)
+                }
+            })
+            // this._cohortsSettingsModal.open(container);
+        }).catch(
+            error => {
+                console.log("error loading cohorts:" + error);
+                this.handleError(error);
+            }
+        );
+    }
+
+    isShowEditSeason() {
+        return this._airlockService.isAdministrator() || this._airlockService.isProductLead();
+    }
+
     @Input()
-    set product (p:Product){
-        console.log("SET PRODUCT");
-        console.log(this._season);
-        var isTheSameProd = (p != null && this._product != null &&  p.uniqueId == this._product.uniqueId);
+    set product(p: Product) {
+        var isTheSameProd = (p != null && this._product != null && p.uniqueId == this._product.uniqueId);
         this._product = p;
         this.setUserCreds();
-        this._airlockService.setCapabilities(p);
-        this.canUseBranches = this._airlockService.canUseBranches();
+        // this._airlockService.setCapabilities(p);
+        this.canUseBranches = this._product.capabilities.includes("BRANCHES");
         this._productCopy = new Product(p);
-        if(!isTheSameProd) {
-            if(p != null && p.seasons != null && p.seasons.length > 0){
-                this.selectSeason(p.seasons[p.seasons.length -1 ]);
-            }else {
-                console.log("Init Selected season")
+        if (!isTheSameProd) {
+            if (p != null && p.seasons != null && p.seasons.length > 0) {
+                this.selectSeason(p.seasons[p.seasons.length - 1]);
+            } else {
                 this.branches = null;
                 this._season = null;
             }
-        }else{
-            if(this._season){
+        } else {
+            if (this._season) {
                 this.selectSeason(this._season);
-            }else if(p != null && p.seasons != null && p.seasons.length > 0){
-                this.selectSeason(p.seasons[p.seasons.length -1 ]);
+            } else if (p != null && p.seasons != null && p.seasons.length > 0) {
+                this.selectSeason(p.seasons[p.seasons.length - 1]);
             }
         }
-
     }
 
-    onSave()
-    {
+    onSave() {
         if (this.didProductChange() && this._productCopy.name.trim() !== "" && this._productCopy.codeIdentifier.trim() != "") {
-
-
-            // if (confirm(`Are you sure you want to save the changes to the ${this._product.name} product?`)) {
-            //
-            //
-            // }
             let message = `Are you sure you want to save the changes to the product ${this._product.name}?`;
-
-            this.modal.confirm()
-                .title(message)
-                .open()
-                .catch(err => console.log("ERROR")) // catch error not related to the result (modal open...)
-                .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-                .then(result => {
-                    console.log("confirmed");
+            this.modalService.open(ConfirmActionModal, {
+                closeOnBackdropClick: false,
+                context: {
+                    message: message,
+                }
+            }).onClose.subscribe(confirmed => {
+                if (confirmed){
                     this._save();
-                }) // if were here ok was clicked.
-                .catch(err => console.log("CANCELED"));
+                }
+            });
         }
     }
 
-    getProductFollowTooltip(isfollowed: boolean){
-        if(!this._airlockService.isHaveJWTToken())
+    getProductFollowTooltip(isfollowed: boolean) {
+        if (!this._airlockService.isHaveJWTToken())
             return this.getString("notifications_nonAuth_tooltip");
-        if(isfollowed){
+        if (isfollowed) {
             return this.getString('notifications_unfollow_tooltip_products');
-        }
-        else{
+        } else {
             return this.getString('notifications_follow_tooltip_products');
         }
     }
@@ -134,43 +149,50 @@ export class ProductDetail {
         return this._stringsSrevice.getString(name);
     }
 
-    getStringWithFormat(name: string, ...format:string[]) {
-        return this._stringsSrevice.getStringWithFormat(name,...format);
+    getStringWithFormat(name: string, ...format: string[]) {
+        return this._stringsSrevice.getStringWithFormat(name, ...format);
     }
 
-    starClicked(event,product : Product){
-        console.log("star-clicked");
-        if(event) {
+    doNothing(event) {
+        if (event) {
             event.stopPropagation();
         }
-        if(!this._airlockService.isHaveJWTToken())
+    }
+    starClicked(event: Event, product: Product) {
+        if (event) {
+            event.stopPropagation();
+        }
+        if (!this._airlockService.isHaveJWTToken())
             return;
-        if (product.isCurrentUserFollower){
+        if (product.isCurrentUserFollower) {
             this.loading = true;
             this._airlockService.unfollowProduct(product.uniqueId)
-                .then(response  => {
-                    console.log(response);
+                .then(response => {
                     product.isCurrentUserFollower = false;
                     this.loading = false;
                     this.onProductUpdated.emit(product);
-                    this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this.getStringWithFormat("notifications_unfollow_product_success",product.name)});
+                    this._airlockService.notifyDataChanged("success-notification", {
+                        title: "Success",
+                        message: this.getStringWithFormat("notifications_unfollow_product_success", product.name)
+                    });
                 })
                 .catch(error => {
                     this.loading = false;
                     console.log('Error in unfollow product');
-                    
+
                     this._airlockService.notifyDataChanged("error-notification", this.getString("notifications_unfollow_product_error"));
                 });
-        }
-        else{
+        } else {
             this.loading = true;
             this._airlockService.followProduct(product.uniqueId)
-                .then(response  => {
-                    console.log(response);
+                .then(response => {
                     product.isCurrentUserFollower = true;
                     this.onProductUpdated.emit(product);
                     this.loading = false;
-                    this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this.getStringWithFormat("notifications_follow_product_success",product.name)});
+                    this._airlockService.notifyDataChanged("success-notification", {
+                        title: "Success",
+                        message: this.getStringWithFormat("notifications_follow_product_success", product.name)
+                    });
                 })
                 .catch(error => {
                     this.loading = false;
@@ -181,85 +203,67 @@ export class ProductDetail {
         }
     }
 
-    canShowDeleteBranch(b:Branch){
-        if(b.uniqueId == "MASTER"){
+    canShowDeleteBranch(b: Branch) {
+        if (b.uniqueId == "MASTER") {
             return false;
         }
         return !this._airlockService.isViewer();
     }
 
-    canShowEditBranch(b:Branch){
-        if(b.uniqueId == "MASTER"){
+    canShowEditBranch(b: Branch) {
+        if (b.uniqueId == "MASTER") {
             return false;
         }
         return !this._airlockService.isViewer();
     }
 
-    deleteBranch(b:Branch){
-        let message = `Are you sure you want to delete this branch (`+b.name+`)?`;
-        this.modal.confirm()
-            .title(message)
-            .open()
-            .catch(err => {
-                console.log("ERROR")
-            }) // catch error not related to the result (modal open...)
-            .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-            .then(result => {
+    deleteBranch(b: Branch) {
+        let message = `Are you sure you want to delete this branch (` + b.name + `)?`;
+        this.modalService.open(ConfirmActionModal, {
+            closeOnBackdropClick: false,
+            context: {
+                message: message,
+            }
+        }).onClose.subscribe(confirmed => {
+            if (confirmed) {
                 console.log("confirmed");
                 this.loading = true;
-                this._airlockService.deleteBranch(b.uniqueId).then(response  => {
+                this._airlockService.deleteBranch(b.uniqueId).then(response => {
                     console.log(response);
                     this.showBranches(this._season);
                     this.onProductUpdated.emit(this._product);
                     this.loading = false;
-                    this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this.getString("notifications_delete_feature_success")});
-                })
-                    .catch(error => {
-                        this.loading = false;
-                        this._airlockService.navigateToLoginIfSessionProblem(error);
-                        console.log('Error in delete Branch');
-                        console.log(error);
-                        var errorMessage:string  = "";
-                        if(error && error._body){
-                            try{
-                                var errorObj = JSON.parse(error._body);
-                                errorMessage = errorObj.error;
-                            }catch (e){
-                                errorMessage = this.getString("notifications_delete_feature_error");
-                            }
-
-                        }else{
-                            errorMessage = this.getString("notifications_delete_feature_error");
-                        }
-                        this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                    this._airlockService.notifyDataChanged("success-notification", {
+                        title: "Success",
+                        message: this.getString("notifications_delete_feature_success")
                     });
-            }) // if were here ok was clicked.
-            .catch(err => console.log("CANCELED"));
+                })
+            }
+        });
     }
-    openMenu(event,id:string){
-        if(event) {
+
+    openMenu(event: Event, id: string) {
+        if (event) {
             event.stopPropagation();
         }
-        console.log("click:"+id);
-        // if(this.status.openId == id){
-        //     this.status = {openId: null};
-        // }else {
-            this.status = {openId: null};
-            setTimeout(() => {
-                this.status = {openId: id};
-            }, 50);
-        // }
+        this.status = {openId: null};
+        setTimeout(() => {
+            this.status = {openId: id};
+        }, 50);
     }
+
     _save() {
         this.loading = true;
         let seasons = this._productCopy.seasons;
         this._productCopy.seasons = null;
         this._airlockService.updateProduct(this._productCopy)
-            .then(response  => {
+            .then(response => {
                 this._productCopy.seasons = seasons;
                 // alert(`Product ${response.name} was updated successfully!`);
-                this._airlockService.notifyDataChanged("success-notification",{title: "Success" ,
-                    message:`Product ${response.name} was updated successfully!`});
+                this._airlockService.notifyDataChanged("success-notification", {
+                    title: "Success",
+                    message: `Product ${response.name} was updated successfully!`
+                });
                 this.onProductUpdated.emit(response);
                 this.loading = false;
             })
@@ -268,61 +272,68 @@ export class ProductDetail {
                 this.loading = false;
                 this._airlockService.navigateToLoginIfSessionProblem(error);
                 let errorMessage = this._airlockService.parseErrorMessage(error, "");
-                this._airlockService.notifyDataChanged("error-notification",`Failed to update product: ${errorMessage}`);
+                this._airlockService.notifyDataChanged("error-notification", `Failed to update product: ${errorMessage}`);
             });
     }
-    onReset(){
 
+    onReset() {
+        console.log("reset called");
         if (this.didProductChange()) {
-            // if (confirm('Are you sure you want to reset all fields to their original value?')) {
-            //
-            //     this._productCopy = new Product(this._product);
-            // }
-
             let message = 'Are you sure you want to reset all fields to their original values?';
-
-            this.modal.confirm()
-                .title(message)
-                .open()
-                .catch(err => console.log("ERROR")) // catch error not related to the result (modal open...)
-                .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-                .then(result => {
-                    console.log("confirmed");
+            this.modalService.open(ConfirmActionModal, {
+                closeOnBackdropClick: false,
+                context: {
+                    message: message,
+                }
+            }).onClose.subscribe(confirmed => {
+                if (confirmed){
                     this._productCopy = new Product(this._product);
-                }) // if were here ok was clicked.
-                .catch(err => console.log("CANCELED"));
+                }
+            });
         }
     }
 
-    onAddSeason(){
-
-        console.log(`ON ADD SEASON`);
-
+    onAddSeason() {
         this._season = null;
-        this._seasonModal.open(true, false);
+        this.modalService.open(SeasonModal, {
+            closeOnBackdropClick: false,
+            context: {
+                _product: this._product,
+                _isAddNew: true,
+                _isLastSeason: false
+            }
+        }).onClose.subscribe( () => {
+                this.onProductUpdated.emit(this._product);
+        });
     }
-    onEditBranch(branch: Branch){
-        this._editBranchModal.open(branch);
+
+    onEditBranch(branch: Branch) {
+        this.modalService.open(EditBranchModal, {
+            closeOnBackdropClick: false,
+            context: {
+                _branch: Branch.clone(branch),
+            }
+        })
     }
-    branchEdited(branch: Branch){
+
+    branchEdited(branch: Branch) {
         this.showBranches(this._season);
         this.onProductUpdated.emit(this._product);
     }
 
-    selectSeason(season : Season){
-        console.log("SELECT selectSeason");
-        console.log(season);
+    selectSeason(season: Season) {
         this._season = new Season(season);
         this.status = {openId: null};
-        this.showBranches(this._season);
+        this.showBranches(this._season, false);
     }
-    showBranches(season:Season){
-        if(this.canUseBranches){
-            console.log("showBranches");
-            console.log(season);
-            this.loading = true;
+
+    showBranches(season: Season, showLoading = true) {
+        if (this.canUseBranches) {
+            if (showLoading){
+                this.loading = true;
+            }
             this._airlockService.getBranches(season.uniqueId)
-                .then(response  => {
+                .then(response => {
                     this.branches = response;
                     this.loading = false;
                 })
@@ -331,82 +342,131 @@ export class ProductDetail {
                     this.loading = false;
                     this._airlockService.navigateToLoginIfSessionProblem(error);
                     let errorMessage = this._airlockService.parseErrorMessage(error, "");
-                    this._airlockService.notifyDataChanged("error-notification",`Failed to load branches: ${errorMessage}`);
+                    this._airlockService.notifyDataChanged("error-notification", `Failed to load branches: ${errorMessage}`);
                 });
         }
     }
-    onEditSeason(season : Season){
 
-        console.log(`ON EDIT SEASON ${season.name}`);
-
+    onEditSeason(season: Season) {
         this._season = season;
-        var lastSeason = this._product.seasons[this._product.seasons.length-1]==season;
-        this._seasonModal.open(false, lastSeason);
+        var lastSeason = this._product.seasons[this._product.seasons.length - 1] == season;
+        this.popover.hide();
+        this.modalService.open(SeasonModal, {
+            closeOnBackdropClick: false,
+            context: {
+                _product: this._product,
+                _isAddNew: false,
+                _season: season,
+                _isLastSeason: lastSeason
+            }
+        }).onClose.subscribe( deleted => {
+            if (deleted){
+                this._season = null;
+            }
+            this.onProductUpdated.emit(this._product);
+        });
+        // this._seasonModal.open(false, lastSeason);
     }
-    onEditInputSchema(season : Season){
+
+    onEditInputSchema(season: Season) {
+        this.popover.hide();
         this.loading = true;
         this._airlockService.getInputSchema(season.uniqueId)
-            .then(response  => {
-                console.log("inputschema");
-                console.log(response);
+            .then(response => {
                 const editMode = this.isShowEditSchema();
-                this._editInputSchemaModal.open(response,season, editMode);
+                this.modalService.open(EditInputSchemaModal, {
+                    closeOnBackdropClick: false,
+                    context: {
+                        season: season,
+                        isOnlyDisplayMode: !editMode,
+                        inputSchema: response,
+                    },
+                })
+                // this._editInputSchemaModal.open(response, season, editMode);
                 this.loading = false;
             })
             .catch(error => {
                 this.loading = false;
                 this._airlockService.navigateToLoginIfSessionProblem(error);
                 let errorMessage = this._airlockService.parseErrorMessage(error, "");
-                this._airlockService.notifyDataChanged("error-notification",`Failed to update input schema: ${errorMessage}`);
+                this._airlockService.notifyDataChanged("error-notification", `Failed to update input schema: ${errorMessage}`);
             });
     }
-    isShowEditSchema(){
-        if(this._airlockService.isGlobalUserProductLead() || this._airlockService.isGlobalUserAdministrator()){
+
+    onDownloadBranchUsage(season: Season) {
+        this.loading = true;
+        this._airlockService.getBranchUsage(season.uniqueId).then(response => {
+            let usage = response;
+            let usageStr = this.getUsageString(season);
+            this.modalService.open(BranchUsageModal, {
+                closeOnBackdropClick: false,
+                context: {
+                    fileName: usageStr+".json",
+                    text: usage
+                }
+            })
+        }).catch(error => {
+            this.loading = false;
+            this._airlockService.navigateToLoginIfSessionProblem(error);
+            let errorMessage = this._airlockService.parseErrorMessage(error, "");
+            this._airlockService.notifyDataChanged("error-notification", `Failed to download branch usage: ${errorMessage}`);
+        });
+        this.popover.hide();
+    }
+
+    getUsageString(season: Season) {
+        var toRet = this._product.name + "_" + season.minVersion + (season.maxVersion ? "_to_" + season.maxVersion : "_and_up");
+        return toRet;
+    }
+
+    isShowEditSchema() {
+        if (this._airlockService.isGlobalUserProductLead() || this._airlockService.isGlobalUserAdministrator()) {
             return true;
         }
         return !this._airlockService.isViewer() && !this._airlockService.isEditor();
     }
-    downloadSeason(season : Season){
-        console.log("downloadSeason");
+
+    downloadSeason(season: Season) {
         this._airlockService.downloadSeasonFeatures(season);
 
     }
-    onShowDocumentLinks(season : Season){
 
-        console.log(`ON Show Documents ${season.name}`);
-
-
-        this._documentLinksModal.open(season.uniqueId, season.platforms);
+    onShowDocumentLinks(season: Season) {
+        this.popover.hide();
+        this.modalService.open(DocumentlinksModal, {
+            closeOnBackdropClick: false,
+            context: {
+                seasonId: season.uniqueId,
+                platforms: season.platforms,
+            }
+        });
     }
 
-    seasonAdded(season : Season){
-        console.log(`SEASON ADDED ${season.name}`);
+    seasonAdded(season: Season) {
         this.onSeasonsChanged.emit(season);
     }
 
-    seasonEdited(season : Season){
-        console.log(`SEASON EDITED ${season.name}`);
+    seasonEdited(season: Season) {
         this.onSeasonsChanged.emit(season);
     }
 
-    seasonDeleted(season : Season){
-        console.log(`SEASON DELETED ${season.name}`);
-        if(season != null && this._season != null && season.uniqueId == this._season.uniqueId){
+    seasonDeleted(season: Season) {
+        if (season != null && this._season != null && season.uniqueId == this._season.uniqueId) {
             this._season = null;
         }
         this.onSeasonsChanged.emit(season);
     }
 
-    private didProductChange() : boolean {
+    private didProductChange(): boolean {
         return (this._product.name !== this._productCopy.name ||
-                this._product.codeIdentifier !== this._productCopy.codeIdentifier ||
-                this._product.description !== this._productCopy.description);
+            this._product.codeIdentifier !== this._productCopy.codeIdentifier ||
+            this._product.description !== this._productCopy.description);
     }
 
-    private arraysIdentical(arrayA, arrayB) : boolean{
-        if(!arrayA && !arrayB)
+    private arraysIdentical(arrayA, arrayB): boolean {
+        if (!arrayA && !arrayB)
             return true;
-        if((arrayA && !arrayB) || (!arrayA && arrayB))
+        if ((arrayA && !arrayB) || (!arrayA && arrayB))
             return false;
         var i = arrayA.length;
         if (i != arrayB.length)
@@ -418,4 +478,19 @@ export class ProductDetail {
         return true;
     }
 
+    handleError(error: any) {
+        this.loading = false;
+        let errorMessage = FeatureUtilsService.parseErrorMessage(error) || "Failed to load cohorts. Please try again.";
+        console.log("handleError in products:" + errorMessage);
+        this.create(errorMessage);
+    }
+
+    create(message: string) {
+        this.toastrService.danger(message, "Error", {
+            duration: 60000,
+            position: NbGlobalLogicalPosition.BOTTOM_START,
+            preventDuplicates: true,
+            toastClass: 'big-toast'
+        });
+    }
 }

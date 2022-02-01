@@ -1,0 +1,272 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="queryConditionUpdated($event)"
+                                     (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+                                    (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<nb-card class="editCohortModal" [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+
+    <nb-card-header *ngIf="cohort != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{cohort.name}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body [class.noAnalytics]="!canUseAnalytics">
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+                    <span *ngIf="cohort != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="queryTabActive" (click)="selectTab('Query')">{{getString('edit_cohort_query_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!queryTabActive" (click)="selectTab('Query')">{{getString('edit_cohort_query_tab_heading')}}</button>
+                    </span>
+
+                    <span *ngIf="cohort != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="exportsTabActive" (click)="selectTab('Exports')">{{getString('edit_cohort_export_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!exportsTabActive" (click)="selectTab('Exports')">{{getString('edit_cohort_export_tab_heading')}}</button>
+                    </span>
+                </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                    <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                                <div class="row no-margin">
+                                                    <label for="input01" class="control-label">Name</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_cohort_name')"
+                                                                     [title]="getString('edit_cohort_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input01" placeholder=""
+                                                           [(ngModel)]="cohort.name" class="form-control blackText" tabindex="1">
+                                                </div>
+                                                <div class="row no-margin">
+                                                    <label for="input0101" class="control-label">Number of users in Cohort</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_cohort_number_of_users')"
+                                                                     [title]="getString('edit_cohort_number_of_users_title')"></airlock-tooltip>
+                                                    <input type="text" disabled id="input0101" placeholder=""
+                                                           [ngModel]="cohort.usersNumber | number" class="form-control blackText"
+                                                           tabindex="1">
+                                                </div>
+                                                <div class="row no-margin">
+                                                    <div class="col-md-6 no-padding-left">
+                                                        <div class="no-margin " *ngIf="cohort != null">
+                                                            <label for="input80" class="control-label">Creation Date</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_experiment_creation_date')"
+                                                                             [title]="getString('edit_experiment_creation_date_title')"></airlock-tooltip>
+                                                            <input type="text" id="input80" disabled placeholder=""
+                                                                   [value]="creationDate | date:'medium'"
+                                                                   class="form-control blackText">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 no-padding-right">
+                                                        <div class="no-margin " *ngIf="cohort != null">
+                                                            <label for="input82" class="control-label">Last Modified</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_experiment_last_modified')"
+                                                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                                                            <input type="text" id="input82" disabled placeholder=""
+                                                                   [value]="lastModificationDate | date:'medium'"
+                                                                   class="form-control blackText">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row no-margin">
+                                                    <div class="col-md-12 no-padding-left">
+                                                        <div class="no-margin " *ngIf="cohort != null" style="margin-bottom: 2px;">
+                                                            <label for="input008" class="control-label">Creator</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_experiment_creator')"
+                                                                             [title]="getString('edit_experiment_creator_title')"></airlock-tooltip>
+                                                            <input type="text" id="input008" disabled placeholder=""
+                                                                   [(ngModel)]="cohort.creator" class="form-control blackText">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row no-margin">
+                                                    <label class="control-label">Update frequency</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_cohort_update_frequency')"
+                                                                     [title]="getString('edit_cohort_update_frequency_title')"></airlock-tooltip>
+                                                    <nb-select id="select05" [(selected)]="cohort.updateFrequency" class="full-no-padding" placeholder="Select Frequency">
+                                                        <nb-option hero *ngFor="let freqValue of frequencyValues"
+                                                                   value="{{freqValue}}"> {{ freqValue }} </nb-option>
+                                                    </nb-select>
+                                                </div>
+                                                <div class="row no-margin " *ngIf="cohort != null">
+                                                    <label for="input55" class="control-label">Description</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_experiment_description')"
+                                                                     [title]="getString('edit_experiment_description_title')"></airlock-tooltip>
+                                                    <textarea id="input55" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                              [(ngModel)]="cohort.description" value="FEATURE"
+                                                              class="form-control description-text blackText"
+                                                              style="height: 120px; resize:none" tabindex="8"></textarea>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #queryTab *ngIf="queryTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                    <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_cohort_query_tab_details')}}
+                                <br>
+                            </h5>
+                        </span>
+                    <span class="locales-filter leftFlexContainer">
+                            <p class="modal-title value-expression-label">Optionally add additional tables to the query:</p>
+                    </span>
+                    <div class="valueExpressionRow"></div>
+                    <span>
+                        <div [class.dirty-mode]="dirtyMode" #mytesteditor ace-editor id="input56"
+                             (onTextChanged)="queryConditionUpdated($event)"
+                             [mode]="'sql'"
+                             [markdown]="cohort.queryCondition" [readonly]="isOnlyDisplayMode"
+                             [heightSize]="aceEditorRuleHeight" [sample]="calculatedColumnNames" [sql]="true">
+                        </div>
+                        </span>
+                    <div class="row valueExpressionRow">
+                        <div class="col-md-12">
+                            <div class="no-margin" *ngIf="cohort != null">
+                                <div class="leftFlexContainer">
+                                    <label for="input556" class="control-label value-expression-label">Use Value
+                                        Expression:</label>
+                                    <nb-toggle class="padding-right paddingTop" [disabled]="isOnlyDisplayMode"
+                                               [(ngModel)]="showValueExpression"></nb-toggle>
+                                    <span class="modal-title value-expression-label value-expression-exp">{{getString('edit_cohort_value_expression_details')}}</span>
+                                </div>
+                                <div *ngIf="showValueExpression" [class.dirty-mode]="dirtyMode" #mytesteditor ace-editor
+                                     id="input556" (onTextChanged)="queryAdditionalValueUpdated($event)"
+                                     [mode]="'javascript'"
+                                     [markdown]="cohort.queryAdditionalValue" [readonly]="isOnlyDisplayMode"
+                                     [heightSize]="aceEditorAdditionalHeight" [sample]="calculatedColumnNames"
+                                     [sql]="true">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 no-padding-right">
+                            <div class="no-margin " *ngIf="cohort != null">
+                                <div class="row">
+                                    <div class="flexcontainer">
+                                        <button class="btn btn-default btn-with-icon assess-button"
+                                                [class.in-progress]="validatingQuery" [disabled]="validatingQuery"
+                                                (click)="assesUsers()" type="button">
+                                            <i *ngIf="validatingQuery" class="fas fa fa-spinner fa-spin"></i>
+                                            <i *ngIf="hasValidResponse()"
+                                               class="fas fa fa-check btn-success-outline"></i>
+                                            <i *ngIf="validationError || hasInvalidResponse()"
+                                               class="fas fa fa-times btn-outline-danger"></i>
+                                            Assess number of users
+                                        </button>
+                                        <label *ngIf="dirtyMode" class="control-label asses-label dirty-label">* Query
+                                            changed - assess to view updated number of users</label>
+                                        <label *ngIf="hasValidResponse()"
+                                               class="control-label asses-label">{{validationResponse?.usersNumber | number}}
+                                            Users</label>
+                                        <label *ngIf="validationError != null"
+                                               class="control-label asses-label error-label">{{validationError}}</label>
+                                        <label *ngIf="hasInvalidResponse()"
+                                               class="control-label asses-label error-label"
+                                               [tooltip]="validationResponse?.statusMessage">{{validationResponse?.statusMessage}}</label>
+                                        <button *ngIf="validationError != null" class="btn btn-expand btn-icon"
+                                                type="button" (click)="showError()">
+                                            <i class="ion-more"></i>
+                                        </button>
+                                        <button *ngIf="hasValidResponse()" class="btn btn-expand btn-icon" type="button"
+                                                (click)="showDetails()">
+                                            <i class="ion-ios-more-outline"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #exportsTab *ngIf="exportsTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                       <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_cohort_export_explain')}}
+                                <br>
+                            </h5>
+                        </span>
+                    <div class="no-margin " *ngIf="cohort != null">
+                            <label for="input882" class="control-label">Export type</label>
+                            <airlock-tooltip class="endFlexContainer"
+                                             [content]="getString('edit_experiment_last_modified')"
+                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                            <input type="text" disabled placeholder=""
+                                   [value]="selectedExportKey"  class="form-control blackText">
+                    </div>
+                    <div class="no-margin " *ngIf="cohort != null">
+                            <label for="input882" class="control-label">Value type</label>
+                            <airlock-tooltip class="endFlexContainer"
+                                             [content]="getString('edit_experiment_last_modified')"
+                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                            <input type="text" disabled placeholder=""
+                                   [value]="cohort.valueType"  class="form-control blackText">
+                    </div>
+                    <div class="export-details" *ngIf="selectedExport != null">
+                        <div class="no-margin " *ngIf="cohort != null">
+                            <label for="input01" class="control-label">User Attribute Name
+                                in {{ selectedExportKey }}</label>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_cohort_export_name')"
+                                             [title]="getString('edit_cohort_export_name_title')"></airlock-tooltip>
+                            <div class="flexcontainer">
+                                <input type="text" [disabled]="isOnlyDisplayMode || !isNewExportItem()" id="input101"
+                                       placeholder="" [(ngModel)]="selectedExport.exportName"
+                                       (focusin)="exportNameFocus()" class="form-control blackText" tabindex="1">
+                                <button *ngIf="!isNewExportItem() && !isOnlyDisplayMode" type="button"
+                                        class="btn btn-default" (click)="renameExportName()">Rename
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="no-margin " *ngIf="cohort != null">
+                            <label for="input882" class="control-label">Last Export Time</label>
+                            <airlock-tooltip class="endFlexContainer"
+                                             [content]="getString('edit_experiment_last_modified')"
+                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                            <input type="text" id="input882" disabled placeholder=""
+                                   [value]="lastExportDate | date:'medium'" class="form-control blackText">
+                        </div>
+                    </div>                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="cohort != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode"   data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

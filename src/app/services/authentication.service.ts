@@ -2,19 +2,20 @@
  * Created by yoavmac on 14/09/2016.
  */
 
-import { Injectable } from '@angular/core';
-import {Headers, Http, RequestOptions, Response} from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
-import { User } from '../model/user';
+import {User} from '../model/user';
 
 @Injectable()
 export class AuthenticationService {
 
-    constructor(private http: Http) { }
+    constructor(private http: HttpClient) {
+    }
 
-    oktaGetUser (errorHandler:any = this.handleError) {
+    oktaGetUser(errorHandler: any = this.handleError) {
 
         // let url = '/auth/user';
         //
@@ -26,7 +27,7 @@ export class AuthenticationService {
 
         return this.http.get(url)
             .toPromise()
-            .then(response => response.json() as User)
+            .then(response => (response as any).json() as User)
             .catch(errorHandler);
     }
 
@@ -41,10 +42,10 @@ export class AuthenticationService {
     //         .catch(errorHandler);
     // }
 
-    private extractData(res: Response) {
+    private extractData(res: HttpResponse<any>) {
 
-        let body = res.json();
-        return body.data || { };
+        let body = res as any;
+        return body.data || {};
     }
 
     private handleError(error: any) {

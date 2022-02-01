@@ -1,0 +1,18 @@
+<span class="popover-content">
+    <p class="poll-id">{{poll?.pollId}}</p>
+    <p class="poll-title">{{poll?.title}}</p>
+    <p *ngIf="poll?.subTitle" class="poll-subtitle">{{poll.subTitle}}</p>
+    <div class="question-div" *ngFor="let question of poll?.questions; let idx = index">
+        <span class="dashFlexContainer">
+            <i class="fa fa-question-circle"></i>
+            <p class="question-text">{{question?.title}}</p>
+        </span>
+<!--        <p class="question-id">{{question?.pollId}}</p>-->
+
+        <div *ngFor="let answer of question.predefinedAnswers">
+            <p>{{answer.answerId}} - {{answer.title}}</p>
+        </div>
+        <p class="question-answer" *ngIf="question.openAnswer"> Open answer - {{question.openAnswer.title}}</p>
+    </div>
+</span>
+

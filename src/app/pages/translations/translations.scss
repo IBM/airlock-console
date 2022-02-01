@@ -64,3 +64,41 @@ a.disabled {
 .dropdown-toggle::after {
   display: none !important;
 }
+
+.header-title {
+  line-height: 2rem;
+  padding-right: 3px;
+}
+
+.layout-select {
+  border-radius: 2px;
+  height: 32px;
+}
+.layout-selected {
+  margin-bottom: 0px;
+  background: #009ff3;
+  color: white;
+  width: 100%;
+}
+
+.layout-selected:hover {
+  border-color: #009ff3;
+}
+
+.layout-not-selected {
+  background: lightgrey;
+  color: black;
+  margin: 0px;
+  border-color: #009ff3;
+  border-width: 2px;
+}
+
+.layout-not-selected:hover {
+  background: #f0f0f0 !important;
+}
+
+.translations-table {
+  table-layout: fixed;
+  width: 100%;
+}
+

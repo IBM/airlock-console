@@ -1,4 +1,3 @@
-
 export class Webhook {
     creator: string;
     uniqueId: string;
@@ -12,8 +11,8 @@ export class Webhook {
     products: string[];
 
 
-    static clone(src: Webhook) : Webhook {
-        let toRet:Webhook = new Webhook();
+    static clone(src: Webhook): Webhook {
+        let toRet: Webhook = new Webhook();
         toRet.uniqueId = src.uniqueId;
         toRet.name = src.name;
         toRet.lastModified = src.lastModified;
@@ -27,18 +26,19 @@ export class Webhook {
         return toRet;
     }
 
-    static duplicateArrayString(array:Array<string>): Array<string> {
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })

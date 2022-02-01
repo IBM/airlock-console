@@ -1,0 +1,122 @@
+
+<nb-card #reorderMXGroupModal id="reorderMXGroupModal" class="reorderMXGroupModal fixed-size-modal" data-keyboard="false" data-backdrop="static">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header [show-close]="true" *ngIf="_mxGroup != null">
+        <h4 class="modal-title">
+             <span *ngIf="isFeature">
+                 Reorder Features
+            </span>
+            <span *ngIf="!isConfig && !isOrderRule && !isConfigurationsRoot() && !isFeature">
+                 Reorder Mutual Exclusion Group
+            </span>
+            <span *ngIf="isConfig || (!isOrderingRule() &&isConfigurationsRoot() && !isFeature)">
+                 Reorder Configurations
+            </span>
+            <span *ngIf="isOrderRule || (isOrderingRule() && !isFeature)">
+                 Reorder Ordering Rules
+            </span>
+            <span style="width:3em;float: right;"> </span>
+
+
+        </h4>
+        <div *ngIf="isFeature">
+            <h5 class="modal-title">
+                {{getString('reorder_feature_subheader')}}
+            </h5>
+        </div>
+        <div *ngIf="!isOrderingRule() && (isConfigurationsRoot() || isConfig) && !isFeature">
+            <h5 class="modal-title">
+                {{getString('reorder_configuration_root_subheader')}}
+            </h5>
+        </div>
+
+        <div *ngIf="isOrderingRule() && !isFeature">
+            <h5 class="modal-title">
+                {{getString('reorder_ordering_rules_root_subheader')}}
+            </h5>
+        </div>
+
+        <div *ngIf="!isConfig &&  !isOrderingRule() && !isConfigurationsRoot() && !isFeature">
+            <h5 class="modal-title" *ngIf="!isConfigMode()">
+                {{getString('reorder_features_subheader')}}
+            </h5>
+
+            <h5 class="modal-title" *ngIf="isConfigMode()">
+                {{getString('reorder_configuration_subheader')}}
+            </h5>
+        </div>
+
+    </nb-card-header>
+    <nb-card-body  *ngIf="_mxGroup != null">
+        <div>
+        <div style="display: inline-block;width: 100%;">
+            <button (click)="moveUp()" class="moveButton  btn btn-primary" >
+                <i class = "ion-chevron-up"></i>
+            </button>
+            <button (click)="moveDown()" class="moveButton btn btn-primary marginrightbutton">
+                <i class = "ion-chevron-down"></i>
+            </button>
+        </div>
+        <div id="mainAccordion" class="accordion mainAccordion"  style="overflow: scroll;height: 300px;position: relative">
+            <span *ngFor="let item of getChildren(_mxGroup); let i = index;">
+                <section  class="accordion-item" *ngIf="!isEmptyMX(item)" [class.col-sm-12]="false"  [class.isOpen]="item==_selectedTarget">
+
+                    <div class="panel panel-success" >
+                        <span >
+                            <div class="panel-body targetItem">
+                                <ul class="list-group">
+                                    <li class="list-group-item" [class.selected]="item==_selectedTarget" (click)="selectTarget(item,i,$event.target)">{{getName(item)}}
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </span>
+                    </div>
+
+                </section>
+            </span>
+            </div>
+
+            <div *ngIf="shouldShowMaxOnSection()">
+
+                <hr class="hr">
+
+                <label *ngIf="!isConfigMode() && !isOrderingRule()" for="maxOn" class="control-label">{{getString('reorder_max_features_on')}}</label>
+                <airlock-tooltip *ngIf="!isConfigMode() && !isOrderingRule()" class="endFlexContainer" [content]="getString('reorder_max_features_on_tooltip')" [title]=""></airlock-tooltip>
+
+                <label *ngIf="isConfigMode()&& !isOrderingRule()" for="maxOn" class="control-label">{{getString('reorder_max_configs_on')}}</label>
+                <airlock-tooltip *ngIf="isConfigMode() && !isOrderingRule()" class="endFlexContainer" [content]="getString('reorder_max_configs_on_tooltip')" [title]=""></airlock-tooltip>
+
+                <label *ngIf="!isConfigMode() && isOrderingRule()" for="maxOn" class="control-label">{{getString('reorder_max_ordering_rule_on')}}</label>
+                <airlock-tooltip *ngIf="!isConfigMode() && isOrderingRule()" class="endFlexContainer" [content]="getString('reorder_max_ordering_rules_on_tooltip')" [title]=""></airlock-tooltip>
+
+                <input type="number" min="1" max="{{getChildren(_mxGroup)?.length}}" id="maxOn" [(ngModel)]="_mxGroup.maxFeaturesOn"  class="form-control whiteText" >
+
+            </div>
+        </div>
+        <!--<table class="ordertable">-->
+            <!--<tr *ngFor="let mxItem of _mxGroup.features; let i = index">-->
+                <!--<td class="whiteText">-->
+                    <!--{{mxItem.name}}-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<button (click)="moveUp(i)">-->
+                        <!--<i class = "ion-chevron-up"></i>-->
+                    <!--</button>-->
+                    <!--<button (click)="moveDown(i)">-->
+                        <!--<i class = "ion-chevron-down"></i>-->
+                    <!--</button>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

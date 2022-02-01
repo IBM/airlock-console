@@ -1,105 +1,92 @@
-<div class="container_not">
-    <div>
-        <!--<div id="tloader" [hidden]="!loading">-->
-            <!--<div></div>-->
-        <!--</div>-->
-        <div id="tloader" [hidden]="!loading">
-            <div></div>
-        </div>
-        <div style="float: right;    display: flex;" *ngIf="selectedSeason != null">
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">
+        <div>
+            <div id="tloader" [hidden]="!loading">
+                <div></div>
+            </div>
+            <div style="float: right;    display: flex;" *ngIf="selectedSeason != null">
 
-            <button  style="margin-right: 8px;" *ngIf="addFeatureModal.isShownADDButton()" [hidden]="!addFeatureModal.valid" type="button" (click)="addFeatureModal.open(rootId)" class="btn btn-primary">
-                <i class="ion-plus"></i>
-                Add Feature
-            </button>
-
-            <div class="btn-group" *ngIf="!isViewer()" dropdown style="margin-right: 8px;" [hidden]="selectedSeason == null">
-                <button id="single-button" type="button" class="btn btn-primary" dropdownToggle title="Actions">
-                    <i class="ion-settings"></i>
+                <!--            <button  style="margin-right: 8px;" *ngIf="addFeatureModal.isShownADDButton()" [hidden]="!addFeatureModal.valid" type="button" (click)="addFeatureModal.open(rootId)" class="btn btn-primary">-->
+                <button style="margin-right: 8px;" type="button" (click)="addFeature()" class="btn btn-primary">
+                    <i class="ion-plus"></i>
+                    Add Feature
                 </button>
-                <ul dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu-right main-actions">
-                    <li role="menuitem"  *ngIf="isShowEditSchema() && !staticMode"><a class="dropdown-item" (click)="onEditInputSchema()" style=""><i class="fa ion-compose" style="margin-right: 5px;"></i>Edit input schema</a></li>
-                    <li role="menuitem"  *ngIf="isShowViewSchema() && !staticMode"><a class="dropdown-item" (click)="onEditInputSchema(false)" style=""><i class="fa ion-compose" style="margin-right: 5px;"></i>View input schema</a></li>
-                    <li role="menuitem"  *ngIf="isShowEditUtil() && !staticMode"><a class="dropdown-item" (click)="onEditUtilities()" style=""><i class="fa ion-hammer" style="margin-right: 5px;"></i>Edit utilities</a></li>
-                    <li  role="menuitem" *ngIf="isShowOptions()"><a class="dropdown-item" (click)="onShowDocumentLinks()"><i class="fa ion-ios-download-outline" style="margin-right: 5px;"></i>Download defaults file</a></li>
-                    <!--<li  role="menuitem" *ngIf="isShowOptions()"><a class="dropdown-item" (click)="downloadRuntimeDefaults()"><i class="fa ion-ios-download-outline" style="margin-right: 5px;"></i>Download Runtime files</a></li>-->
-                    <li  role="menuitem" *ngIf="isShowOptions() && !staticMode"><a class="dropdown-item" (click)="onShowEncryptionKey()"><i class="fa ion-key" style="margin-right: 5px;"></i>Show encryption key</a></li>
-                    <li  role="menuitem" *ngIf="isShowOptions()"><a class="dropdown-item" (click)="reorder()"><i class="fa fa-sort" style="margin-right: 5px;"></i>Reorder</a></li>
-                    <li  role="menuitem" *ngIf="isShowOptions() && seasonSupportAnalytics  && !staticMode"><a class="dropdown-item" (click)="onShowContext()"><i class="fa ion-radio-waves" style="margin-right: 5px;"></i>Report on context fields</a></li>
-
-                    <li  role="menuitem"  *ngIf="isShowImport()"><a class="dropdown-item" (click)="importFeaturesModal.open(false,root)"><i class="fa ion-log-in" style="margin-right: 5px;"></i>Import</a></li>
-                    <li  role="menuitem"  *ngIf="isShowImport()" ><a class="dropdown-item" [class.disabled]= "!isShowPaste()" (click)="isShowPaste() && importFeaturesModal.open(true,root)"><i class="fa fa-clipboard" style="margin-right: 5px;"></i>Paste</a></li>
-                </ul>
+                <div class="btn-group" *ngIf="!isViewer()" dropdown style="margin-right: 8px;" [hidden]="selectedSeason == null">
+                    <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" id="single-button" type="button" class="btn btn-primary" dropdownToggle title="Actions">
+                        <i class="ion-settings"></i>
+                    </button>
+                    <ng-template #templateRef>
+                        <ul class="menu-items">
+                            <li class="dropdown-item"  *ngIf="isShowEditSchema() "><a (click)="onEditInputSchema();hidePopover()"><i class="fa ion-compose" style="margin-right: 5px;"></i>Edit context schema</a></li>
+                            <li class="dropdown-item"  *ngIf="isShowViewSchema() "><a  (click)="onEditInputSchema(false);hidePopover()" style=""><i class="fa ion-compose" style="margin-right: 5px;"></i>View input schema</a></li>
+                            <li class="dropdown-item"  *ngIf="isShowEditUtil() "><a  (click)="onEditUtilities();hidePopover()"><i class="fa ion-hammer" style="margin-right: 5px;"></i>Edit utilities</a></li>
+                            <li  class="dropdown-item" *ngIf="isShowOptions()"><a  (click)="onShowDocumentLinks();hidePopover()"><i class="fa ion-ios-download-outline" style="margin-right: 5px;"></i>Download defaults file</a></li>
+                            <li  class="dropdown-item" *ngIf="isShowEncryption() "><a (click)="onShowEncryptionKey();hidePopover()"><i class="fa ion-key" style="margin-right: 5px;"></i>Show encryption key</a></li>
+                            <li  class="dropdown-item" *ngIf="isShowOptions()"><a (click)="reorder();hidePopover()"><i class="fa fa-sort" style="margin-right: 5px;"></i>Reorder</a></li>
+                            <li  class="dropdown-item" *ngIf="isShowOptions() && seasonSupportAnalytics  "><a (click)="onShowContext();hidePopover()"><i class="fa ion-radio-waves" style="margin-right: 5px;"></i>Report on context fields</a></li>
+                            <li  class="dropdown-item" *ngIf="seasonSupportAnalytics"><a (click)="toggleDataCollectionDetails();hidePopover()"><i class="ion-ios-information-outline info-icon" style="margin-right: 5px;"></i>View Data Collection Summary</a></li>
+                            <li  class="dropdown-item"  *ngIf="isShowImport()"><a (click)="openImportFeatureModal(false);hidePopover()"><i class="fa ion-log-in" style="margin-right: 5px;"></i>Import</a></li>
+                            <li  class="dropdown-item"  *ngIf="isShowImport()" ><a [class.disabled]= "!isShowPaste()" (click)="isShowPaste() && openImportFeatureModal(true);hidePopover()"><i class="fa fa-clipboard" style="margin-right: 5px;"></i>Paste</a></li>
+                        </ul>
+                    </ng-template>
+                </div>
             </div>
 
-            <button #btn_whitelist id="btn_whitelist" *ngIf="seasonSupportAnalytics  && !staticMode"  [hidden]="selectedSeason == null"  data-count="0" (click)="toggleDataCollectionDetails()" class="btn badge-top-right btn-primary" title="Data Collection Summary">
-                <i class="ion-radio-waves"></i>
-            </button>
-            <!--
-            <button #btn_whitelist id="btn_test" *ngIf=seasonSupportAnalytics  [hidden]="selectedSeason == null"  data-count="0" (click)="toggleTestExperiments()" class="btn badge-top-right btn-primary" title="Data Collection Summary">
-                <i class="icon ion-funnel"></i>
-            </button>
-            -->
-            <!--<button #btn_whitelist id="btn_test_exper" (click)="toggleTestExperiments()" class="btn badge-top-right btn-primary" title="Data Collection Summary">
-                <i class="icon ion-funnel"></i>
-            </button>-->
 
-        </div>
-        <verify-action-modal  #verifyActionModal ></verify-action-modal>
-        <verify-remove-from-branch-modal #verifyRemoveFromBranchModal></verify-remove-from-branch-modal>
-        <add-feature-modal  [staticMode]="staticMode" [valid]="valid" #addFeatureModal [rootId]="rootId" [parentId]="rootId" [possibleGroupsList]="possibleUserGroupsList" style="float: right" [seasonId]="selectedSeason?.uniqueId" [branchId]="selectedBranch?.uniqueId" (onAddFeature)="refreshTable($event)"></add-feature-modal>
-        <add-configuration-modal [valid]="valid" #addConfigurationModal [rootId]="rootId" [parentId]="rootId" [possibleGroupsList]="possibleUserGroupsList" style="float: right" [seasonId]="selectedSeason?.uniqueId" (onAddFeature)="refreshTable($event)"></add-configuration-modal>
-        <wl-attributes-modal #wlAttributesModalDialog (outputEventAnalyticsAttributesUpdate)="updateWhitelist($event)" [totalCount]="totalAnaliticsCount" [totalCountDev]="totalAnaliticsDevCount" [totalCountQuota]="totalCountQuota"> </wl-attributes-modal>
-        <edit-feature-modal [staticMode]="staticMode" [verifyActionModal]="verifyActionModal"  (outputEventWhiteListUpdate)="updateWhitelist($event)" (onShowFeature)="setEditDialog($event)" [season]="selectedSeason" [possibleGroupsList]="possibleUserGroupsList" [rootId]="rootId" [root]="root" #editFeatureModal [rootFeatuteGroups]="groups" [feature]="selectedEditedFeature" (onEditFeature)="refreshTable($event)"></edit-feature-modal>
-        <import-features-modal [targetBranch] = "selectedBranch" [rootFeatuteGroups]="groups"  [season]="selectedSeason" [rootId]="rootId" [root]="root" #importFeaturesModal (onImportFeatures)="refreshTable($event)"></import-features-modal>
-        <reorder-mx-group-modal  [verifyActionModal]="verifyActionModal"  #reorderMxGroupModal (onReorderMX)="refreshTable($event)"></reorder-mx-group-modal>
-        <add-to-group-modal #addToMXGroupModal (onSave)="refreshTable($event)"></add-to-group-modal>
-        <document-links-Modal #documentLinksModal></document-links-Modal>
-        <select-Locale-For-Runtime-Modal #selectLocaleForRuntimeModal></select-Locale-For-Runtime-Modal>
-        <edit-input-schema-modal #editInputSchemaModal></edit-input-schema-modal>
-        <edit-utility-modal #editUtilityModal></edit-utility-modal>
-        <show-key-modal #showKeyModal></show-key-modal>
-        <wl-context-modal #pwlContextModalDialog (outputEventWhiteListUpdate)="updateWhitelist($event)" [totalCount]="totalAnaliticsCount" [totalCountDev]="totalAnaliticsDevCount" [totalCountQuota]="totalCountQuota"></wl-context-modal>
-        <wl-summary [(visible)]="showDialog" [(analyticDataForDisplay)]="analyticDataForDisplay" [totalCount]="totalAnaliticsCount" [totalCountDev]="totalAnaliticsDevCount" [totalCountQuota]="totalCountQuota" [selectedBranch]="selectedBranch"></wl-summary>
-        <custom-airlock-header [products]="products" [seasons]="seasons" [selectedProduct]="selectedProduct" [selectedSeason]="selectedSeason"
-         [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showOrdering]="showOrdering"  (onShowOrderingChanged)="setShowOrdering($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
-                               [selectedResultNum]="selectedFeatureIndex" [showAnalytics]="seasonSupportAnalytics" [staticMode]="staticMode"
-         [showNotInBranch]="showNotInBranch" (onShowNotInBranchChanged)="setShowNotInBranch($event)"
-         [showSearch]="true" [showExperiments]="false" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="this.filteredFeatures.length"
-        (onProductSelected)="onProductSelection($event)" (onSeasonSelected)="onSeasonSelection($event)" (onNextSearchResult)="showNextSearchResult($event)"></custom-airlock-header>
+            <wl-summary [(visible)]="showDialog" [(analyticDataForDisplay)]="analyticDataForDisplay"
+                        [totalCount]="totalAnaliticsCount" [totalCountDev]="totalAnaliticsDevCount"
+                        [totalCountQuota]="totalCountQuota" [selectedBranch]="selectedBranch"></wl-summary>
+<!--            <search-screen [visible]="showAdvancedSearch"></search-screen>-->
+<!--            <nb-search type="column-curtain" tag="column-curtain"></nb-search>-->
+            <div>{{searchValue}}</div>
+            <custom-airlock-header
+                    [selectedProduct]="selectedProduct"
+                    [showTableHeader]="!inlineMode"
+                    [selectedSeason]="selectedSeason"
+                    [showConfig]="showConfig"
+                    (onShowConfigChanged)="setShowConfig($event)"
+                    [showOrdering]="showOrdering"
+                    (onShowOrderingChanged)="setShowOrdering($event)"
+                    [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                    [selectedResultNum]="selectedFeatureIndex" [showAnalytics]="seasonSupportAnalytics"
+                    [showNotInBranch]="showNotInBranch" (onShowNotInBranchChanged)="setShowNotInBranch($event)"
+                    [showSearch]="true" [showExperiments]="false" (onSearchQueryChanged)="onSearchQueryChanged($event)"
+                    [numSearchResults]="this.filteredFeatures.length"
+                    (onNextSearchResult)="showNextSearchResult($event)"
+                    (onShowAdvancedSearch)="toggleAdvancedSearch()"></custom-airlock-header>
 
-        <div class="row col-sm-12 featuresContainer" style="padding-bottom: 20px" *ngIf="selectedSeason != null">
-            <feature-cell *ngFor="let container of groups; let i = index" class=""
-                          [feature]="container" [level]="0" [editFeatureModal]="editFeatureModal" [insideMX]="false"
-                          (onUpdate)="refreshTable($event)"
-                          (hideIndicator)="afterUpdate()"
-                          (beforeUpdate)="beforeUpdate($event)"
-                          (onCellClick)="featureChangedStatus($event)"
-                          (onSearchHit)="featureIsInFilter($event)"
-                          (onSelected)="featureIsSelected($event)"
-                          [shouldOpenCell]="isCellOpen(container?.uniqueId)"
-                          [openFeatures]="openFeatures"
-                          [featuresPath]="[]"
-                          [addToMXGroupModal]="addToMXGroupModal"
-                          [addFeatureModal]="addFeatureModal"
-                          [addConfigurationModal]="addConfigurationModal"
-                          [wlAttributesModalDialog]="wlAttributesModalDialog"
-                          [parentFeatureId]="rootId"
-                          [contextFeatureId]="rootId"
-                          [reorderMXGroupModal]="reorderMXGroupModal"
-                          [showConfig]="showConfig"
-                          [showNotInBranch]="showNotInBranch"
-                          [showDevFeatures]="showDevFeatures"
-                          [filterlistDict]="filterlistDict"
-                          [verifyActionModal]="verifyActionModal"
-                          [verifyRemoveFromBranchModal]="verifyRemoveFromBranchModal"
-                          [importFeaturesModal]="importFeaturesModal"
-                          [searchTerm]="searchQueryString"
-                          [seasonSupportAnalytics]="seasonSupportAnalytics"
-                          [canImportExport]="importExportSupport"
-                          [branch]="selectedBranch"
-                          [selectedFeatureId]="selectedFeatureId"
-            ></feature-cell>
+            <div class="row col-sm-12 featuresContainer" style="padding-bottom: 20px" *ngIf="selectedSeason != null">
+                <feature-cell *ngFor="let container of features; let i = index" class=""
+                              [feature]="container" [level]="0"
+                              [insideMX]="false"
+                              [inlineMode]="inlineMode"
+                              (onUpdate)="refreshTable($event)"
+                              (hideIndicator)="afterUpdate()"
+                              (beforeUpdate)="beforeUpdate()"
+                              (onCellClick)="featureChangedStatus($event)"
+                              (onSearchHit)="featureIsInFilter($event)"
+                              (onSelected)="featureIsSelected($event)"
+                              (onEditInline)="showEditInline($event)"
+                              [shouldOpenCell]="isCellOpen(container?.uniqueId)"
+                              [openFeatures]="openFeatures"
+                              [featuresPath]="[]"
+                              [parentFeatureId]="rootId"
+                              [contextFeatureId]="rootId"
+                              [showConfig]="showConfig"
+                              [showNotInBranch]="showNotInBranch"
+                              [showDevFeatures]="showDevFeatures"
+                              [filterlistDict]="filterlistDict"
+                              [searchTerm]="searchQueryString"
+                              [seasonSupportAnalytics]="seasonSupportAnalytics"
+                              [canImportExport]="importExportSupport"
+                              [branch]="selectedBranch"
+                              [selectedFeatureId]="selectedFeatureId"
+                ></feature-cell>
+            </div>
         </div>
     </div>
+    <div [class.col-md-6]="inlineMode">
+        <edit-feature-page #editInline (onClose)="closeEditInline($event)" [visible]="inlineMode"></edit-feature-page>
+    </div>
 </div>
+

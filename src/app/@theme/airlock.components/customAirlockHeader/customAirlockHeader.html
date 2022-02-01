@@ -1,0 +1,238 @@
+<div class="pad"></div>
+<div class="headerCard">
+    <div bacardblur="" zoom-in="">
+        <div class="card-body">
+            <div #stickyParent class="row">
+                <div class="no-padding-left" [class.col-md-12]="showCohorts"
+                     [class.col-md-8]="!showTranslationFilters && !showCohorts && !showDataimport"
+                     [class.col-md-5]="showDataimport" [class.col-md-4]="showTranslationFilters">
+                    <div *ngIf="showSearch" class="rightFlexContainer">
+                        <span class="middle-align-element">
+                            <i class="ion-ios-search-strong searchIcon"></i>
+                        </span>
+                        <input class="form-control smallPad" placeholder="Search for..." type="text"
+                               [(ngModel)]="searchQuery" (ngModelChange)="filterFeatures()"
+                               (keyup.enter)="getNextResult()">
+                        <span class="search-count">{{getNumResults(numSearchResults)}}</span>
+                        <i aria-hidden="true" class="ion-chevron-down search-down-button clearSearchIcon"
+                           *ngIf="numSearchResults > 0 && simpleSearch == false"
+                           (click)="getNextResult()"></i>
+                        <i aria-hidden="true" class="ion-chevron-up search-up-button clearSearchIcon"
+                           *ngIf="numSearchResults > 0 && simpleSearch == false"
+                           (click)="getPreviousResult()"></i>
+                        <i aria-hidden="true" class="ion-close-circled clearSearchIcon search-clear"
+                           [class.search-clear-simple]="simpleSearch" *ngIf="searchQuery?.length > 0"
+                           (click)="clearSearch()"></i>
+                        <button *ngIf="false" id="advanced-button" type="button" class="btn btn-default advanced-button"
+                                (click)="showAdvancedSearchClicked($event)">
+                            <i class="fa fa-search-plus"></i>
+                            Advanced Search
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="showDataimport"
+                     class="btn-group configCheckBox noMarginBottom align-right col-md-7">
+                    <span class="order-by-title">Order By:</span>
+                    <nb-select placeholder="Creation Date" class="dataimport-filter">
+                        <nb-option *ngFor="let ordetItem of orderByList" (selectionChange)="orderBySelected($event)" value="{{ordetItem}}"> {{ordetItem}} </nb-option>
+                    </nb-select>
+                    <span class="date-by-title">Last Modified:</span>
+                    <nb-select placeholder="Last Week" class="dataimport-filter">
+                        <nb-option *ngFor="let filterDate of filterDateList" (selectionChange)="dateFilterSelected($event)" value="{{filterDate}}"> {{filterDate}} </nb-option>
+                    </nb-select>
+                </div>
+                <div *ngIf="!showCohorts && !showDataimport" class="" [class.col-md-4]="!showTranslationFilters"
+                     [class.col-md-8]="showTranslationFilters">
+                    <div class="btn-group configCheckBox noMarginBotton"
+                         *ngIf="showDisplayOptions">
+                        <div style="display: table-cell;" class="right-margin">
+                            <nb-select id="select05" hero multiple placeholder="Display Options(0)"  [(selected)]="selectedFilters">
+                                <nb-select-label>Display Options ({{optionsLength}})</nb-select-label>
+                                <nb-option hero *ngFor="let filter of mFilters" (selectionChange)="handleSelectionChange($event)" value="{{filter.id}}"> {{ filter.label }} </nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                    <div class="btn-group configCheckBox noMarginBotton"
+                         *ngIf="showAddAuthUser">
+                        <div style="display: table-cell;" class="right-margin">
+                            <button *ngIf="showAddAuthUser" style="margin-right: 0px;" type="button"
+                                    class="btn btn-primary" (click)="addUserClicked($event)">
+                                <i class="ion-plus"></i>
+                                Add User
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-group configCheckBox noMarginBottom flexcontainer full-width"
+                         *ngIf="showModeSelector">
+                        <span class="locales-filter">
+                            <span class="header-title">Selected Locales:</span>
+                            <nb-select hero multiple placeholder="Choose locales" [selected]="optionsModel">
+                                <nb-option hero *ngFor="let localeOption of localeOptions" (selectionChange)="onLocalesChange($event)" value="{{localeOption.id}}"> {{localeOption.name}} </nb-option>
+                            </nb-select>
+                        </span>
+                        <nb-select hero placeholder="Filter by Feature...">
+                            <nb-option hero *ngFor="let feature of featuresList" (selectionChange)="selected($event)" value="{{feature.id}}"> {{feature.text}} </nb-option>
+                        </nb-select>
+                        <div>{{itemsToString(value)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="header-title table table-hover header-table" *ngIf="showTableHeader" sticky-view #headerDiv>
+    <thead>
+    <tr class="black-muted-bg"
+        *ngIf="!showExperimentsHeader && !showStreamsHeader && !showCohorts  && !showPollsHeader && !showDataimport && !(hideColumns && !(showSearch && headerDiv.classList.contains('fixed')))">
+        <th *ngIf="showAnalytics" style="width: 3%"></th>
+        <th style="width: 50%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+            <div class="row"  >
+                <div class="col-12">
+                    <div *ngIf="showSearch && headerDiv.classList.contains('fixed')" class="rightFlexContainer">
+                            <span class="middle-align-element">
+                                <i class="ion-ios-search-strong searchIcon"></i>
+                            </span>
+                        <input class="form-control smallPad" placeholder="Search for..." type="text"
+                               [(ngModel)]="searchQuery" (ngModelChange)="filterFeatures()"
+                               (keyup.enter)="getNextResult()">
+                        <span class="search-count-header">{{getNumResults(numSearchResults)}}</span>
+                        <i aria-hidden="true" class="ion-chevron-down search-down-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0 && simpleSearch == false"
+                           (click)="getNextResult()"></i>
+                        <i aria-hidden="true" class="ion-chevron-up search-up-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0 && simpleSearch == false"
+                           (click)="getPreviousResult()"></i>
+                        <i aria-hidden="true" class="ion-close-circled clearSearchIcon search-clear-header"
+                           *ngIf="searchQuery?.length > 0"
+                           (click)="clearSearch()"></i>
+                    </div>
+                </div>
+            </div>
+        </th>
+        <th *ngIf="!hideColumns" style="width: 11%; text-align: start; vertical-align: middle;" class="align-left">
+            Stage
+        </th>
+        <th *ngIf="!hideColumns" style="width: 9%; text-align: start; vertical-align: middle;" class="align-left">Min.
+            Version
+        </th>
+        <th *ngIf="!hideColumns"
+            style="width: 8%; min-width: 70px; text-align: start; vertical-align: middle;" class="align-left">Rollout
+        </th>
+        <th *ngIf="!hideColumns" style=" width: 11%; vertical-align: middle; text-align: center;" class="align-right">
+            Enabled
+        </th>
+        <th *ngIf="!hideColumns" style="width:10%; min-width: 60px; vertical-align: middle;" class="-align-right"></th>
+    </tr>
+    <tr class="black-muted-bg" *ngIf="showExperimentsHeader">
+        <th style="width: 35%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+            <div class="row">
+                <div class="col-12">
+                    <div *ngIf="showSearch && headerDiv.classList.contains('fixed')" class="rightFlexContainer">
+                            <span class="middle-align-element">
+                                <i class="ion-ios-search-strong searchIcon"></i>
+                            </span>
+                        <input class="form-control smallPad" placeholder="Search for..." type="text"
+                               [(ngModel)]="searchQuery" (ngModelChange)="filterFeatures()"
+                               (keyup.enter)="getNextResult()">
+                        <span class="search-count-header">{{getNumResults(numSearchResults)}}</span>
+                        <i aria-hidden="true" class="ion-chevron-down search-down-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0"
+                           (click)="getNextResult()"></i>
+                        <i aria-hidden="true" class="ion-chevron-up search-up-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0"
+                           (click)="getPreviousResult()"></i>
+                        <i aria-hidden="true" class="ion-close-circled clearSearchIcon search-clear-header"
+                           *ngIf="searchQuery?.length > 0"
+                           (click)="clearSearch()"></i>
+                    </div>
+                </div>
+            </div>
+        </th>
+        <th style="width: 11%; text-align: start; vertical-align: middle;" class="align-left">Stage</th>
+        <th style="width: 8%; text-align: start; vertical-align: middle;" class="align-left">Min. version</th>
+        <th style="width: 11%; text-align: start; vertical-align: middle;" class="align-left">Max. version</th>
+        <th style="width: 10%; min-width: 70px; text-align: start; vertical-align: middle;"
+            class="align-left">Rollout
+        </th>
+        <th style=" width: 14%; text-align: start;vertical-align: middle;" class="align-left">Enabled</th>
+    </tr>
+    <tr class="black-muted-bg" *ngIf="showPollsHeader">
+        <th style="width: 3%; vertical-align: middle;" class="align-right"></th>
+        <th style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left"></th>
+        <th style="width: 8%; text-align: start;  vertical-align: middle;" class="align-left branch-name" align="left">
+        </th>
+        <th style="width: 12%; text-align: start;  vertical-align: middle;" class="align-left branch-name" align="left">
+            Title
+        </th>
+        <th style="width: 9%; text-align: center; vertical-align: middle;" class="align-left">
+            Dashboard
+        </th>
+        <th style="width: 7%; text-align: start; vertical-align: middle;" class="align-left">Stage</th>
+        <th style="width: 6%; text-align: start; vertical-align: middle;" class="align-left">Min. version</th>
+        <th style="width: 6%; text-align: start; vertical-align: middle;" class="align-left">Max. version</th>
+        <th style=" width: 13%; vertical-align: middle; text-align: end;" class="align-right">Enabled</th>
+        <th style="width:8%; min-width: 60px; vertical-align: middle;" class="-align-right"></th>
+    </tr>
+    <tr class="black-muted-bg" *ngIf="showCohorts">
+        <th style="width: 3%; vertical-align: middle;" class="align-right"></th>
+        <th style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left"></th>
+        <th style="width: 15%; text-align: start;  vertical-align: middle;" class="align-left" align="left"></th>
+        <th style="width: 14%; text-align: start;  vertical-align: middle;" class="align-left branch-name" align="left"></th>
+        <th style="width: 15%; text-align: start; vertical-align: middle;" class="align-left">Update Frequency</th>
+        <th style="width: 6%; text-align: start; vertical-align: middle;" class="align-left"></th>
+        <th style="width: 5%; text-align: start; vertical-align: middle;" class="align-left"></th>
+        <th style="width: 16%; text-align: center; vertical-align: middle;" class="align-left">Export Status</th>
+        <th style="width: 10%; min-width: 70px; text-align: start; vertical-align: middle;" class="align-left"></th>
+        <th style=" width: 4%; vertical-align: middle; text-align: center;" class="align-right"></th>
+        <th style="width:7%; min-width: 60px; vertical-align: middle;" class="-align-right"></th>
+    </tr>
+    <tr class="black-muted-bg" *ngIf="showDataimport">
+        <th style="width: 3%; vertical-align: middle;" class="align-right"></th>
+        <th style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left"></th>
+        <th style="width: 22%; text-align: start;  vertical-align: middle;" class="align-left" align="left"></th>
+        <th style="width: 0%; text-align: start;  vertical-align: middle;" class="align-left branch-name" align="left"></th>
+        <th style="width: 15%; text-align: start; vertical-align: middle;" class="align-left">Creator</th>
+        <th style="width: 5%; text-align: start; vertical-align: middle;" class="align-left"></th>
+        <th style="width: 4%; text-align: start; vertical-align: middle;" class="align-left">Last Modified</th>
+        <th style="width: 20%; text-align: center; vertical-align: middle;" class="align-left"></th>
+        <th style="width: 7%; min-width: 70px; text-align: start; vertical-align: middle;" class="align-left"></th>
+        <th style=" width: 14%; vertical-align: middle; text-align: start;" class="align-left">Status</th>
+        <th style="width:7%; min-width: 60px; vertical-align: middle;" class="-align-right"></th>
+    </tr>
+    <tr class="black-muted-bg" *ngIf="showStreamsHeader">
+        <th style="width: 52%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+            <div class="row">
+                <div class="col-12">
+                    <div *ngIf="showSearch && headerDiv.classList.contains('fixed')" class="rightFlexContainer">
+                            <span class="middle-align-element">
+                                <i class="ion-ios-search-strong searchIcon"></i>
+                            </span>
+                        <input class="form-control smallPad" placeholder="Search for..." type="text"
+                               [(ngModel)]="searchQuery" (ngModelChange)="filterFeatures()"
+                               (keyup.enter)="getNextResult()">
+                        <span class="search-count-header">{{getNumResults(numSearchResults)}}</span>
+                        <i aria-hidden="true" class="ion-chevron-down search-down-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0"
+                           (click)="getNextResult()"></i>
+                        <i aria-hidden="true" class="ion-chevron-up search-up-button-header clearSearchIcon"
+                           *ngIf="numSearchResults > 0"
+                           (click)="getPreviousResult()"></i>
+                        <i aria-hidden="true" class="ion-close-circled clearSearchIcon search-clear-header"
+                           *ngIf="searchQuery?.length > 0"
+                           (click)="clearSearch()"></i>
+                    </div>
+                </div>
+            </div>
+        </th>
+        <th style="width: 11%; text-align: start; vertical-align: middle;" class="align-left">Stage</th>
+        <th style="width: 8%; text-align: start; vertical-align: middle;" class="align-left">Min. Version
+        </th>
+        <th style="width: 8%; min-width: 70px; text-align: start; vertical-align: middle;"
+            class="align-left">Rollout
+        </th>
+        <th style="width: 11%; vertical-align: middle; text-align: center;" class="align-right">Enabled
+        </th>
+        <th style="width:7%; min-width: 60px; vertical-align: middle;" class="-align-right"></th>
+    </tr>
+    </thead>
+</table>

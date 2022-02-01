@@ -1,0 +1,393 @@
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)"
+           (outputEventFilterUpdate)="filterUpdated($event)"
+           (outputEventProcessorUpdate)="processorUpdated($event)"
+           (outputEventStreamSchemaUpdate)="schemaUpdated($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header *ngIf="stream != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{stream.name}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+                <span *ngIf="stream != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="filterTabActive" (click)="selectTab('Filter')">{{getString('edit_stream_filter_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!filterTabActive" (click)="selectTab('Filter')">{{getString('edit_stream_filter_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="stream != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="processorTabActive" (click)="selectTab('Processor')">{{getString('edit_stream_processor_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!processorTabActive" (click)="selectTab('Processor')">{{getString('edit_stream_processor_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="stream != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="schemaTabActive" (click)="selectTab('Schema')">{{getString('edit_stream_schema_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!schemaTabActive" (click)="selectTab('Schema')">{{getString('edit_stream_schema_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="stream != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="historyTabActive" (click)="selectTab('History')">Historical Events</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!historyTabActive" (click)="selectTab('History')">Historical Events</button>
+                    </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="col-md-12">
+                                                <div class="row no-margin" *ngIf="stream != null">
+                                                    <label for="input01" class="control-label">Name</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_stream_name')"
+                                                                     [title]="getString('edit_stream_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input01" placeholder=""
+                                                           [(ngModel)]="stream.name" class="form-control blackText" tabindex="1">
+                                                </div>
+                                                <div class="row no-margin" *ngIf="stream != null">
+                                                    <div class="col-md-6 no-padding-left">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input07" class="control-label">Stage</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_stage')"
+                                                                             [title]="getString('edit_stream_stage_title')"></airlock-tooltip>
+                                                            <input type="text" id="input07" placeholder="" [(ngModel)]="stream.stage"
+                                                                   class="form-control blackText" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 no-padding-right">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input07" class="control-label">Status</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_enabled')"
+                                                                             [title]="getString('edit_stream_enabled_title')"></airlock-tooltip>
+                                                            <input type="text" id="input087" placeholder=""
+                                                                   [value]="stream.enabled ? 'Enabled' : 'Disabled'"
+                                                                   class="form-control blackText" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row no-margin " *ngIf="stream != null">
+                                                    <label for="input87" class="control-label">Rollout Percentage</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_stream_rollout')"
+                                                                     [title]="getString('edit_stream_rollout_title')"></airlock-tooltip>
+                                                    <div class="input-group rollout">
+                                                        <!--<span class="input-group-addon addon-left input-group-addon-success">$</span>-->
+                                                        <!--<div aria-label="Rollout percentage" class="rollout form-control with-success-addon" style="height: 100%" type="text">-->
+                                                        <!--<input id= "input87"[disabled] = "isOnlyDisplayMode"  aria-label="Rollout percentage" class="form-control with-success-addon" type="range" min="0" max="100" [(ngModel)]="feature.rolloutPercentage" tabindex="3">-->
+                                                        <!--</div>-->
+                                                        <input id="input87" [disabled]="isOnlyDisplayMode"
+                                                               aria-label="Rollout percentage"
+                                                               class="form-control with-success-addon numberInput" type="number" min="0"
+                                                               step="0.0001"
+                                                               max="100" [(ngModel)]="stream.rolloutPercentage" tabindex="2"
+                                                               style="width: 100px;height: 35px;">
+                                                    </div>
+                                                </div>
+                                                <div class="row no-margin">
+                                                    <div class="col-md-6 no-padding-left">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input08" class="control-label">Minimum App Version</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_min_app_version')"
+                                                                             [title]="getString('edit_stream_min_app_version_title')"></airlock-tooltip>
+                                                            <input type="text" [disabled]="isOnlyDisplayMode" id="input08"
+                                                                   placeholder="" [(ngModel)]="stream.minAppVersion"
+                                                                   class="form-control blackText " tabindex="5">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 no-padding-right">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input07" class="control-label">Scheduler Type</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_scheduler_type')"
+                                                                             [title]="getString('edit_stream_stage_title')"></airlock-tooltip>
+                                                            <div>
+                                                                <div class="btn-group" dropdown style="vertical-align:baseline">
+                                                                    <button type="button" [nbPopover]="templateRef" nbPopoverPlacement="bottom" class="btn btn-primary" dropdownToggle
+                                                                            style="width: 100%;" [disabled]="isOnlyDisplayMode">
+                                                                        {{schedulerTypesbuttonText}}
+                                                                    </button>
+                                                                    <ng-template #templateRef>
+                                                                    <ul class="dropdown-items" dropdownMenu>
+                                                                        <ng-template ngFor let-item [ngForOf]="schedulerTypes"
+                                                                                     let-i="index">
+                                                                            <li class="dropdown-item"
+                                                                                (click)="selectSchedulerTypesItem(i)"
+                                                                                style="cursor: pointer">{{item}}</li>
+                                                                        </ng-template>
+
+                                                                    </ul>
+                                                                    </ng-template>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row no-margin" *ngIf="stream != null">
+                                                    <label for="input08" class="control-label">Creator</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_stream_creator')"
+                                                                     [title]="getString('edit_stream_creator_title')"></airlock-tooltip>
+                                                    <input type="text" id="input28" disabled placeholder=""
+                                                           [(ngModel)]="stream.creator" class="form-control blackText">
+                                                </div>
+                                                <div class="row no-margin " *ngIf="stream != null">
+
+                                                        <label class="control-label">User Groups</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_stream_groups')"
+                                                                         [title]="getString('edit_stream_groups_title')"></airlock-tooltip>
+                                                        <br>
+                                                        <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="stream.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                                </div>
+                                                <div class="row no-margin " *ngIf="stream != null">
+                                                    <label for="input55" class="control-label">Description</label>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_stream_description')"
+                                                                     [title]="getString('edit_stream_description_title')"></airlock-tooltip>
+                                                    <textarea id="input55" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                              [(ngModel)]="stream.description" value="FEATURE"
+                                                              class="form-control description-text blackText"
+                                                              style="height: 113px; resize:none" tabindex="8"></textarea>
+
+                                                </div>
+                                            </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input80" class="control-label">Creation Date</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_creation_date')"
+                                                                             [title]="getString('edit_stream_creation_date_title')"></airlock-tooltip>
+                                                            <input type="text" id="input80" disabled placeholder=""
+                                                                   [value]="creationDate | date:'medium'"
+                                                                   class="form-control blackText">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="no-margin " *ngIf="stream != null">
+                                                            <label for="input82" class="control-label">Last Modified</label>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_stream_last_modified')"
+                                                                             [title]="getString('edit_stream_last_modified_title')"></airlock-tooltip>
+                                                            <input type="text" id="input82" disabled placeholder=""
+                                                                   [value]="lastModificationDate | date:'medium'"
+                                                                   class="form-control blackText">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </span>
+                </div>
+                <div #filterTab *ngIf="filterTabActive">
+                        <span class="flexcontainer">
+                                <h5 class="modal-title">
+                                    {{getString('edit_stream_filter_tab_details')}}
+                                    <button class="modalLink modalLinkButton"
+                                            (click)="showStreamHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                </h5>
+                            </span>
+
+                    <div></div>
+                    <span>
+                                <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorFilterExpand()">
+                                <i class="ion-arrow-expand"></i>
+                            </button>
+                            <div #mytesteditor ace-editor id="input564" (onTextChanged)="filterUpdated($event)"
+                                 [markdown]="stream.filter" [readonly]="isOnlyDisplayMode"
+                                 [mode]="'javascript'"
+                                 [sample]="filterInputSchemaSample" [utilitiesinfo]="filterUtilitiesInfo"
+                                 [heightSize]="aceEditorRuleHeight">
+                            </div>
+                            </span>
+                </div>
+                <div #processorTab *ngIf="processorTabActive">
+                    <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_stream_processor_tab_details')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showStreamHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                <div *ngIf="!haveProcessorSample()"
+                                     class="warning-no-intellisense">{{getString('edit_stream_no_intellisense')}}</div>
+                                <!--<div>{{convertToString(this.processorInputSchemaSample)}}</div>-->
+                            </h5>
+                    </span>
+                    <div></div>
+                    <span>
+                        <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                        (click)="openAceEditorProcessorExpand()">
+                                <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div id="tinlineloader" [hidden]="!loadingSchema">
+                                    <div></div>
+                        </div>
+                        <div #mytesteditor1 ace-editor id="input563" (onTextChanged)="processorUpdated($event)"
+                                 [markdown]="stream.processor" [readonly]="isOnlyDisplayMode"
+                                    [mode]="'javascript'"
+                                 [sample]="processorInputSchemaSample" [utilitiesinfo]="processorUtilitiesInfo"
+                                 [heightSize]="aceEditorRuleHeight">
+                        </div>
+                    </span>
+                </div>
+                <div #schemaTab *ngIf="schemaTabActive">
+                    <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_stream_schema_tab_details')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showStreamHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                            </h5>
+                    </span>
+                    <div></div>
+                    <span>
+                                <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorSchemaExpand()">
+                                <i class="ion-arrow-expand"></i>
+                            </button>
+                            <div #mytesteditor2 ace-editor id="input562" (onTextChanged)="schemaUpdated($event)"
+                                 [markdown]="stream.resultsSchema" [readonly]="isOnlyDisplayMode"
+                                 [mode]="'javascript'"
+                                 [sample]="schemaInputSchemaSample" [utilitiesinfo]="schemaUtilitiesInfo"
+                                 [heightSize]="aceEditorRuleHeight">
+                            </div>
+                    </span>
+                </div>
+                <div #historyTab *ngIf="historyTabActive">
+                   <span>
+                       <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                                    <div class="row1">
+                                        <div class="col-md-12">
+                                            <label *ngIf="isHistoryDisabled" class="modal-title">Historical events are disabled for
+                                                this version range</label>
+                                            <div class="no-margin " *ngIf="stream != null">
+                                                <table style="width: 100%;">
+                                                    <tr>
+                                                        <td class="align-left"><label
+                                                                class="control-label">{{getString('edit_stream_operate_on_history')}}</label>
+                                                            <airlock-tooltip class="FlexContainer leftPad editStreamsDataModalPad"
+                                                                             [placement]="'right'"
+                                                                             [content]="getString('edit_stream_operate_on_history_tooltip')"
+                                                                             [title]="getString('edit_stream_operate_on_history_title')"></airlock-tooltip>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="align-left">
+                                                            <nb-toggle [disabled]="isHistoryDisabled"
+                                                                       [(checked)]="stream.operateOnHistoricalEvents"
+                                                            ></nb-toggle>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="no-margin " *ngIf="stream != null">
+                                                <label for="input87"
+                                                       class="control-label">{{getString('edit_stream_limit_historical_events')}}</label>
+                                                <airlock-tooltip class="FlexContainer leftPad"
+                                                                 [content]="getString('edit_stream_limit_historical_events_tooltip')"
+                                                                 [title]="getString('edit_stream_limit_historical_events_title')"></airlock-tooltip>
+                                                <div class="input-group rollout">
+                                                    <div class="btn-group">
+                                                        <button class="btn" [disabled]="isHistoryDisabled"
+                                                                [class.btn-default]="limitState != 2"
+                                                                [class.btn-primary]="limitState == 2" type="button"
+                                                                (click)="setByDates()">By Dates
+                                                        </button>
+                                                        <button class="btn" [disabled]="isHistoryDisabled"
+                                                                [class.btn-default]="limitState != 3"
+                                                                [class.btn-primary]="limitState == 3" type="button"
+                                                                (click)="setByDays()">Number of days
+                                                        </button>
+                                                        <button class="btn" [disabled]="isHistoryDisabled"
+                                                                [class.btn-default]="limitState != 1"
+                                                                [class.btn-primary]="limitState == 1" type="button"
+                                                                (click)="setAsNone()">All Available History
+                                                        </button>
+                                                    </div>
+                                         </div>
+                                            </div>
+                                            <div class="no-margin " *ngIf="stream != null">
+                                                <div class="row" *ngIf="limitState == 2">
+                                                    <div class="form-group col-md-6 no-padding-left">
+                                                        <div class="myFlexcontainer">
+                                                            <label class="control-label no-padding-left date-row label-width">Start Date:</label>
+                                                            <input #inputStartDate [disabled]="isHistoryDisabled" nbInput placeholder="Unlimited"
+                                                                   class="no-padding-middle date-row date-picker form-control with-success-addon no-width right-margin"
+                                                                   [nbDatepicker]="ngmodel" [(ngModel)]="startDate">
+                                                            <nb-datepicker #ngmodel></nb-datepicker>
+                                                            <button type="button" [disabled]="isHistoryDisabled"
+                                                                    class="btn btn-default date-row" (click)="clearStartDate()">
+                                                                Clear
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="limitState == 2">
+                                                    <div class="form-group col-md-6 no-padding-left">
+                                                        <div class="">
+                                                            <div class="myFlexcontainer">
+                                                                <label class="control-label no-padding-left date-row label-width">End Date:</label>
+                                                                <input #inputEndDate [disabled]="isHistoryDisabled" nbInput placeholder="Unlimited"
+                                                                       class="no-padding-middle date-row date-picker form-control with-success-addon no-width right-margin"
+                                                                       [nbDatepicker]="ngmodel" [(ngModel)]="endDate">
+                                                                <nb-datepicker #ngmodel></nb-datepicker>
+                                                                <button type="button" [disabled]="isHistoryDisabled"
+                                                                        class="btn btn-default date-row" (click)="clearEndDate()">
+                                                                    Clear
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="limitState == 3" class="col-md-12 no-padding-left ">
+                                                    <div class="flexcontainer">
+                                                        <div class="control-label padding-right">Process last</div>
+                                                        <div class="input-group rollout width-limit">
+                                                            <input id="input817" [disabled]="isHistoryDisabled"
+                                                                   class="form-control with-success-addon" type="number" min="0"
+                                                                   step="1" [(ngModel)]="stream.processEventsOfLastNumberOfDays"
+                                                                   placeholder="Unlimited" tabindex="2"
+                                                                   style="width: 100px;height: 35px;">
+                                                        </div>
+                                                        <div class="control-label padding-left">days of available events since
+                                                            before the stream registered on the device
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                   </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="stream != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode"   data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

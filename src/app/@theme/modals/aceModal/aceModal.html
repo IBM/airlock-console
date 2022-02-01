@@ -1,0 +1,19 @@
+<div *ngIf="messageIsVisible" id="myModal" role="dialog" class="ace-modal">
+    <div class="modal-dialog" [style.width]="aceModalWidth" style="position: fixed; left: 20px; top: 70px;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{expandDialogTitle}}</h4>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-expand btn-icon" type="button" (click)="closeAndSaveDialog()">
+                    <i class="ion-arrow-shrink"></i>
+                </button>
+                <div ace-editor #pAceEditor id="input57" (onTextChanged)="setAceEditorModalContent($event)" [markdown]="componentMsg" [readonly] = "isEditorReadOnly" [sql]="isSQL" [sample] = "ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo" [heightSize] = "aceEditorContainerHeight" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeAndSaveDialog()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

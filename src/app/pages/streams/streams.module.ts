@@ -1,68 +1,59 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgaModule } from '../../theme/nga.module';
-
-import { routing }       from './streams.routing';
-import { ProgressbarModule } from 'ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import { DropdownModule } from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {NgaModule} from '../../@theme/nga.module';
+import {routing} from './streams.routing';
 import ALCommonsModule from "../common.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {InputTextModule} from 'primeng/primeng';
-import {ListboxModule} from 'primeng/primeng';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-import {SelectModule} from "ng2-select";
-
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import {TreeModule,TreeNode} from 'primeng/primeng';
 import {StreamsPage} from "./streams.component";
-import {AddStreamModal} from "../../theme/airlock.components/addStreamModal/addStreamModal.component";
-import {StreamCell} from "../../theme/airlock.components/streamCell/streamCell.component";
-import {FlaskIcon} from "../../theme/airlock.components/flaskIcon/flaskIcon.component";
-import {EditStreamModal} from "../../theme/airlock.components/editStreamModal/editStreamModal.component";
+import {StreamCell} from "../../@theme/airlock.components/streamCell/streamCell.component";
+import {PopoverModule} from "ngx-bootstrap/popover";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AlertModule} from "ngx-bootstrap/alert";
+import {
+    NbButtonModule,
+    NbCardModule, NbDatepickerModule, NbDialogService, NbLayoutModule, NbPopoverModule, NbSelectModule, NbSidebarModule,
+    NbTabsetModule
+} from "@nebular/theme";
+import {AddStreamModal} from "../../@theme/modals/addStreamModal";
+import {EditStreamModal} from "../../@theme/modals/editStreamModal";
+import {EditStreamsDataModal} from "../../@theme/modals/editStreamsDataModal";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
+        NbCardModule,
         PopoverModule.forRoot(),
+        NbPopoverModule,
         ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
+        NbDatepickerModule,
         TooltipModule.forRoot(),
-        TabsModule.forRoot(),
+        NbTabsetModule,
+        NbButtonModule,
         AccordionModule.forRoot(),
         ButtonsModule.forRoot(),
         AlertModule.forRoot(),
-        ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        DropdownMultiselectModule,
-        PushNotificationsModule,ALCommonsModule,
+        ALCommonsModule,
         routing,
-        InputTextModule,
-        ListboxModule,
-        DataTableModule,
-        TreeModule,
-        SelectModule,
-
+        NbCardModule,
+        NbButtonModule,
+        NbLayoutModule,
+        NbSidebarModule,
     ],
     declarations: [
-        StreamsPage,AddStreamModal,EditStreamModal,
-        StreamCell
+        AddStreamModal,
+        EditStreamModal,
+        EditStreamsDataModal,
+        StreamsPage,
+        StreamCell,
     ],
-    providers: [
-    ]
+    providers: [NbDialogService],
 })
-export default class StreamsModule {}
+export class StreamsModule { }

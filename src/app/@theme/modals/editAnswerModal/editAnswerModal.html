@@ -1,0 +1,147 @@
+
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+                                     (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+                                    (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+                                    (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header *ngIf="answer != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{answer.answerId}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #descriptionTab *ngIf="settingsTabActive">
+                    <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin" *ngIf="answer != null">
+                                                    <label for="input05" class="control-label">Id</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_question_id')"
+                                                                     [title]="getString('edit_question_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input05" placeholder=""
+                                                           [(ngModel)]="answer.answerId" class="form-control blackText" tabindex="1">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin"
+                                                     *ngIf="answer != null">
+                                                    <label for="input06" class="control-label" style="padding-top: 4px;">Title</label>
+                                                    <button id="input16" style="margin-right: 0; margin-left: 0; margin-bottom: 4px" type="button" class="btn btn-primary btn-dynamic-generate" (click)="generateDynamic()" [disabled]="!question.title || question.title.length == 0" *ngIf="!isOnlyDisplayMode">
+                                                            <i class="ion-language-outline"></i>
+                                                            Generate translation
+                                                        </button>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_answer_title')"
+                                                                     [title]="getString('edit_question_display_name_title')"></airlock-tooltip>
+                                                    <div class="input-group">
+                                                        <textarea id="input06" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                                  [(ngModel)]="answer.title" value="question"
+                                                                  class="form-control description-text blackText"
+                                                                  style="height: 68px;resize:none" tabindex="1"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row1">
+                                            <div class="no-margin dashFlexContainer"
+                                                 *ngIf="question != null">
+                                                <input type="checkbox" id="checkboxname" class="form-checkbox blackText check-all"
+                                                       [(ngModel)]="useDynamicText" (ngModelChange)="dynamicTextChanged($event)" name="checkboxname">
+                                                <label class="control-label answer-label">Dynamic title</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_answer_dynamic_title')"
+                                                                 [title]="getString('edit_question_display_name_title')"></airlock-tooltip>
+                                            </div>
+                                            <div *ngIf="useDynamicText" class="no-margin">
+                                                <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorExpandForDynamicTitle()"
+                                                        style="margin-top: 5px; margin-right: 24px">
+                                                    <i class="ion-arrow-expand" style="height: 12px;width: 12px;"></i>
+                                                </button>
+                                                <div *ngIf="!loading" #mytesteditor5 ace-editor
+                                                     (onTextChanged)="dynamicTextUpdated($event)"
+                                                     [markdown]="answer.dynamicTitle"
+                                                     [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample"
+                                                     [heightSize]="aceEditorConfigurationHeight"
+                                                     [mode]="'javascript'"
+                                                     [utilitiesinfo]="ruleUtilitiesInfo">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="no-margin dashFlexContainer"
+                                                 *ngIf="answer != null">
+
+                                                <label class="control-label answer-label">On answer go to
+                                                </label>
+                                                <nb-select *ngIf="!loading" class="select-goto"
+                                                           [(selected)]="answer.onAnswerGoto">
+                                                    <nb-option hero *ngFor="let option of gotoOptions" (selectionChange)="handleSelectionChange($event)" value="{{option.id}}"> {{option.name}} </nb-option>
+                                                </nb-select>
+                                                <airlock-tooltip [content]="getString('edit_answer_goto')" style="align:left"></airlock-tooltip>
+
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="no-margin " *ngIf="answer != null">
+                                                <table style="width: 100%;">
+                                                    <tr>
+                                                        <td class="align-right" style="padding-right: 4px"><label>Correct answer</label>
+                                                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_answer_correct')"></airlock-tooltip>
+                                                        </td>
+                                                        <td>
+                                                            <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                       [(checked)]="answer.correctAnswer"
+                                                            ></nb-toggle>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="answer-enable" *ngIf="answer != null">
+                                                <table>
+                                                    <tr>
+                                                        <td style="padding-right: 4px; padding-left: 6px"><label>Enable</label>
+                                                        </td>
+                                                        <td>
+                                                            <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                       [(checked)]="answer.enabled"
+                                                            ></nb-toggle>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="question != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

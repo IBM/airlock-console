@@ -1,0 +1,139 @@
+ul {
+  margin-bottom: 0px;
+
+}
+
+.panel {
+  background-color: rgba(255,255,255,0.40);
+}
+
+.panel-body[_ngcontent-hoa-10] {
+  padding: 8px;
+}
+
+
+.panel-warning {
+  margin-bottom: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+.hide {
+  display: none;
+}
+.feature-cell {
+  padding-bottom: 0px;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: white;
+}
+
+.fix-to-top {
+  position: fixed;
+  top: 110px;
+  z-index: 100;
+}
+
+.row.col-sm-12.featuresContainer {
+  margin: 0px;
+  padding: 0px;
+}
+
+.top-dropdown-menu.profile-dropdown {
+  width: 250px;
+  top: 45px;
+  right: -20px;
+  left: auto;
+  z-index: 9999999;
+}
+
+.top-dropdown-menu.profile-dropdown i.dropdown-arr {
+  right: 25px;
+}
+
+a.disabled {
+  color: gray !important;
+  cursor: not-allowed;
+  text-decoration: underline;
+}
+.top-dropdown-menu.profile-dropdown a {
+  color: black;
+}
+.btn:hover {
+  transform: none !important;
+    background-color: #009ff3 !important;
+
+}
+
+.btn-group button.btn.btn-primary:hover {
+  background-color: #009ff3;
+}
+
+bigger-font {
+  font-size: 22px;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+/*wrapper cell*/
+ul {
+  margin-bottom: 0px;
+
+}
+.panel {
+  background-color: rgba(255,255,255,0.40);
+}
+
+.panel-body[_ngcontent-hoa-10] {
+  padding: 8px;
+}
+
+.panel-warning {
+  margin-bottom: 20px;
+}
+
+.smallPadding {
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.mx-group-panel {
+  color: white;
+  text-shadow: 0.5px 0.5px #1C2B36;
+  padding: 1px;
+  font-size: small;
+
+}
+
+.mx-group-background {
+  background-color: rgba(34, 53, 51, 0.6)
+}
+
+.panel {
+  border-radius: 2px;
+}
+
+.configTitle {
+  padding-top: 4px;
+  padding-left: 4px;
+  float: left;
+}
+
+.reorder-button {
+  float: right;
+  padding-top: 0px;
+  text-shadow: 0.5px 0.5px #1C2B36;
+}
+
+.list-group {
+  margin-bottom: 0px;
+}
+
+button.profile-toggle-link.btn.btn-default.btn-icon.reorder-button {
+  padding-top: 2px;
+}

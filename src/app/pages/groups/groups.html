@@ -1,17 +1,17 @@
 <div class="row">
-    <ba-card class="col-md-4" title="user groups">
+    <ba-card class="col-md-4">
         <group-list (featureSelected)="featureSelected($event)" (usageSelected)="usageSelected($event)"></group-list>
     </ba-card>
-    <ba-card class="col-md-8" title="{{getTitle()}}">
+<!--    <ba-card class="col-md-8" title="{{getTitle()}}">-->
         <!--<group-detail *ngIf="selectedGroup" [group]="selectedGroup"></group-detail>-->
-        <usage-detail *ngIf="selectedUsage" [usage]="selectedUsage"></usage-detail>
+<!--        <usage-detail *ngIf="selectedUsage" [usage]="selectedUsage"></usage-detail>-->
         <!--<div *ngIf="selectedUsage">-->
             <!--<div *ngFor="let season of selectedUsage.seasons">-->
                 <!--{{season.minVersion}}-->
             <!--</div>-->
         <!--</div>-->
-        <div *ngIf="!selectedGroup">
-            Select a group to see the features that are associated with it.
-        </div>
-    </ba-card>
+<!--        <div *ngIf="!selectedGroup">-->
+<!--            Select a group to see the features that are associated with it.-->
+<!--        </div>-->
+<!--    </ba-card>-->
 </div>

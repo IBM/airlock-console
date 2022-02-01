@@ -1,0 +1,58 @@
+
+<nb-card #seasonModal id="seasonModal" class="seasonModal" >
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span *ngIf="_isAddNew">
+                 Add Version Range
+            </span>
+            <span *ngIf="!_isAddNew">
+                 Edit Version Range
+            </span>
+        </h4>
+        <h5 *ngIf="_isAddNew" class="modal-title">
+            {{getString('season_subheader')}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body>
+
+        <form>
+            <!--<div class="row box">-->
+                <!--<div class="form-group has-success col-md-12">-->
+                    <!--<label for="name" class="control-label">Name</label>-->
+                    <!--<input type="text" class="form-control" id="name" placeholder="" required class="form-control blackText"-->
+                           <!--[(ngModel)]="_season.name" name="name" #name="ngModel">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div *ngIf="_season" class="row">
+                <div class="form-group" [class.col-md-6]="_isAddNew || !_showEncryption" [class.col-md-4]="!_isAddNew && _showEncryption">
+                    <label for="minVersion" class="control-label">Minimum Version</label>
+                    <airlock-tooltip class="endFlexContainer" [content]="getString('season_min_version')" [title]="getString('season_min_version_title')"></airlock-tooltip>
+                    <input type="text" class="form-control" id="minVersion" placeholder="" class="form-control whiteText"
+                              [(ngModel)]="_season.minVersion" name="minVersion">
+                </div>
+                <div class="form-group col-md-4" *ngIf="!_isAddNew">
+                    <label for="maxVersion" class="control-label">Maximum Version</label>
+                    <airlock-tooltip class="endFlexContainer" [content]="getString('season_max_version')" [title]="getString('season_max_version_title')"></airlock-tooltip>
+                    <input type="text" class="form-control" id="maxVersion" placeholder="" class="form-control whiteText"
+                           [(ngModel)]="_season.maxVersion" name="maxVersion" [disabled]="_isLastSeason==true">
+                </div>
+                <div *ngIf="_showEncryption" class="form-group" [class.col-md-6]="_isAddNew" [class.col-md-4]="!_isAddNew">
+                    <label for="runtimeCheckbox" class="control-label">Runtime Encryption</label>
+                    <div>
+                        <input id="runtimeCheckbox" type="checkbox" [checked]="_season?.runtimeEncryption" (click)="toggleEncryption($event)" [disabled]="!_isAddNew">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" style="float: left" align="left" *ngIf="!_isAddNew" class="btn btn-danger" (click)="deleteSeason()">Delete</button>
+        <button type="button" *ngIf="_isAddNew" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" *ngIf="!_isAddNew" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

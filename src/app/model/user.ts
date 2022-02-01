@@ -12,7 +12,8 @@ export class User {
     roles: string[];
     // jwt: string;
     uniqueId: string;
-    constructor(){
+
+    constructor() {
 
     }
 }

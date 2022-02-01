@@ -1,0 +1,46 @@
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header id="editModal">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close(null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+            <span>
+                     {{title}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div *ngIf="false" [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                                    <full-calendar [options]="calendarOptions"></full-calendar>
+                                </div>
+                            </div>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="polls != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode && showDeepLink" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Close</button>
+    </nb-card-footer>
+</nb-card>

@@ -1,0 +1,93 @@
+
+<nb-card #markForTranslationModal id="markForTranslationModal" class="markForTranslationModal" data-keyboard="false" data-backdrop="static">
+
+<!--    <show-message-modal #showMessageModal></show-message-modal>-->
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+        <nb-card-header *ngIf = "season != null">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+                <span *ngIf="isMark">
+                     {{getString('mark_for_translation_title')}}
+                </span>
+                <span *ngIf="isReview">
+                     {{getString('review_for_translation_title')}}
+                </span>
+                <span *ngIf="isSend">
+                     {{getString('send_for_translation_title')}}
+                </span>
+                <span *ngIf="isCopy">
+                     {{getString('copy_strings_title')}}
+                </span>
+                <span *ngIf="isExport">
+                     {{getString('export_strings_title')}}
+                </span>
+
+            </h4>
+            <h5 class="modal-title">
+                {{actionTitle}}
+                <span *ngIf="!isCopy && !isExport"><button class="modalLink modalLinkButton" (click)="showRuleHelp()">{{getString('analytics_summary_context_learn_more')}}</button></span>
+                <span *ngIf="isExport">
+                     <span><button class="modalLink modalLinkButton" (click)="showRuleHelpExport()">{{getString('analytics_summary_context_learn_more')}}</button></span>
+                </span>
+
+            </h5>
+
+        </nb-card-header>
+        <nb-card-body>
+            <div class="tabContentBackgroud tab-div-container" >
+                <div class="box">
+                 <span class="flexcontainer">
+
+                </span>
+                    <div  class="form-group"  *ngIf = "season != null" style="max-height: 35px; min-height: 35px; width: 100%;">
+
+                        <div dropdown style="vertical-align:baseline">
+                            <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" type="button" class="btn btn-primary" dropdownToggle  style="float: right;">
+                                {{buttonText}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <ng-template #templateRef>
+                                    <li class="dropdown-item" (click)="selectItem(0)" style="cursor: pointer">Android</li>
+                                    <li class="dropdown-item" (click)="selectItem(1)" style="cursor: pointer">iOS</li>
+                                    <li class="dropdown-item" (click)="selectItem(2)" style="cursor: pointer">JSON</li>
+                                </ng-template>
+                            </ul>
+                        </div>
+
+                        <button class="btn btn-primary" (click)="unSelectAll()" style="float: right; margin-right: 4px;">Clear All</button>
+                        <button class="btn btn-primary" (click)="selectAll()" style="float: right; margin-right: 4px;">Select All</button>
+                    </div>
+                    <div  class="form-group"  *ngIf = "season != null" style="max-height: 340px; min-height: 340px; width: 100%;border: 1px solid #D5D5D5;color: white;">
+                        <ul class="strings limit-height leftPad" style="max-height: 335px; overflow-y: auto">
+                            <li *ngFor="let s of strings"
+                                class="truncate"  style="position: static" (click)="markStatus[s.uniqueId] = !markStatus[s.uniqueId];$event.stopPropagation();" >
+                                <div class="badge" style="position: static;margin-top: -10px;">
+                                    <input type="checkbox"  [(ngModel)] = "markStatus[s.uniqueId]">
+                                    <!--<i aria-hidden="true" style="float: right;padding-right: 10px;color: white;" class="ion-checkmark-round featureEnabled" *ngIf="s.status == 'TRANSLATION_COMPLETE'"></i>-->
+                                    <!--<i aria-hidden="true"  style="float: right;padding-right: 10px;color: white;"class="ion-close-round featureDisabled" *ngIf="s.status != 'TRANSLATION_COMPLETE'"></i>-->
+
+                                </div>
+                                <label class="custom-input-success" style="vertical-align: top;">
+                                    <span class="cut-with-dots" style="max-width: 250px;font-size: 14px">{{ s.key}}</span>
+                                    <span class="cut-with-dots" style="max-width: 250px;color: #dcd7d7;font-size: 10px">{{ s.value}}</span>
+                                </label>
+                                <!--{{s.key}}-->
+                                <!--<i aria-hidden="true" class="del-string-icon ion-ios-trash" (click)="remove(s.uniqueId)"></i>-->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <input type="text" #plainVersion style="display: none;width: 860px;">
+
+        </nb-card-body>
+        <nb-card-footer *ngIf = "season != null">
+            <button type="button" class="btn btn-primary" (click)="save()">{{continueText}}</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+        </nb-card-footer>
+    </nb-card>

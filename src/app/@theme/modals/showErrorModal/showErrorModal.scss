@@ -1,0 +1,46 @@
+.has-success .control-label {
+  color: black;
+}
+
+.fixed-size-modal {
+  width: 800px;
+  height: 500px;
+}
+
+.control-label {
+  color: black;
+}
+
+.box{
+  box-sizing:border-box;
+}
+
+.blackText{
+  //color: black !important;
+  border: 1px solid #00abff !important;
+}
+
+.docLink {
+  color: rgba(256,256,256,0.85);
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+a.docLink:hover {
+  color: white;
+}
+
+i.fa.ion-ios-download-outline {
+  padding-right: 6px;
+  color: white;
+}
+.btn {
+  float: right;
+  margin-left: 8px;
+}
+.btn.btn-default {
+  border-color: white;
+  color: white;
+}

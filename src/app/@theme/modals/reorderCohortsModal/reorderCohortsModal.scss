@@ -1,0 +1,48 @@
+.reorderCohortsModal .modal-title{
+  color:white !important;
+}
+.reorderCohortsModal li{
+  font-size: 0.9rem !important;
+}
+.reorderCohortsModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.reorderCohortsModal .whiteText{
+  color: white !important;
+  font-size: 0.9rem !important;
+  //color: black !important;
+  //border: 1px solid #00abff !important;
+}
+
+.reorderCohortsModal .ordertable{
+  width: 100%;
+}
+
+.reorderCohortsModal .moveButton{
+  background-color: #00abff;
+  float: right;
+}
+.reorderCohortsModal .marginrightbutton{
+  margin-right: 2px;
+}
+.reorderCohortsModal .modal-dialog .selected{
+  background-color: #00abff !important;
+}
+
+.reorderCohortsModal .hr {
+  display: block;
+  height: 3px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+.reorderCohortsModal .modal {
+  font-size: 0.9rem;
+}
+
+.reorderCohortsModal .control-label {
+  font-size: 0.9rem;
+}
+

@@ -1,0 +1,27 @@
+.action-button {
+  float: right;
+  margin-top: -8px;
+  height: 32px;
+}
+
+.action-button .btn:hover {
+  transform: none !important;
+  background-color: #009ff3 !important;
+  cursor: pointer;
+}
+
+.slim-title {
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-header, .card-footer {
+  border-bottom-style: none !important;
+  padding-top: 10px !important;
+}
+
+.action-button {
+  margin-top: 3px !important;
+}

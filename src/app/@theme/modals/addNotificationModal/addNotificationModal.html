@@ -1,0 +1,81 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--<modal #addNotificationModal id="addNotificationModal" class="addNotificationModal" [backdrop]="'static'">-->
+    <!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+    <nb-card-header>
+        <h4 class="nb-card-title">
+            <span>
+                 Add Notification
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_notification_name')"
+                                 [title]="getString('add_notification_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_notification.name)" type="text" id="input01"
+                       [(ngModel)]="_notification.name" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input02" class="control-label">Title</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_notification_title')"
+                                 [title]="getString('add_notification_title_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(notificationTitle)" type="text" id="input02"
+                       [(ngModel)]="notificationTitle" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_notification_group')"
+                                 [title]="getString('add_notification_group_title')"></airlock-tooltip>
+                <br>
+                <user-groups-input id="select05" [(internalUserGroups)]="_notification.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Minimum App Version</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_notification_min_app_version')"
+                                 [title]="getString('edit_notification_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_notification.minAppVersion)" type="text" id="input54"
+                       [(ngModel)]="_notification.minAppVersion" class="form-control whiteText" tabindex="4">
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_notification_description')"
+                                 [title]="getString('add_notification_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_notification.description" value="FEATURE"
+                          class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td><label class="control-label">Enabled</label>
+                            <airlock-tooltip [content]="getString('add_feature_enabled')"
+                                             [title]="getString('add_feature_enabled_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><nb-toggle [(checked)]="_notification.enabled"></nb-toggle></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

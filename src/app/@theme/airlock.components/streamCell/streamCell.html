@@ -1,0 +1,80 @@
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+        <div #streamCell [class.col-sm6]="true">
+            <div [class.panel]="shouldStyleCell()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.mx-group-background]="shouldStyleAsMTX()" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                            <tr *ngIf="isStream()">
+                                <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="">
+                                        <i *ngIf="stream?.operateOnHistoricalEvents == true" class="history-enabled-icon fa fa-history" [class.history-active]="isStreamRunning()" [class.rotating]="isStreamRunning()" [class.history-not-active]="!isStreamRunning()"></i>
+                                        <i class="reported-to-analytics-icon" [class.ion-ios-bolt-outline]="!isStreamRunning()" [class.not-active]="!isStreamRunning()" [class.ion-ios-bolt]="isStreamRunning()" [class.active-stream]="isStreamRunning()"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 51%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                    <div class="descpDiv">
+                                        <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted">
+
+                                        </a>
+                                        <ng-template #popTemplate>
+                                            <div class="descpPopover">
+                                                <div  class="no-margin "  *ngIf="(stream?.description?.length > 0)">
+                                                    <label><p style="color: black;font-weight: bold">Description</p>{{stream.description}}</label>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                        <i *ngIf="(stream?.description?.length > 0)" class="ion-ios-information-outline info-icon" [popover]="popTemplate" placement="right" triggers="mouseenter:mouseleave"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 12%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                    <span class="capitalize">{{stream.stage | lowercase}}</span>
+                                    <i *ngIf="shouldShowUserGroups()" class="ion-ios-people user-groups" [tooltip]="userGroupsText()" [isDisabled]="!(shouldShowUserGroups())" ></i>
+                                </td>
+                                <td *ngIf="!inlineMode" style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" ><span class="">{{stream.minAppVersion}}</span></td>
+                                <td *ngIf="!inlineMode" style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                    <div style="vertical-align: middle; height: 20px;">
+                                        <progressbar class="progress progress-striped" value="{{stream.rolloutPercentage}}" max="100" type="primary">
+                                            <div class="progress-text-align">
+                                                <span>{{stream.rolloutPercentage}}%</span>
+                                            </div>
+                                        </progressbar>
+                                    </div>
+                                </td>
+                                <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                    <div style="vertical-align: middle;" class="middle-align-element">
+                                        <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="stream.enabled"></i>
+                                        <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="!stream.enabled"></i>
+                                    </div>
+                                </td>
+
+                                <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right">
+                                    <div class="dropdown noExpand maxWidth" dropdown >
+                                        <button [nbPopover]="templateRef" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd1" data-toggle="dropdown" aria-expanded="false" title="Actions" nbPopoverPlacement="bottom">
+                                            <i class="ion-settings"></i>
+                                        </button>
+                                        <ng-template #templateRef>
+                                            <ul class="menu-items">
+                                            <li class="dropdown-item"  *ngIf="true"><i class="dropdown-arr"></i></li>
+                                            <li class="dropdown-item" *ngIf="!isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Details</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Edit</a></li>
+                                            <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                            <li class="dropdown-item" *ngIf="isShowChangeEnableState()"><a (click)="changeEnableState()"><i class="fa" [class.ion-toggle-filled]="stream.enabled==false" [class.ion-toggle]="stream.enabled==true"></i>{{stream.enabled==true? 'Disable' : 'Enable'}}</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowReleaseToProduction()"><a (click)="changeStage()"><i class="fa" [class.ion-code-working]="stream.stage!='DEVELOPMENT'" [class.fa-flag]="stream.stage=='DEVELOPMENT'"></i>{{stream.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                            <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                        </ul>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <!--</div>-->
+
+</div>

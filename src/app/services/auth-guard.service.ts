@@ -1,30 +1,30 @@
-
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthenticationService } from './authentication.service';
-
-import { User } from '../model/user';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {AuthenticationService} from './authentication.service';
 import {AirlockService} from "./airlock.service";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     //AIRLOCK_AUTH
-    private auth = process.env.AIRLOCK_API_AUTH;
-    constructor(private authService: AuthenticationService, private router: Router,private airlockService:AirlockService) {}
+    private auth = environment.AIRLOCK_API_AUTH;
+
+    constructor(private authService: AuthenticationService, private router: Router, private airlockService: AirlockService) {
+    }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if(this.auth != "TRUE"){
+        if (this.auth != "TRUE") {
             return true;
         }
         let url: string = state.url;
 
-        if(!this.checkLogin(url)){
+        if (!this.checkLogin(url)) {
             var str = window.location.href;
             var ind = str.lastIndexOf("#");
-            var prefix = str.substring(0,ind);
-            window.location.href = prefix+'auth/login';
+            var prefix = str.substring(0, ind);
+            window.location.href = prefix + 'auth/login';
             return false;
-        }else{
+        } else {
             return true;
         }
     }

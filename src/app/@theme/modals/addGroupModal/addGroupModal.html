@@ -1,0 +1,28 @@
+
+
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Group
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <i class="mandatoryField">*</i>
+                <input type="text" id="input02"
+                       [(ngModel)]="groupName" class="form-control  whiteText" tabindex="1">
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

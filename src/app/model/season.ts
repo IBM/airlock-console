@@ -1,5 +1,4 @@
-
-import { Feature } from './feature';
+import {Feature} from './feature';
 
 export class Season {
     minVersion: string;
@@ -13,7 +12,7 @@ export class Season {
     platforms: string[];
     serverVersion: string;
 
-    constructor(s?:Season){
+    constructor(s?: Season) {
 
         if (s) {
             this.name = s.name;

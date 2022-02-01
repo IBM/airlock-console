@@ -1,0 +1,19 @@
+
+
+.documentlinksModal .modal-content{
+  background: currentColor !important;//url("assets/img/sky-bg.jpg");
+}
+
+.docLink {
+  color: #00abff;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.docLink:hover {
+  color: beige;
+}
+
+ li::marker {
+   content: none !important;
+}

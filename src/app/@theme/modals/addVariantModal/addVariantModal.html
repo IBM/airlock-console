@@ -1,0 +1,68 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--<modal #addVariantModal id="addVariantModal" class="addVariantModal" [backdrop]="'static'">-->
+    <!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Variant
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_name')"
+                                 [title]="getString('add_variant_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_variant.name)" type="text" id="input01"
+                       [(ngModel)]="_variant.name" class="form-control whiteText">
+            </div>
+            <div class="form-group">
+                <label for="input1101" class="control-label">Display Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_displayname')"
+                                 [title]="getString('add_variant_displayname_title')"></airlock-tooltip>
+                <input type="text" id="input1101" [(ngModel)]="_variant.displayName" class="form-control whiteText">
+            </div>
+            <div class="box">
+                <div class="form-group select-branch-button">
+                    <label class="control-label">Branch</label>
+                    <!--                    <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                    <i class="mandatoryField">*</i>
+                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_branch_base')"
+                                     [title]="getString('add_variant_branch_base_title')"></airlock-tooltip>
+                    <div>
+                        <nb-select placeholder="Branch" [(selected)]=selectedBranch class="full-no-padding">
+                            <nb-option hero *ngFor="let branch of availableBranches"
+                                       value="{{branch}}"> {{ branch }} </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_group')"
+                                 [title]="getString('add_variant_group_title')"></airlock-tooltip>
+                <br>
+                <user-groups-input id="select05" [(internalUserGroups)]="_variant.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_description')"
+                                 [title]="getString('add_variant_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_variant.description" value="FEATURE"
+                          class="form-control  whiteText"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

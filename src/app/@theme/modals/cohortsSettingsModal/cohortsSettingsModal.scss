@@ -1,0 +1,54 @@
+.verifyActionModal .has-success .control-label {
+  color: black;
+}
+
+.cohortsSettingsModal{
+  width: 490px;
+  height: 230px;
+}
+
+.verifyActionModal .control-label {
+  color: black;
+}
+.verifyActionModal .control-label-checkbox {
+  padding-left: 10px;
+}
+
+.verifyActionModal .box{
+  box-sizing:border-box;
+}
+
+.verifyActionModal .blackText{
+  //color: black !important;
+  border: 1px solid #00abff !important;
+}
+
+.verifyActionModal .feature-name {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.verifyActionModal .checkbox-flex {
+  padding-top: 15px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+.verifyActionModal .check-all {
+  width: 20px;
+  height: 17px;
+  padding-right: 4px;
+}
+
+.verifyActionModal .listOfData{
+  list-style-type: none;
+}
+
+
+.copy-button {
+  display: block;
+  float: right;
+}

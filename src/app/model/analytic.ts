@@ -1,12 +1,14 @@
-import { Rule } from './rule';
+import {Rule} from './rule';
+
 export class Analytic {
     seasonId: string;
     rule: Rule;
     lastModified: number;
     analyticsDataCollection: analyticsDataCollection;
     rolloutPercentage: number;
-    rolloutPercentageBitmap:string;
+    rolloutPercentageBitmap: string;
 }
+
 //TODO  change class name
 export class analyticsDataCollection {
     featuresAttributesForAnalytics: FeatureAnalyticAttributes[];
@@ -30,5 +32,5 @@ export class DisplayAttribute {
     name: string[];
     arrayPattern: string[];
     type: string;
-    selected:boolean;
+    selected: boolean;
 }

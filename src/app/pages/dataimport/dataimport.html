@@ -1,0 +1,58 @@
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">    <div *ngIf="isAllowedToSeePage()">
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div style="float: right;    display: flex;">
+            <button style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addDataimportJob()" *ngIf="isShowAddJob()">
+                <i class="ion-plus"></i>
+                Create User Attribute Import Job
+            </button>
+        </div>
+        <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                               [showDisabled]="showDisabled" (onShowDisabledChanged)="setShowDisabled($event)"
+                               [showSearch]="true" [showExperiments]="false" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
+                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showAnalytics]="false" [showCohorts]="showCohorts" [showDataimport]="showDataimport"
+                               [orderByList]="orderByList" (onOrderBySelected)="orderBySelected($event)"
+                               [filterDateList]="modifiedDateList" (onDateFilterSelected)="dateFilterSelected($event)" [showTableHeader]="!inlineMode"
+                               ></custom-airlock-header>
+
+        <div *ngIf="dataimportsData?.jobs?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
+            <div [class.panel]="true" [class.hide]="!hasSomeData()" [class.panel-warning]="true" [class.mx-group-background]="true" [class.full-width]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="false">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <div *ngIf="true" class="mx-group-panel">
+                            <p class="configTitle">{{getString('cohorts_header_text')}}</p>
+                            <span class="flexContainer">
+                            </span>
+                        </div>
+                        <dataimport-cell *ngFor="let job of dataimportsData?.jobs; let i = index"
+                                         [job]="job"
+                                         [level]="0"
+                                         [openJobs]="openExperiments"
+                                         [searchTerm]="searchQueryString"
+                                         [showDisabled]="showDisabled"
+                                         [filterlistDict]="filterlistDict"
+                                         (onEditInline)="showEditInline(job)"
+                                         (onSearchHit)="experimentIsInFilter($event)"
+                                         (onDummySearchHit)="variantIsNotInFilter($event)"
+                                         (onCellClick)="experimentChangedStatus($event)"
+                                         (onUpdate)="refreshTable()"
+                                         (hideIndicator)="afterUpdate()"
+                                         (beforeUpdate)="beforeUpdate()"
+                                         (onSelected)="itemIsSelected($event)"
+                        ></dataimport-cell>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="h5" *ngIf="!isAllowedToSeePage()">
+        You do not have enough permissions to view this page
+    </div>
+</div>
+    <div [class.col-md-6]="inlineMode">
+        <edit-dataimport-modal #editInline (onClose)="closeEditInline('')" [visible]="inlineMode"></edit-dataimport-modal>
+    </div>
+</div>

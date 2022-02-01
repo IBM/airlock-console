@@ -6,14 +6,15 @@ export class Branch {
     lastModified: number;
     description: string;
     creationDate: number;
-    public static clone(other:Branch):Branch{
-        var retObj:Branch = new Branch();
+
+    public static clone(other: Branch): Branch {
+        var retObj: Branch = new Branch();
         retObj.uniqueId = other.uniqueId;
         retObj.seasonId = other.seasonId;
         retObj.name = other.name;
         retObj.creationDate = other.creationDate;
         retObj.lastModified = other.lastModified;
-        retObj.description=other.description;
+        retObj.description = other.description;
         retObj.creator = other.creator;
         return retObj;
     }

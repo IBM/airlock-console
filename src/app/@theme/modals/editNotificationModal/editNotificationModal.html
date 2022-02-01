@@ -1,0 +1,325 @@
+<ace-modal #paceModalContainerDialog (outputEventNotificationCancellationRule)="cancellationRuleUpdated($event)"
+           (outputEventNotificationRegistrationRule)="registrationRuleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)"
+           (outputEventInputSchemaUpdate)="inputSchemaUpdated($event)">
+</ace-modal>
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [class.edit-inline]="inlineMode" *ngIf="visible" [style.width]="modalWidth" [style.height]="modalHeight">
+    <nb-card-header *ngIf="notification != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{notification.name}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+                <span *ngIf="notification != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_notification_rule_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_notification_rule_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="notification != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="configTabActive" (click)="selectTab('Config')">{{getString('edit_notification_configuration_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!configTabActive" (click)="selectTab('Config')">{{getString('edit_notification_configuration_tab_heading')}}</button>
+                    </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="col-md-12">
+                                    <div class="row no-margin " *ngIf="notification != null">
+                                        <label for="input01" class="control-label">Name</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_notification_name')"
+                                                         [title]="getString('edit_notification_name_title')"></airlock-tooltip>
+                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input01" placeholder=""
+                                               [(ngModel)]="notification.name" class="form-control blackText" tabindex="1">
+                                    </div>
+                                    <div class="row no-margin " *ngIf="notification != null">
+                                        <label for="input07" class="control-label">Stage</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_notification_stage')"
+                                                         [title]="getString('edit_notification_stage_title')"></airlock-tooltip>
+                                        <input type="text" id="input07" placeholder="" [(ngModel)]="notification.stage"
+                                               class="form-control blackText" disabled>
+                                    </div>
+                                    <div class="row no-margin " *ngIf="notification != null">
+                                        <label for="input87" class="control-label">Rollout Percentage</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_notification_rollout')"
+                                                         [title]="getString('edit_notification_rollout_title')"></airlock-tooltip>
+                                        <div class="input-group rollout">
+                                            <!--<span class="input-group-addon addon-left input-group-addon-success">$</span>-->
+                                            <!--<div aria-label="Rollout percentage" class="rollout form-control with-success-addon" style="height: 100%" type="text">-->
+                                            <!--<input id= "input87"[disabled] = "isOnlyDisplayMode"  aria-label="Rollout percentage" class="form-control with-success-addon" type="range" min="0" max="100" [(ngModel)]="feature.rolloutPercentage" tabindex="3">-->
+                                            <!--</div>-->
+                                            <input id="input87" [disabled]="isOnlyDisplayMode"
+                                                   aria-label="Rollout percentage"
+                                                   class="form-control with-success-addon numberInput" type="number" min="0"
+                                                   step="0.0001"
+                                                   max="100" [(ngModel)]="notification.rolloutPercentage" tabindex="2"
+                                                   style="width: 100px;height: 35px;">
+                                        </div>
+                                    </div>
+                                    <div class="row no-margin">
+                                        <div class="col-md-8 no-padding-left">
+                                            <div class="no-margin " *ngIf="notification != null">
+                                                <label for="input08" class="control-label">Minimum App Version</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_notification_min_app_version')"
+                                                                 [title]="getString('edit_notification_min_app_version_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="isOnlyDisplayMode" id="input08"
+                                                       placeholder="" [(ngModel)]="notification.minAppVersion"
+                                                       class="form-control blackText " tabindex="3">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 no-padding-right" *ngIf="notification != null">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td class="align-right no-pa-top"><label
+                                                            class="control-label">Enabled</label></td>
+                                                    <airlock-tooltip class="endFlexContainer"
+                                                                     [content]="getString('edit_feature_enabled')"
+                                                                     [title]="getString('edit_feature_enabled_title')"></airlock-tooltip>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-right">
+                                                        <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                   [(checked)]="notification.enabled"
+                                                                   ></nb-toggle>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row no-margin">
+                                        <div class="col-md-12 no-padding-left">
+                                            <div class="no-margin " *ngIf="notification != null">
+                                                <label for="input28" class="control-label">Creator</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_notification_creator')"
+                                                                 [title]="getString('edit_notification_creator_title')"></airlock-tooltip>
+                                                <input type="text" id="input28" disabled placeholder=""
+                                                       [(ngModel)]="notification.creator" class="form-control blackText">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-margin ">
+                                        <label class="control-label">User Groups</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_notification_groups')"
+                                                         [title]="getString('edit_notification_groups_title')"></airlock-tooltip>
+                                            <br>
+                                        <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="notification.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                    </div>
+                                    <div class="row no-margin " *ngIf="notification != null">
+                                        <label for="input55" class="control-label">Description</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_notification_description')"
+                                                         [title]="getString('edit_notification_description_title')"></airlock-tooltip>
+                                        <textarea id="input55" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                  [(ngModel)]="notification.description" value="FEATURE"
+                                                  class="form-control description-text blackText"
+                                                  style="height: 113px; resize:none" tabindex="6"></textarea>
+
+                                    </div>
+                                    <div class="row no-margin">
+                                        <div class="col-md-6 no-padding-left">
+                                            <div class="no-margin " *ngIf="notification != null">
+                                                <label for="input80" class="control-label">Creation Date</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_notification_creation_date')"
+                                                                 [title]="getString('edit_notification_creation_date_title')"></airlock-tooltip>
+                                                <input type="text" id="input80" disabled placeholder=""
+                                                       [value]="creationDate | date:'medium'"
+                                                       class="form-control blackText">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 no-padding-right">
+                                            <div class="no-margin " *ngIf="notification != null">
+                                                <label for="input82" class="control-label">Last Modified</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_notification_last_modified')"
+                                                                 [title]="getString('edit_notification_last_modified_title')"></airlock-tooltip>
+                                                <input type="text" id="input82" disabled placeholder=""
+                                                       [value]="lastModificationDate | date:'medium'"
+                                                       class="form-control blackText">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                            <div class="row col-md-12" *ngIf="notification != null">
+                                    <div class="myFlexcontainer notifs-limit">
+                                        <nb-toggle class="padding-right paddingTop" [disabled]="isOnlyDisplayMode"
+                                                   [(ngModel)]="isChecked"></nb-toggle>
+                                        <div class="control-label padding-right">{{getString('edit_notification_limit_notification')}}</div>
+                                        <airlock-tooltip [content]="getString('edit_notification_limit')"
+                                                         [title]="getString('edit_notification_limit_title')"></airlock-tooltip>
+                                        <div class="padding-right padding-right"
+                                             [class.notif-limit-disabled]="!isChecked">{{getString('edit_notification_limit_occurrenceA')}}</div>
+                                        <div>
+                                            <airlock-tooltip [content]="getString('edit_notification_max')"
+                                                             [title]="getString('edit_notification_max_title')"></airlock-tooltip>
+                                        </div>
+                                        <div class="col-md-2 padding-right remove-padding-left">
+                                            <input type="number" [class.notif-limit-disabled]="!isChecked" tabindex="4"
+                                                   id="input91" [disabled]="isOnlyDisplayMode || !isChecked" placeholder=""
+                                                   [(ngModel)]="notification.maxNotifications"
+                                                   [value]="notification.maxNotifications || ''"
+                                                   class="form-control with-success-addon endFlexContainer" type="number"
+                                                   min="0">
+                                        </div>
+                                        <div class="padding-right"
+                                             [class.notif-limit-disabled]="!isChecked">{{getString('edit_notification_limit_occurrenceB')}}</div>
+                                        <div>
+                                            <airlock-tooltip [content]="getString('edit_notification_min_interval')"
+                                                             [title]="getString('edit_notification_min_interval_title')"></airlock-tooltip>
+                                        </div>
+                                        <div class="padding-right intervalPicker">
+                                            <div class="btn-group" dropdown style="vertical-align:baseline">
+                                                <button type="button" [class.notif-limit-disabled]="!isChecked"
+                                                        class="btn btn-primary intervalPickerBtn" dropdownToggle
+                                                        style="width: 100%;" [disabled]="isOnlyDisplayMode || !isChecked">
+                                                    {{minIntervalButtonText}}
+                                                </button>
+                                                <ul class="dropdown-menu" dropdownMenu>
+                                                    <ng-template ngFor let-item [ngForOf]="intervalValues" let-i="index">
+                                                        <li class="dropdown-item" (click)="selectIntervalValue(i)"
+                                                            style="cursor: pointer">{{item}}</li>
+                                                    </ng-template>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="padding-right"
+                                             [class.notif-limit-disabled]="!isChecked">{{getString('edit_notification_limit_occurrenceC')}}</div>
+                                    </div>
+                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                </div>
+                <div #ruleTab *ngIf="ruleTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                                    <div class="row1">
+                                        <span class="flexcontainer">
+                                            <h5 class="modal-title">
+                                                {{getString('edit_notification_rule_tab_details')}}
+                                                <button class="modalLink modalLinkButton"
+                                                        (click)="showNotificationHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                            </h5>
+                                        </span>
+                                        <div class="no-margin " *ngIf="notification != null">
+                                            <label for="input67"
+                                                   class="control-label">{{getString('edit_notification_rule_tab_details_registration')}}</label>
+                                            <span>
+                                                <button class="btn btn-expand btn-expand-down btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorRegistrationRuleExpand()">
+                                                    <i class="ion-arrow-expand"></i>
+                                                </button>
+                                                <div *ngIf="!loading" #mytesteditor10 ace-editor id="input67"
+                                                     [mode]="'javascript'"
+                                                     (onTextChanged)="registrationRuleUpdated($event)"
+                                                     [markdown]="this.notification.registrationRule.ruleString"
+                                                     [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample"
+                                                     [utilitiesinfo]="ruleUtilitiesInfo" [sample]="" [heightSize]="aceEditorRuleHeight">
+                                                </div>
+                                                </span>
+                                        </div>
+                                        <div class="no-margin " *ngIf="notification != null">
+                                            <label for="input68"
+                                                   class="control-label">{{getString('edit_notification_rule_tab_details_cancellation')}}</label>
+                                            <span>
+                                                <button class="btn btn-expand btn-expand-down btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorCancellationRuleExpand()">
+                                                    <i class="ion-arrow-expand"></i>
+                                                </button>
+                                                <div #mytesteditor2 ace-editor id="input68"
+                                                     [mode]="'javascript'"
+                                                     (onTextChanged)="cancellationRuleUpdated($event)"
+                                                     [markdown]="this.notification.cancellationRule.ruleString"
+                                                     [readonly]="isOnlyDisplayMode" [sample]="cancellationRuleInputSchemaSample"
+                                                     [utilitiesinfo]="ruleUtilitiesInfo" [sample]="" [heightSize]="aceEditorRuleHeight">
+                                                </div>
+                                                </span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                        </span>
+                </div>
+                <div #configTab *ngIf="configTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container" >
+                                <accordion>
+                                    <accordion-group #group [isOpen]="referenceOpen">
+                                        <div accordion-heading class="accordionHead">
+                                            <span class="modal-title">
+                                                <span class="openIndicator">
+                                                <i  [class.ion-arrow-right-b]="!group.isOpen" [class.ion-arrow-down-b]="group.isOpen"></i>
+                                                </span>
+                                                {{getString('edit_notification_configuration_configuration_edit_title')}}
+                                            </span>
+                                        </div>
+                                        <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorConfigurationSchemaExpand()">
+                                            <i class="ion-arrow-expand"></i>
+                                        </button>
+                                        <div #mytesteditor1 ace-editor id="input77" (onTextChanged)="schemaUpdated($event)" [mode]="'javascript'"
+                                             [markdown]="this.schema" [readonly]="true" [sample]="" [heightSize]="aceEditorConfigurationHeight">
+                                        </div>
+                                    </accordion-group>
+                                </accordion>
+                                <div class="box">
+                                    <h5 class="modal-title">
+                                        {{getString('edit_notification_configuration_tab_details')}}
+                                        <button class="modalLink modalLinkButton" (click)="showNotificationHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                    </h5>
+                                    <div  class="no-margin "  *ngIf = "notification != null">
+                                        <label for="input78" class="control-label">{{getString('edit_notification_input_schema_edit_title')}}</label>
+                                        <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px" [content]="getString('edit_notification_input_schema_schema')" [title]="getString('edit_notification_input_schema_title')"></airlock-tooltip>
+                                        <span>
+                                        <button class="btn btn-expand btn-expand-down btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorInputSchemaExpand()">
+                                            <i class="ion-arrow-expand"></i>
+                                        </button>
+                                        <div #mytesteditor4 id="input78" ace-editor
+                                                 (onTextChanged)="inputSchemaUpdated($event)"
+                                                 [markdown]="this.configurationStr" [readonly]="isOnlyDisplayMode" [sample]=""
+                                                 [mode]="'javascript'"
+                                                 [heightSize]="aceEditorConfigurationHeight">
+                                        </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="notification != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>
+<!--    </modal>-->

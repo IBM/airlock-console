@@ -1,82 +1,81 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgaModule } from '../../theme/nga.module';
-
-import { routing }       from './translations.routing';
-import { ProgressbarModule } from 'ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import {TransparentSpinner} from "../../theme/airlock.components/transparentSpinner/transparentSpinner.service";
-import {FeatureCell} from "../../theme/airlock.components/featureCell/featureCell.component";
-import {AddConfigurationModal} from "../../theme/airlock.components/addConfigurationModal/addConfigurationModal.component";
-import {AddFeatureToGroupModal} from "../../theme/airlock.components/addFeatureToGroupModal/addFeatureToGroupModal.component";
-import {ReorderMXGroupModal} from "../../theme/airlock.components/reorderMXGroupModal/reorderMXGroupModal.component";
-import {CustomAirlockHeader} from "../../theme/airlock.components/customAirlockHeader/customAirlockHeader.component";
-import {AddFeatureModal} from "../../theme/airlock.components/addFeatureModal/addFeatureModal.component";
-import {EditFeatureModal} from "../../theme/airlock.components/editFeatureModal/editFeatureModal.component";
-import { TranslationsPage} from "./translations.component";
-import {AceModal} from "../../theme/airlock.components/aceModal/aceModal.component";
-import {AceEditor} from "../../theme/airlock.components/aceEditor/aceEditor";
-import {NotificationsService} from "angular2-notifications";
-import {FeatureUtilsService} from "../../services/featureUtils.service";
-import {UiSwitchComponent} from "angular2-ui-switch/dist/ui-switch.component";
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import {ConfigurationCell} from "../../theme/airlock.components/configurationCell/configurationCell.component";
-import { DropdownModule } from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {HirarchyTree} from "../../theme/airlock.components/hirarchyTree/hirarchyTree.component";
-import {HirarchyNode} from "../../theme/airlock.components/hirarchyTree/hirarchyNode/hirarchyNode.component";
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {NgaModule} from '../../@theme/nga.module';
+import {routing} from './translations.routing';
+import {TranslationsPage} from "./translations.component";
 import ALCommonsModule from "../common.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {AddStringModal} from "../../theme/airlock.components/addStringModal/addStringModal.component";
 import {StringsMasterDetail} from "./components/stringsMasterDetailView/strings.master.detail.component";
 import {StringList} from "./components/stringsMasterDetailView/stringsList/strings.list.component";
-import {StringsTableView} from "./components/stringsTableView/strings.table.component.ts";
+import {StringsTableView} from "./components/stringsTableView/strings.table.component";
 import {StringDetail} from "./components/stringsMasterDetailView/stringsDetail/strings.detail.component";
-import {OverrideStringModal} from "../../theme/airlock.components/overrideStringModal/overrideStringModal.component";
-import {StringIssueModal} from "../../theme/airlock.components/stringIssueModal/stringIssueModal.component";
-import {DataTableModule} from "angular2-datatable";
-import {MarkForTranslationModal} from "../../theme/airlock.components/markForTranslationModal/markForTranslationModal.component";
-import {EditStringModal} from "../../theme/airlock.components/editStringModal/editStringModal.component";
-import {StringStatus} from "../../theme/airlock.components/stringStatus/stringStatus.component";
-import {CreateIssueModal} from "../../theme/airlock.components/createIssueModal/createIssueModal.component";
-import {StringUsageModal} from "../../theme/airlock.components/stringUsageModal/stringUsageModal.component";
+import {StringStatus} from "../../@theme/airlock.components/stringStatus/stringStatus.component";
+import {PopoverModule} from "ngx-bootstrap/popover";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AlertModule} from "ngx-bootstrap/alert";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {AddStringModal} from "../../@theme/modals/addStringModal";
+import {NbCardModule, NbPopoverModule, NbTabsetModule, NbTooltipModule, NbTreeGridModule} from "@nebular/theme";
+import {EditStringModal} from "../../@theme/modals/editStringModal";
+import {MarkForTranslationModal} from "../../@theme/modals/markForTranslationModal/markForTranslationModal.component";
+import {BaThemeConfigProvider} from "../../@theme/theme.configProvider";
+import {BaThemeConfig} from "../../@theme/theme.config";
+import {StringUsageModal} from "../../@theme/modals/stringUsageModal";
+import {OverrideStringModal} from "../../@theme/modals/overrideStringModal";
+import {Ng2SmartTableModule} from "ng2-smart-table";
+import {CustomActionComponent} from "./components/stringsTableView/smartTableCustom/custom.action.component";
+import {CustomTranslationComponent} from "./components/stringsTableView/smartTableCustom/custom.translation.component";
+import {CustomStatusComponent} from "./components/stringsTableView/smartTableCustom/custom.status.compunent";
+
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
+        NbCardModule,
         PopoverModule.forRoot(),
+        NbPopoverModule,
         ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
         TooltipModule.forRoot(),
-        TabsModule.forRoot(),
+        NbTooltipModule,
+        NbTabsetModule,
         AccordionModule.forRoot(),
         ButtonsModule.forRoot(),
         AlertModule.forRoot(),
         ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        PushNotificationsModule,ALCommonsModule,
-        DataTableModule,
+        ALCommonsModule,
+        NbTreeGridModule,
+        Ng2SmartTableModule,
+        NbPopoverModule,
         routing,
     ],
     declarations: [
-        TranslationsPage,AddStringModal,StringsMasterDetail,StringList,StringDetail,OverrideStringModal,StringsTableView,MarkForTranslationModal,
-        EditStringModal,StringStatus,StringIssueModal,CreateIssueModal,StringUsageModal
+        TranslationsPage,
+        AddStringModal,
+        StringsMasterDetail,
+        StringList,
+        StringDetail,
+        StringsTableView,
+        MarkForTranslationModal,
+        EditStringModal,
+        StringStatus,
+        OverrideStringModal,
+        // StringIssueModal,
+        // CreateIssueModal,
+        StringUsageModal,
+        CustomActionComponent,
+        CustomStatusComponent,
+        CustomTranslationComponent,
     ],
     providers: [
-        FeatureUtilsService,
-
+        BaThemeConfigProvider,
+        BaThemeConfig,
     ]
 })
-export default class TranslationsModule {}
+export class TranslationsModule {}

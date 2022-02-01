@@ -1,0 +1,144 @@
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+        <div #dataimportCell [class.col-sm6]="true">
+            <div [class.panel-job]="shouldStyleCell()" [class.panel-warning]="false" [class.highlight-cell]="shouldHightlight()" [class.mx-group-background]="shouldStyleAsMTX()" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                            <tr *ngIf="isExperiment()">
+
+                                <td style="width: 1%; vertical-align: middle;" (click)="cellClicked()" class="align-right" [style.color]="getNextColorStyle()">
+<!--                                    <i *ngIf="showExpand()" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>-->
+                                </td>
+                                <td style="width: 5%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="starDiv">
+                                        <i class="flask-icon fa fa-upload" [ngClass]="{'job-running': isRunning(), 'job-pending': isJobPending(), 'job-done': isDone(), 'job-failed':isFailed()}"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 22%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                    <div class="descpDiv" style="    max-width: 260px;display: inline-flex;    text-overflow: ellipsis;overflow: hidden;">
+                                        <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted" style="text-overflow: ellipsis;overflow: hidden;display: block;">
+
+                                        </a>
+                                        <ng-template #popTemplate>
+                                            <div class="descpPopover">
+                                                <div  class="no-margin "  *ngIf="(job?.description?.length > 0)">
+                                                    <label for="input55" class="control-label">Description</label>
+                                                    <p id="input55" [innerHTML]="job.description | replaceLineBreak"></p>
+                                                </div>
+                                                <div  class="no-margin " >
+                                                    <label for="input556" class="control-label">S3 Path</label>
+                                                    <p id="input556" [innerHTML]="job.s3File | replaceLineBreak"></p>
+                                                </div>
+                                            </div>
+
+                                        </ng-template>
+
+                                        <i class="ion-ios-information-outline info-icon" [popover]="popTemplate" placement="right" triggers="mouseenter:mouseleave"></i>
+                                    </div>
+                                    <div class="subHeaderDiv" >
+                                        {{getRunningMessage()}}
+                                    </div>
+                                </td>
+                                <td style="width: 19%; min-width: 70px; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                    <div class="path-text">
+                                        {{job?.creator}}
+                                    </div>
+                                </td>
+                                <td style="width: 16%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" ><span class="">{{job?.lastModified | date:'medium'}}</span></td>
+                                <td style="width: 18%; text-align: center;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="starDiv">
+<!--                                        <loading-icon *ngIf="isExportRunning()" [tooltip]="getExportStatusTooltip()"></loading-icon>-->
+<!--                                        <pending-icon *ngIf="isExportPending()" [tooltip]="getExportStatusTooltip()"></pending-icon>-->
+                                    </div>
+
+                                </td>
+                                <td style="width: 12%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                    <div class="starDiv">
+                                        <ng-template #dashTemplate>
+                                            <div class="dashPopver">
+                                                <div class="row1 popover-icon">
+                                                    <pending-icon *ngIf="job?.status == 'PENDING'"></pending-icon>
+                                                    <loading-icon *ngIf="job?.status == 'RUNNING'"></loading-icon>
+                                                    <div *ngIf="job?.status == 'COMPLETED'">
+                                                        <i class="ion-android-cloud-done job-done"></i>
+                                                    </div>
+                                                    <div *ngIf="job?.status == 'FAILED'">
+                                                        <i class="ion-alert-circled job-failed"></i>
+                                                    </div>
+                                                    <div *ngIf="shouldAlert()">
+                                                        <i class="ion-alert-circled job-warning"></i>
+                                                    </div>
+<!--                                                    <template ngFor let-item [ngForOf]="getListedExported()" [ngForTrackBy]="itemTrackBy" let-i="index">-->
+<!--                                                        <div class="dashFlexContainer">-->
+<!--                                                            <img class="tooltip-dashboard" src="{{ ( getDashboardIconForExport(getListedExported()[i].value) | baProfilePicture ) }}">-->
+<!--                                                            <span *ngIf="hasStatusData()" class="popover-stats">-->
+<!--                                                            <span  class="dash-title">{{getListedExported()[i].key}}</span>-->
+<!--                                                                <p>Users to update: {{getListedExported()[i].value?.exportStatusDetails?.totalImports}}</p>-->
+<!--                                                                <p>Failed: {{getListedExported()[i].value?.exportStatusDetails?.failedImports}}</p>-->
+<!--                                                                <p>Successful: {{getListedExported()[i].value?.exportStatusDetails?.successfulImports}}</p>-->
+<!--                                                            </span>-->
+<!--                                                            <span class="popover-stats" *ngIf="!hasStatusData()">-->
+<!--                                                                <span class="dash-title">No available export data</span>-->
+<!--                                                            </span>-->
+
+<!--                                                        </div>-->
+<!--                                                        <p class="last-indexed-text">Last export to {{getListedExported()[i].key}}:</p>-->
+<!--                                                        <p class="last-indexed-time">{{getListedExported()[i].value?.lastExportTime | date:'medium'}}</p>-->
+<!--                                                    </template>-->
+
+                                                </div>
+                                                <p class="dash-link-message" [class.dash-link-no-permissions]="!isAnalyticsViewer()">{{getStatusTooltip()}}</p>
+                                                <p class="last-indexed-text">{{job?.statusMessage}}</p>
+                                                <p class="last-indexed-text">{{job?.detailedMessage}}</p>
+                                                <p *ngIf="job?.status == 'RUNNING' || job?.status == 'PENDING'" class="last-indexed-text">Running for {{(job?.lastModified-job?.creationDate)/(1000)}} seconds</p>
+                                                <p *ngIf="job?.status == 'COMPLETED' || job?.status == 'FAILED'" class="last-indexed-text">Processed time {{(job?.lastModified-job?.creationDate)/(1000)}} seconds</p>
+                                                <p *ngIf="job?.successfulImports != null" class="last-indexed-text">Users modified:{{job?.successfulImports}}</p>
+                                                <p *ngIf="(shouldSuggestExport() && !canClickStartIndexing()) || (!shouldSuggestExport() && !hasDashboard())" class="no-dash-message">{{getTooltipForWhyUserCantDoAction()}}</p>
+                                            </div>
+                                        </ng-template>
+                                        <i *ngIf="hasStatusData() || true" class="dashboard-icon fa" [popover]="dashTemplate" placement="top" triggers="mouseenter:mouseleave" [class.dashboard-not-active]="!hasStatusData()" [class.cursor]="isAnalyticsViewer() && hasDashboard()" [class.dashboard-active]="isAnalyticsViewer() && hasDashboard()" (click)="isAnalyticsViewer() && showDashboard()" [style.color]="getDashboardColor()">
+                                            <pending-icon *ngIf="job?.status == 'PENDING'"></pending-icon>
+                                            <loading-icon *ngIf="job?.status == 'RUNNING'"></loading-icon>
+                                            <div *ngIf="job?.status == 'COMPLETED'">
+                                                <i class="ion-android-cloud-done job-done"></i>
+                                            </div>
+                                            <div *ngIf="job?.status == 'FAILED'">
+                                                <i class="ion-alert-circled job-failed"></i>
+                                            </div>
+                                            <div *ngIf="shouldAlert()">
+                                                <i class="ion-alert-circled job-warning"></i>
+                                            </div>
+<!--                                            <img *ngIf="!(job?.status == 'LOADING' || job?.status == 'PENDING')" src="{{ ( getDashboardIcon() | baProfilePicture ) }}">-->
+                                        </i>
+                                    </div>
+                                </td>
+<!--                                <td style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" ><span class=""></span></td>-->
+
+
+
+                                <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right">
+                                    <div class="dropdown noExpand maxWidth" dropdown >
+                                        <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd1" data-toggle="dropdown" aria-expanded="false" title="Actions">
+                                            <i class="ion-settings"></i>
+                                        </button>
+                                        <ng-template #templateRef>
+                                            <ul class="menu-items">
+<!--                                        <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">-->
+                                            <li class="dropdown-item"  *ngIf="true"><i class="dropdown-arr"></i></li>
+                                            <li class="dropdown-item" *ngIf="true"><a (click)="openEditDialog($event)"><i class="fa ion-more"></i>Details</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Discard</a></li>
+                                        </ul>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <!--</div>-->
+
+</div>

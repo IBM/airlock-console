@@ -1,0 +1,131 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--        <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <nb-card-header *ngIf="feature != null">
+        <h4 class="modal-title" *ngIf="feature != null">
+                <span *ngIf="feature.namespace.length > 0">
+                     {{title}} - {{feature.namespace}}.{{feature.name}}
+                </span>
+            <span *ngIf="feature.namespace.length == 0">
+                     {{title}}
+                </span>
+        </h4>
+        <h5 class="modal-title" *ngIf="mxGroupToAdd == null">
+            {{getString('add_feature_subheader')}}
+        </h5>
+        <h6 class="modal-title" style="font-size: 15px;" *ngIf="mxGroupToAdd != null">
+            {{getString('add_feature_to_mx_group_subheader')}}
+        </h6>
+    </nb-card-header>
+    <nb-card-body *ngIf="feature != null">
+        <div class="box">
+            <div class="form-group" *ngIf="mxGroupToAdd != null">
+                <div class="form-group tab-div-container">
+                    <label class="control-label">Add After</label>
+                    <div style="display: table-cell;">
+                        <div class="btn-group" dropdown style="vertical-align:baseline">
+                            <button type="button" class="btn btn-primary" dropdownToggle>
+                                {{mxItemNames[newItemInMXIndex]}}
+                            </button>
+                            <ul class="dropdown-menu" dropdownMenu>
+                                <ng-template ngFor let-item [ngForOf]="mxItemNames" let-i="index">
+                                    <li class="dropdown-item" (click)="selectItemToBeAfter(i)"
+                                        style="cursor: pointer">{{item}}</li>
+                                </ng-template>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="subFeatureParentName != null">
+                <label class="control-label">Parent feature</label>
+                <!--<input type="text" id="input0288" disabled  [(ngModel)]="subFeatureParentName"  class="form-control  whiteText" >-->
+                <div style="display: table-cell;">
+                    <div class="btn-group" dropdown style="vertical-align:baseline">
+                        <button type="button" class="btn btn-default" disabled
+                                style="max-width: 560px;width: 100%;overflow: hidden;text-overflow: ellipsis;">
+                            {{subFeatureParentName}}
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input02" class="control-label">Namespace</label>
+                <!--                    <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_namespace')" [placement]=""
+                                 [title]="getString('add_feature_namespace_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(feature.namespace)" type="text" id="input02"
+                       [(ngModel)]="feature.namespace" class="form-control  whiteText" tabindex="1">
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_name')"
+                                 [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <input [class.mustType]="isInputWarningOn(feature.name)" type="text" id="input01"
+                       [(ngModel)]="feature.name" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input03" class="control-label">Display Name</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_display_name_title')"
+                                 [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                <input type="text" id="input03" [(ngModel)]="feature.displayName" class="form-control whiteText"
+                       tabindex="3">
+            </div>
+
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_group')"
+                                 [title]="getString('add_feature_group_title')"></airlock-tooltip>
+                <br>
+
+            <user-groups-input [(internalUserGroups)]="feature.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+
+            </div>
+
+            <div class="form-group">
+                <label for="input54" class="control-label">Minimum App Version</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_min_app_version')"
+                                 [title]="getString('edit_feature_min_app_version_title')"></airlock-tooltip>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <input [class.mustType]="isInputWarningOn(feature.minAppVersion)" type="text" id="input54"
+                       [(ngModel)]="feature.minAppVersion" class="form-control whiteText" tabindex="4">
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_description')"
+                                 [title]="getString('add_feature_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="feature.description" value="FEATURE" class="form-control  whiteText"
+                          tabindex="5"></textarea>
+            </div>
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td><label class="control-label">Enabled</label>
+                            <airlock-tooltip [content]="getString('add_feature_enabled')"
+                                             [title]="getString('add_feature_enabled_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <nb-toggle [(checked)]="feature.enabled"
+                                       ></nb-toggle>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Cancel</button>
+    </nb-card-footer>
+    <!--    </modal>-->
+</nb-card>

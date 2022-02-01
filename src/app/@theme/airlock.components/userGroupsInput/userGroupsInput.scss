@@ -1,0 +1,52 @@
+input.ng2-tag-input__text-input.ng-pristine.ng-valid {
+  display: none;
+}
+
+.leftFlexContainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+.columnFlexContainer {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+input.input-control {
+  background-color: transparent;
+  border-style: none;
+  font-family: Open Sans, sans-serif;
+  -webkit-appearance: none;
+  outline: none;
+  color: white;
+  min-width: 220px;
+}
+
+.ng2-tag-input {
+  border-bottom: none !important;
+}
+
+user-groups-input {
+  width: 100%;
+}
+
+.user-groups-input {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.dark tag {
+  background: #309ca2 !important;
+}
+ul.option-list::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

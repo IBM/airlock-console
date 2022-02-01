@@ -1,0 +1,99 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--<modal #addVariantModal id="addVariantModal" class="addVariantModal" [backdrop]="'static'">-->
+    <!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Question
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Id<i class="mandatoryField">*</i><span class="export-notice">This cannot be changed after creation</span></label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_question_name')"
+                                 [title]="getString('add_variant_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_question.questionId)" type="text" id="input01"
+                       [(ngModel)]="_question.questionId" class="form-control whiteText">
+            </div>
+            <div class="form-group">
+                <label for="input1101" class="control-label">Title</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_displayname')"
+                                 [title]="getString('add_variant_displayname_title')"></airlock-tooltip>
+                <textarea id="input1101" [(ngModel)]="_question.title" value="FEATURE"
+                          class="form-control  whiteText"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">Answer data type</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_question_name')"
+                                 [title]="getString('add_variant_name_title')"></airlock-tooltip>
+                <div>
+                    <nb-select *ngIf="!loading" class="select-goto"
+                               [(selected)]="_question.type" class="full-no-padding">
+                        <nb-option hero *ngFor="let option of types" value="{{option.id}}"> {{option.name}} </nb-option>
+                    </nb-select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="select05" class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_group')"
+                                 [title]="getString('add_variant_group_title')"></airlock-tooltip>
+                <br>
+                <user-groups-input id="select05" [(internalUserGroups)]="_question.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_variant_description')"
+                                 [title]="getString('add_variant_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_question.description" value="FEATURE"
+                          class="form-control  whiteText"></textarea>
+            </div>
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td><label class="control-label">PI</label>
+                            <airlock-tooltip [content]="getString('add_feature_enabled')"
+                                             [title]="getString('add_feature_enabled_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <nb-toggle [(checked)]="_question.pi"
+                            ></nb-toggle>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td><label class="control-label">Enabled</label>
+                            <airlock-tooltip [content]="getString('add_feature_enabled')"
+                                             [title]="getString('add_feature_enabled_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <nb-toggle [(checked)]="_question.enabled"
+                            ></nb-toggle>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

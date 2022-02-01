@@ -1,54 +1,63 @@
-import { NgModule, ApplicationRef } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import { ModalModule } from 'angular2-modal';
-
-
-/*
- * Platform and Environment providers/directives/pipes
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { ENV_PROVIDERS } from './environment';
-import { routing } from './app.routing';
-
-// App is our top level component
-import { App } from './app.component';
-import { AppState, InternalStateType } from './app.service';
-import { GlobalState } from './global.state';
-// import { NgaModule } from './theme/nga.module';
-// import { PagesModule } from './pages/pages.module';
-import {AirlockService} from "./services/airlock.service";
-import {StringsService} from "./services/strings.service";
-import {NgaModule} from "./theme/nga.module";
-import {PagesModule} from "./pages/pages.module";
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './@core/core.module';
+import { ThemeModule } from './@theme/theme.module';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import {
+  NbAutocompleteModule,
+  NbCardModule,
+  NbChatModule,
+  NbDatepickerModule,
+  NbDialogModule,
+  NbMenuModule,
+  NbSidebarModule,
+  NbToastrModule,
+  NbWindowModule,
+} from '@nebular/theme';
+import {AuthorizationService} from './services/authorization.service';
+import {AirlockService} from './services/airlock.service';
+import {StringsService} from './services/strings.service';
+import {GlobalState} from "./global.state";
 import {AuthGuard} from "./services/auth-guard.service";
 import {AuthenticationService} from "./services/authentication.service";
-import {AuthorizationService} from "./services/authorization.service";
-import {TransparentSpinner} from "./theme/airlock.components/transparentSpinner/transparentSpinner.service";
-import {NotificationsService} from "angular2-notifications/lib/notifications.service";
-import {SimpleNotificationsComponent} from "angular2-notifications/lib/simple-notifications.component";
-import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
-import {SimpleNotificationsModule} from "angular2-notifications";
-import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
-import {ToastrModule} from "ngx-toastr";
-import {TransparentInlineSpinner} from "./theme/airlock.components/transparentInlineSpinner/transparentInlineSpinner.service";
-// Application wide providers
+import {TransparentSpinner} from "./@theme/airlock.components/transparentSpinner";
+import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
+import {TreeviewModule} from "ngx-treeview";
+import {TagInputModule} from "ngx-chips-angular";
+import {UserGroupsInput} from "./@theme/airlock.components/userGroupsInput";
+import {HashLocationStrategy, LocationStrategy} from "@angular/common";
+import {TransparentInlineSpinner} from "./@theme/airlock.components/transparentInlineSpinner";
+import {NgxSelectModule} from "ngx-select-ex";
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from "@fullcalendar/interaction"; // a plugin!
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin
+]);
+
 const APP_PROVIDERS = [
-  AppState,
+  // AppState,
   GlobalState,
   AirlockService,
+  AuthGuard,
+  AuthenticationService,
+  AuthorizationService,
+  TransparentSpinner,
+  TransparentInlineSpinner,
+  NbCardModule,
   StringsService,
-  ,AuthGuard,AuthenticationService,AuthorizationService,TransparentSpinner,TransparentInlineSpinner,NotificationsService, SimpleNotificationsComponent,Ng2Bs3ModalModule,StringsService
-
+  {provide: LocationStrategy, useClass: HashLocationStrategy}
 ];
-
-type StoreType = {
-  state: InternalStateType,
-  restoreInputValues: () => void,
-  disposeOldHosts: () => void
-};
 
 export enum AceExpandDialogType {
   FEATURE_RULE,
@@ -63,73 +72,40 @@ export enum AceExpandDialogType {
   STREAM_SCHEMA,
   NOTIFICATION_CANCELLATION_RULE,
   NOTIFICATION_REGISTRATION_RULE
-
 }
 
-/**
- * `AppModule` is the main entry point into Angular2's bootstraping process
- */
 @NgModule({
-  bootstrap: [App],
-  declarations: [
-    App,
-  ],
-  imports: [ // import Angular's modules
+  declarations: [AppComponent],
+  imports: [
     BrowserModule,
-    HttpModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalModule.forRoot(),
-    BootstrapModalModule,
-    NgaModule.forRoot(),
-    ToastrModule.forRoot({preventDuplicates:true}),
-    SimpleNotificationsModule,
-    PagesModule,/*,GroupsModule,ProductsModule,FeaturesModule,*/
-    routing
+    BrowserAnimationsModule,
+    HttpClientModule,
+    TagInputModule,
+    AppRoutingModule,
+    NbAutocompleteModule,
+    NgxSelectModule,
+    NbSidebarModule.forRoot(),
+    NbMenuModule.forRoot(),
+    NbDatepickerModule.forRoot(),
+    NbDialogModule.forRoot(),
+    NbWindowModule.forRoot(),
+    NbToastrModule.forRoot(),
+    NbMenuModule.forRoot(),
+    NbDatepickerModule.forRoot(),
+    NbChatModule.forRoot({
+      messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
+    }),
+    CoreModule.forRoot(),
+    ThemeModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    TreeviewModule.forRoot(),
+    FullCalendarModule
   ],
+  bootstrap: [AppComponent],
   providers: [ // expose our Services and Providers into Angular's dependency injection
-    ENV_PROVIDERS,
-    APP_PROVIDERS
-  ]
+    // ENV_PROVIDERS,
+    APP_PROVIDERS,
+  ],
 })
-
 export class AppModule {
-
-  constructor(public appRef: ApplicationRef, public appState: AppState, public airlockService: AirlockService) {
-  }
-
-  hmrOnInit(store: StoreType) {
-    if (!store || !store.state) return;
-    console.log('HMR store', JSON.stringify(store, null, 2));
-    // set state
-    this.appState._state = store.state;
-    // set input values
-    if ('restoreInputValues' in store) {
-      let restoreInputValues = store.restoreInputValues;
-      setTimeout(restoreInputValues);
-    }
-    this.appRef.tick();
-    delete store.state;
-    delete store.restoreInputValues;
-  }
-
-  hmrOnDestroy(store: StoreType) {
-    const cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
-    // save state
-    const state = this.appState._state;
-    store.state = state;
-    // recreate root elements
-    store.disposeOldHosts = createNewHosts(cmpLocation);
-    // save input values
-    store.restoreInputValues = createInputTransfer();
-    // remove styles
-    removeNgStyles();
-  }
-
-  hmrAfterDestroy(store: StoreType) {
-    // display new elements
-    store.disposeOldHosts();
-    delete store.disposeOldHosts;
-  }
 }

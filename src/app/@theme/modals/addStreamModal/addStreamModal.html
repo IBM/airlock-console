@@ -1,0 +1,36 @@
+<nb-card class="fixed-size-modal">
+    <nb-card-header>Add Stream</nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div  class="form-group">
+                <label for="input01" class="control-label">Name</label>
+<!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_name')" [title]="getString('add_stream_description_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_stream.name)"   type="text" id="input01" [(ngModel)]="_stream.name" class="form-control whiteText" tabindex="2" >
+            </div>
+            <div class="form-group">
+                <label class="control-label">Groups</label><br>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_group')" [title]="getString('add_stream_group_title')"></airlock-tooltip>
+                <br>
+                <user-groups-input id="select05" [(internalUserGroups)]="_stream.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Minimum App Version</label>
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_min_app_version')" [title]="getString('edit_stream_min_app_version_title')"></airlock-tooltip>
+                <input [class.mustType] = "isInputWarningOn(_stream.minAppVersion)"  type="text" id="input54" [(ngModel)]="_stream.minAppVersion" class="form-control whiteText" tabindex="4">
+            </div>
+
+            <div  class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_stream_description')" [title]="getString('add_stream_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_stream.description" value="FEATURE" class="form-control  whiteText" tabindex="5"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

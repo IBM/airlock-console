@@ -1,0 +1,48 @@
+
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+        <nb-card-header >
+        <h4 class="modal-title">
+            <span *ngIf="_user.identifier">
+                 Add User - {{_user.identifier}}
+            </span>
+            <span *ngIf="!_user.identifier">
+                 Add User
+            </span>
+        </h4>
+        <h5 class="modal-title">
+            {{getString('add_user_subheader')}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="name" class="control-label">Identifier</label>
+                    <i class="mandatoryField">*</i>
+                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_user_id')" [title]="getString('add_user_id_title')"></airlock-tooltip>
+                    <input type="text" class="form-control" id="name" placeholder="" class="form-control whiteText"
+                           [(ngModel)]="_user.identifier" name="name" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12" *ngIf="_user">
+                    <table>
+                        <tr>
+                            <td> <label class="control-label">Group Representation</label> <airlock-tooltip [content]="getString('add_user_isgroup')" [title]="getString('add_user_isgroup_title')"></airlock-tooltip></td>
+                        </tr>
+                        <tr>
+                            <td><ui-switch [checked]="_user.isGroupRepresentation" (change)="_user.isGroupRepresentation = $event"></ui-switch></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+    </nb-card-footer>
+</nb-card>

@@ -1,7 +1,6 @@
 <div *ngIf="visible" class="form-control" style="position:relative;top:43px;">
-  <ng-content></ng-content>
+<!--  <ng-content></ng-content>-->
   <button *ngIf="closable" (click)="close()" aria-label="Close" class="wlsummary__close-btn"><i style="font-size:15px" class="ion-ios-close-empty"></i></button>
-
   <h3>Data Collection Summary</h3>
     {{getString('analytics_summary_leading_txt_1')}} <span style="font-weight:bolder;">{{totalCountQuota}}</span> {{getString('analytics_summary_leading_txt_2')}}
     <br>
@@ -91,12 +90,12 @@
           <span *ngIf="isMasterIndicatorAtributes(attribute)">
             <span class="grayout-text" ><i class="ion-ios-pricetag"  tooltip="Attribute"></i> </span>
             <span class="grayout">{{attribute.name}}</span>
-            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>
+<!--            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>-->
           </span>
           <span *ngIf="!isMasterIndicatorAtributes(attribute)">
             <span><i class="ion-ios-pricetag"  tooltip="Attribute"></i> </span>
             {{attribute.name}}
-            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>
+<!--            <span *ngIf="attribute.warning"><i class="fa ion-alert-circled" [tooltip]="getAttributeDeletedTooltip()"></i></span>-->
           </span>
         </li>
       </ul>

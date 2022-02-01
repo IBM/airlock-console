@@ -1,26 +1,20 @@
-import {Component, Injectable, trigger, state, transition, animate, style, ElementRef} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AirlockService} from "../../services/airlock.service";
-import {Season} from "../../model/season";
-import {ViewChild} from "@angular/core";
-import {TransparentSpinner} from "../../theme/airlock.components/transparentSpinner/transparentSpinner.service";
 import {GlobalState} from "../../global.state";
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
-import {FeatureUtilsService} from "../../services/featureUtils.service";
 import {StringsService} from "../../services/strings.service";
 import {Product} from "../../model/product";
 import {User} from "../../model/user";
-import {Role} from "../../model/role";
-import {AddUserModal} from "../../theme/airlock.components/addUserModal";
-import {Modal} from "angular2-modal/plugins/bootstrap/modal";
 import {Webhook} from "../../model/webhook";
-import {AddNotificationModal} from "../../theme/airlock.components/addNotificationModal/addNotificationModal.component";
-import {AddWebhookModal} from "../../theme/airlock.components/addWebhookModal";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NbDialogService} from "@nebular/theme";
+import {AddWebhookModal} from "../../@theme/modals/addWebhookModal";
+import {ActivatedRoute} from "@angular/router";
+import {EditWebhookModal} from "../../@theme/modals/editWebhookModal";
 
 @Component({
     selector: 'webhooks',
-    providers: [TransparentSpinner,FeatureUtilsService],
-    styles: [require('./webhooks.scss')],
-    template: require('./webhooks.html'),
+    styleUrls: ['./webhooks.scss'],
+    templateUrl: './webhooks.html',
     animations: [
         trigger('slideInOut', [
             state('in', style({
@@ -37,10 +31,8 @@ import {AddWebhookModal} from "../../theme/airlock.components/addWebhookModal";
 
 
 export class WebhooksPage {
-    @ViewChild('verifyActionModal')
-    verifyActionModal:  VerifyActionModal;
-    @ViewChild('addWebhookModal')
-    addWebhookModal:  AddWebhookModal;
+    @ViewChild("editInline") editInline: EditWebhookModal;
+    inlineMode: boolean = false;
     valid: boolean = true;
     webhooks: Webhook[];
     filteredItems: Array<string> = new Array<string>();
@@ -50,7 +42,7 @@ export class WebhooksPage {
     data;
     public sortOrder = "asc";
     scrolledToSelected = false;
-    filterlistDict: {string: Array<string>} = {string:[]};
+    filterlistDict: { string: Array<string> } = {string: []};
     editDialogOpen: boolean = false;
     loading: boolean = false;
     showDialog = false;
@@ -58,10 +50,14 @@ export class WebhooksPage {
     searchQueryString: string = null;
     allProductsProd: Product;
 
-    public status: {isopen: boolean} = {isopen: false};
-    constructor(private _airLockService:AirlockService,
-                private _appState: GlobalState, private _stringsSrevice: StringsService,
-                public modal: Modal) {
+    public status: { isopen: boolean } = {isopen: false};
+    private pathWebhookId: any;
+
+    constructor(private _airLockService: AirlockService,
+                private _appState: GlobalState,
+                private _stringsSrevice: StringsService,
+                private modalService: NbDialogService,
+                private route: ActivatedRoute) {
         this.allProductsProd = new Product();
         this.allProductsProd.name = "Default for new products";
         this.allProductsProd.uniqueId = null;
@@ -73,40 +69,79 @@ export class WebhooksPage {
 
     addWebhook() {
         let prods = this._appState.getData('products');
-        this.addWebhookModal.open(prods);
+        this.modalService.open(AddWebhookModal, {
+            closeOnBackdropClick: false,
+            context: {
+                webhooksPage: this,
+                possibleProdsList: this._appState.getData('products')
+            }
+        }).onClose.subscribe(item => {
+            this.showEditInline(item);
+        })
     }
 
-    isShowOptions(){
+    isShowOptions() {
         return (!this._airLockService.isViewer());
     }
-    isViewer():boolean {
+
+    isViewer(): boolean {
         return this._airLockService.isViewer();
     }
 
-
-    toggleDataCollectionDetails(){
+    toggleDataCollectionDetails() {
         this.showDialog = !this.showDialog;
     }
+
     initData() {
         this.loading = true;
         this._airLockService.getWebhooks().then((webhooks) => {
             this.webhooks = webhooks;
             console.log(webhooks)
             this.loading = false;
+            if (this.pathWebhookId !== null){
+                let pathDataimport = this.getItemWithId(this.pathWebhookId);
+                if (pathDataimport) {
+                    this.showEditWebhook(pathDataimport);
+                }
+                this.pathWebhookId = null;
+            }
         }).catch(error => {
             this.loading = false;
-            this._airLockService.notifyDataChanged("error-notification",`Failed to load webhooks: ${error}`);
+            this._airLockService.notifyDataChanged("error-notification", `Failed to load webhooks: ${error}`);
         });
+    }
+
+    getItemWithId(fId: string): Webhook {
+        for (let webhook of this.webhooks) {
+            if (webhook.uniqueId === fId){
+                return webhook
+            }
+        }
+        return null;
     }
 
     ngOnInit() {
         this.initData();
-        // this.initProductList();
+        this.route.params.subscribe(params => {
+            let prodId = params.prodId;
+            let seasonId = params.seasonId;
+            let webhookId = params.webhookId;
+            let branchId = params.branchId;
+            if (prodId && seasonId && branchId && webhookId) {
+                console.log("going to edit mode")
+                this.pathWebhookId = webhookId;
+                this._appState.notifyDataChanged('features.pathBranchId', branchId);
+                this._appState.notifyDataChanged('features.pathSeasonId', seasonId);
+                this._appState.notifyDataChanged('features.pathProductId', prodId);
+            } else {
+                this.pathWebhookId = null;
+            }
+        });
     }
+
     ngOnDestroy() {
 
     }
-
 
     getProductFromID(prodId: string, products: Product[]): Product {
         for (let prod of products || []) {
@@ -117,13 +152,13 @@ export class WebhooksPage {
         return null;
     }
 
-    isCellOpen(expID:string): boolean {
+    isCellOpen(expID: string): boolean {
         return false;
         // var index = this.openExperiments.indexOf(expID, 0);
         // return index > -1;
     }
 
-    setShowConfig(show:boolean) {
+    setShowConfig(show: boolean) {
         // this.showConfig = show;
         // if (show) {
         //     this.filterlistDict["type"] = [];
@@ -134,8 +169,12 @@ export class WebhooksPage {
     }
 
 
-    webhookIsInFilter(event) {}
-    webhookChangedStatus(event) {}
+    webhookIsInFilter(event) {
+    }
+
+    webhookChangedStatus(event) {
+    }
+
     public refreshTable() {
         // this.selectProduct(this.selectedProduct);
         this.initData();
@@ -148,7 +187,8 @@ export class WebhooksPage {
     public afterUpdate() {
         this.loading = false;
     }
-    public onSearchQueryChanged(term:string) {
+
+    public onSearchQueryChanged(term: string) {
         this.loading = true;
         setTimeout(() => {
             this.filteredItems = [];
@@ -157,6 +197,7 @@ export class WebhooksPage {
             this.loading = false;
         }, 100);
     }
+
     getString(name: string) {
         return this._stringsSrevice.getString(name);
     }
@@ -178,13 +219,15 @@ export class WebhooksPage {
         }
 
     }
+
     getNumItems() {
         if (this.filteredItems && this.searchQueryString && this.searchQueryString.length > 0) {
             return this.filteredItems.length;
         }
         return 0;
     }
-    _stringIncludes(str:string, term:string) {
+
+    _stringIncludes(str: string, term: string) {
         if (!str) {
             return false;
         }
@@ -194,8 +237,8 @@ export class WebhooksPage {
         return (str.toLowerCase().indexOf(term.toLowerCase()) > -1);
     }
 
-    isPartOfSearch(term:string, webhook:Webhook):boolean {
-        if (!term || term=="") {
+    isPartOfSearch(term: string, webhook: Webhook): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -207,17 +250,17 @@ export class WebhooksPage {
         return displayName.includes(lowerTerm) || fullName.includes((lowerTerm));
     }
 
-    showNextSearchResult(forward:boolean) {
+    showNextSearchResult(forward: boolean) {
         if (this.filteredItems.length > 0) {
             if (forward) {
-                if (this.selectedIndex >= (this.filteredItems.length-1)) {
+                if (this.selectedIndex >= (this.filteredItems.length - 1)) {
                     this.selectedIndex = 0;
                 } else {
                     this.selectedIndex++;
                 }
             } else {
                 if (this.selectedIndex == 0) {
-                    this.selectedIndex = this.filteredItems.length-1;
+                    this.selectedIndex = this.filteredItems.length - 1;
                 } else {
                     this.selectedIndex--;
                 }
@@ -228,30 +271,54 @@ export class WebhooksPage {
         }
     }
 
-    itemIsSelected(itemObj:any) {
-        if (itemObj.id && itemObj.id == this.selectedId && !this.scrolledToSelected) {
-            let y = itemObj.offset;
-            this.checkIfInView(y);
-            this.scrolledToSelected = true;
-        }
+    itemIsSelected(itemObj: any) {
+        itemObj.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    checkIfInView(top: number){
+    checkIfInView(top: number) {
         let windowScroll = jQuery(window).scrollTop();
         if (top > 0) {
             var offset = top - windowScroll;
 
-            if(offset > window.innerHeight  || offset < 0){
+            if (offset > window.innerHeight || offset < 0) {
                 // Not in view so scroll to it
                 // jQuery('html,body').animate({scrollTop: offset-300}, 500);
                 var scrollNode = document.scrollingElement ?
                     document.scrollingElement : document.body;
-                scrollNode.scrollTop = top-200;
+                scrollNode.scrollTop = top - 200;
                 return false;
             }
         }
         return true;
     }
 
+    private showEditWebhook(pathWebhook: Webhook) {
+        let prods = this._appState.getData('products');
+        this.modalService.open(EditWebhookModal, {
+            closeOnBackdropClick: false,
+            context: {
+                webhooksPage: this,
+                inlineMode: false,
+                visible: true,
+                webhook: Webhook.clone(pathWebhook),
+                possibleProdsList: prods,
+            },
+        }).onClose.subscribe(reload => {
+            if (reload) {
+                // this.onUpdate.emit(null);
+            }
+        });
+    }
+    showEditInline(webhook: Webhook) {
+        console.log("showEditExperimentInline");
+        let prods = this._appState.getData('products');
+        this.inlineMode = true;
+        this.editInline.open(webhook, prods);
+    }
+    closeEditInline(value) {
+        console.log("closeEditInline");
+        this.inlineMode = false;
+        this.loading = false;
+    }
 }
 

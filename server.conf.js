@@ -9,6 +9,7 @@ var express = require('express');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+// var routes = require('./config/routes/routes.js')
 
 
 // Create our app with Express
@@ -82,7 +83,7 @@ app.use(auth.session());
 let router = express.Router();
 
 // Load our application API routes
-import routes from './config/routes/routes';
+import routes from './config/routes/routes.js';
 
 // Pass in instances of the express app, router, and passport
 routes(app, router, auth);

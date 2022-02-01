@@ -1,6 +1,7 @@
-import { Rule } from './rule';
+import {Rule} from './rule';
 import {Variant} from "./variant";
 import {IndexingInfo, IndexRange} from "./indexingInfo";
+
 export class Experiment {
     uniqueId: string;
     productId: string;
@@ -8,24 +9,24 @@ export class Experiment {
     displayName: string;
     lastModified: number;
     stage: string;
-    ranges:IndexRange[];
+    ranges: IndexRange[];
     description: string;
     hypothesis: string;
     measurements: string;
     enabled: boolean;
-    indexingInfo:IndexingInfo;
+    indexingInfo: IndexingInfo;
     minVersion: string;
     maxVersion: string;
     rule: Rule;
     rolloutPercentage: number;
     variants: Variant[];
     creator: string;
-    indexExperiment:boolean = false;
+    indexExperiment: boolean = false;
     creationDate: number;
     internalUserGroups: string[];
     controlGroupVariants: string[];
 
-    static cloneToExperiment(exp: Experiment,target:Experiment){
+    static cloneToExperiment(exp: Experiment, target: Experiment) {
         target.uniqueId = exp.uniqueId;
         target.productId = exp.productId;
         target.name = exp.name;
@@ -50,8 +51,8 @@ export class Experiment {
         target.indexExperiment = exp.indexExperiment;
     }
 
-    static clone(exp: Experiment) : Experiment {
-        let toRet:Experiment = new Experiment();
+    static clone(exp: Experiment): Experiment {
+        let toRet: Experiment = new Experiment();
         toRet.uniqueId = exp.uniqueId;
         toRet.productId = exp.productId;
         toRet.name = exp.name;
@@ -76,7 +77,8 @@ export class Experiment {
         toRet.controlGroupVariants = Experiment.duplicateArrayString(exp.controlGroupVariants);
         return toRet;
     }
-    setFromExperiment(exp: Experiment){
+
+    setFromExperiment(exp: Experiment) {
         this.uniqueId = exp.uniqueId;
         this.productId = exp.productId;
         this.name = exp.name;
@@ -100,18 +102,20 @@ export class Experiment {
         this.internalUserGroups = Experiment.duplicateArrayString(exp.internalUserGroups);
         this.controlGroupVariants = Experiment.duplicateArrayString(exp.controlGroupVariants);
     }
-    static duplicateArrayString(array:Array<string>): Array<string> {
+
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })

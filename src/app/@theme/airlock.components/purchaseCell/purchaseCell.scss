@@ -1,0 +1,453 @@
+//@import '../../sass/preloader';
+.progress-striped {
+  height: 50%;
+}
+td {
+  text-align: start;
+}
+
+ul {
+  margin-bottom: 0px;
+}
+
+.list-group {
+  margin-bottom: 0px;
+}
+
+.feature-cell {
+  padding-bottom: 0px;
+  table-layout: fixed;
+}
+
+.table > tbody > tr > td {
+  padding: 0px 8px;
+  line-height: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.selected-feature {
+  background-color: rgba(255, 212, 133,1.0);
+}
+.highlight-cell {
+}
+.descpCell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.descpDiv {
+  margin-right: 8px;
+}
+
+progress {
+  background-color: transparent;
+  background: transparent;
+}
+.progress {
+  background-color: #f5f5f5;
+  height: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+.progress-bar-warning {
+  background-color: #f0ad4e;
+}
+
+.progress-striped .progress-bar-warning {
+  background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+}
+.progress-bar-striped, .progress-striped .progress-bar {
+  background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  -webkit-background-size: 40px 40px;
+  background-size: 40px 40px;
+}
+
+.progress {
+  height: 20px;
+  background: rgba(0, 0, 0, 0.15);
+}
+.progress-striped {
+  background: rgba(0, 0, 0, 0.15);
+}
+div.progress {
+  height: 20px;
+}
+
+.top-dropdown-menu.profile-dropdown {
+  width: 250px;
+  top: 45px;
+  right: -18px;
+  left: auto;
+  z-index: 9999999;
+}
+
+.top-dropdown-menu.profile-dropdown i.dropdown-arr {
+  right: 25px;
+}
+.children-wrapper {
+
+}
+
+
+/*for inside cells wrapping*/
+ul {
+  margin-bottom: 0px;
+
+}
+.panel {
+  background-color: rgba(255,255,255,0.40);
+}
+
+.panel-body[_ngcontent-hoa-10] {
+  padding: 8px;
+}
+
+.panel-warning {
+  margin-bottom: 20px;
+}
+
+.table {
+  margin-bottom: 0px;
+}
+
+ul {
+  margin-bottom: 0px;
+
+}
+.panel {
+  background-color: rgba(255,255,255,0.40);
+}
+
+.panel-body[_ngcontent-hoa-10] {
+  padding: 8px;
+}
+
+
+//.feature-cell {
+//  padding-bottom: 0px;
+//  padding-top: 10px;
+//  padding-left: 15px;
+//  padding-right: 15px;
+//  background-color: white;
+//}
+
+.list-group {
+  background: white;
+}
+
+.col-sm-12 {
+  padding: 0px;
+}
+
+.noPadding {
+  padding: 0px;
+}
+.smallPadding {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.cursor   {
+  cursor: pointer;
+}
+
+.noRightPadding {
+  padding-right: 0px;
+  padding-left: 8px;
+}
+.topPadding {
+  margin-top: 4px;
+}
+
+.transition{
+  -webkit-transition: opacity 500ms ease-in-out,margin-top 500ms ease-in-out;
+  -moz-transition: opacity 500ms ease-in-out,margin-top 500ms ease-in-out;
+  -ms-transition: opacity 500ms ease-in-out,margin-top 500ms ease-in-out ;
+  -o-transition: opacity 500ms ease-in-out,margin-top 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out,margin-top 500ms ease-in-out;
+  //margin-left: 1500px;
+  //width: 200px;
+  opacity: 0;
+}
+
+.transitionActive{
+  opacity: 1.8;
+  //margin-left: 0;
+}
+
+.table-hover > tbody > tr:hover {
+  //background-color: #f5f5f5;
+  opacity: 1.0;
+}
+
+.not-active {
+  color: gray;
+  opacity: 0.6;
+}
+
+.middle-align-element {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding-top: 5px;
+}
+
+.progress-text-align {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-width: 53px;
+}
+.buttonMargin {
+  margin: 3px;
+}
+
+.flexContainer {
+  float: right;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.mx-group-panel {
+  color: white;
+  text-shadow: 0.5px 0.5px #1C2B36;
+  padding: 1px;
+  font-size: small;
+
+}
+
+.mx-group-background {
+  background-color: rgba(90,180,256,0.8);
+}
+
+.reorder-button {
+  float: right;
+  padding-top: 0px;
+  text-shadow: 0.5px 0.5px #1C2B36;
+}
+
+.configTitle {
+  padding-top: 2px;
+  padding-left: 4px;
+  float: left;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.info-icon {
+  padding-left: 2px;
+  font-size: 15px;
+}
+
+.user-groups {
+  padding-left: 2px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.61);
+}
+.noExpand {
+  .btn:hover {
+    transform: none !important;
+    background-color: #009ff3 !important;
+  }
+}
+
+.btn:hover {
+  transform: none !important;
+  color: white;
+  background-color: rgba(26, 37, 128, 0.35) !important;
+}
+
+.new-icon {
+  color: #b60000;
+  padding-left: 2px;
+  font-size: 8px;
+  vertical-align: top;
+  top: 10px;
+  font-weight: 500;
+  position: absolute;
+}
+.hide {
+  display: none;
+}
+.prod {
+  font-weight: 700;
+}
+.destructive {
+  color: red;
+}
+
+.disable-action {
+  color: rgba(0,0,0,0.2);
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-hidden {
+  display: none;
+}
+.star-icon{
+  font-size: 22px;
+  color: darkgray;
+}
+
+.star-disabled {
+  color: rgba(169, 169, 169, 0.41);
+}
+.star-disabled:hover {
+  color: rgba(169, 169, 169, 0.41);
+}
+
+.cell-button:hover {
+  color: #484c4f;
+}
+.reported-to-analytics-icon {
+  font-size: 25px;
+  color: darkgray;
+}
+
+.premium-icon {
+  font-size: 20px;
+  vertical-align: middle;
+}
+.star-selected{
+  color: #ffd470 !important;
+  font-size: 22px;
+  padding-left: 1px;
+  border-color: #dfb470 !important;;
+  -webkit-text-stroke: 1px darkgray;
+}
+
+.star-selected:hover {
+  color: #ffda7b !important;
+}
+
+.btn-circle {
+  border-radius: 30px;
+  color: rgba(0, 0, 0, 0.62);
+  background: transparent;
+  border-color: rgba(0, 0, 0, 0.42);
+}
+
+.btn-circle:hover {
+  border-color: rgba(0, 171, 255, 0.54);
+  color: white;
+}
+
+.reported {
+  color: #00ABFF;
+}
+
+.premium {
+  color: #18b908;
+}
+
+.not-reported {
+  opacity: 0.4;
+}
+
+.reports-something {
+  color: rgba(0, 171, 255, 0.65);
+}
+
+.panel {
+  border-radius: 2px;
+}
+
+a.disabled {
+  color: rgba(0, 0, 0, 0.2) !important;
+  cursor: not-allowed;
+  text-decoration: underline;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.featureEnabled {
+  font-size: 14px;
+  color: #2D5C18
+}
+
+
+.featureDisabled {
+  font-size: 14px;
+  color: rgba(160, 0, 0, 0.39);
+}
+
+.dropdown-menu {
+  .dropdown-item {
+    text-shadow: 0px 0px transparent;
+  }
+}
+
+.maxWidth {
+  width: 100%;
+}
+
+.highlight {
+  background: yellow;
+}
+.not-in-branch:not(.in-branch) {
+  td.align-left {
+    opacity: 0.5;
+  }
+  td.align-right {
+    opacity: 0.5;
+  }
+  .table-hover > tbody > tr:hover {
+    background-color: rgba(245, 245, 245, 0.75);
+    opacity: 1.0;
+
+  }
+  p.configTitle {
+    opacity: 0.5;
+  }
+}
+
+/*.in-branch {
+  td.align-left {
+    opacity: 1.0;
+  }
+  td.align-right {
+    opacity: 1.0;
+  }
+  .table-hover > tbody > tr:hover {
+    background-color: rgba(245, 245, 245, 0.75);
+    opacity: 1.0;
+
+  }
+  p.configTitle {
+    opacity: 1.0;
+  }
+}*/

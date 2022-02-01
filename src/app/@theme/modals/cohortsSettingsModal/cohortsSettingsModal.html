@@ -1,0 +1,36 @@
+
+<nb-card #cohortsSettingsModal  class="cohortsSettingsModal"  id="verifyActionModal" style ="z-index:9988 !important;"  data-keyboard="false" data-backdrop="static">
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                Cohorts Settings
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+
+        <form>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="name" class="control-label">DB Application Name</label>
+
+                    <div></div>
+                    <div class="checkbox-flex">
+                        <input *ngIf="cohortsData != null" #keyTarget type="text" class="form-control" id="name" placeholder="" class="form-control blackText"
+                               [(ngModel)]="cohortsData.dbApplicationName" [readonly]="isOnlyDisplayMode" [disabled]="isOnlyDisplayMode" name="name" required>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="discard()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="isOnlyDisplayMode" (click)="save()">Save</button>
+    </nb-card-footer>
+</nb-card>

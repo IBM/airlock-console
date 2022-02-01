@@ -1,0 +1,37 @@
+.verifyRemoveFromBranchModal .has-success .control-label {
+  color: black;
+}
+
+.verifyRemoveFromBranchModal .control-label {
+  color: white;
+}
+
+.verifyRemoveFromBranchModal .box{
+  box-sizing:border-box;
+}
+
+.verifyRemoveFromBranchModal .blackText{
+  //color: black !important;
+  border: 1px solid #00abff !important;
+}
+.verifyRemoveFromBranchModal .small-pad {
+  padding-left: 2px;
+}
+.verifyRemoveFromBranchModal .feature-name {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.verifyRemoveFromBranchModal .checkbox-flex {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+.verifyRemoveFromBranchModal .check-all {
+  width: 20px;
+  height: 21px;
+  padding-right: 4px;
+}

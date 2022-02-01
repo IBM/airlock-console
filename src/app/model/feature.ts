@@ -1,5 +1,4 @@
-
-import { Rule } from './rule';
+import {Rule} from './rule';
 
 export class Feature {
 
@@ -31,15 +30,16 @@ export class Feature {
     configuration: string;
     defaultIfAirlockSystemIsDown: boolean = false;
     rolloutPercentage: number;
-    rolloutPercentageBitmap:string;
-    maxFeaturesOn:number;
+    rolloutPercentageBitmap: string;
+    maxFeaturesOn: number;
     branchStatus: string;
-    sendToAnalytics:boolean = false;
-    configAttributesToAnalytics:string[];
-    premium:boolean;
-    entitlement:string;
-    premiumRule:Rule;
-    static cloneToFeature(feat: Feature,target:Feature){
+    sendToAnalytics: boolean = false;
+    configAttributesToAnalytics: string[];
+    premium: boolean;
+    entitlement: string;
+    premiumRule: Rule;
+
+    static cloneToFeature(feat: Feature, target: Feature) {
         target.uniqueId = feat.uniqueId;
         target.enabled = feat.enabled;
         target.lastModified = feat.lastModified;
@@ -60,7 +60,7 @@ export class Feature {
         target.orderingRules = Feature.duplicateArray(feat.orderingRules);
 
         target.owner = feat.owner;
-        target.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown)?false:feat.defaultIfAirlockSystemIsDown;
+        target.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown) ? false : feat.defaultIfAirlockSystemIsDown;
         target.rolloutPercentage = feat.rolloutPercentage;
         target.rolloutPercentageBitmap = feat.rolloutPercentageBitmap;
         target.uniqueId = feat.uniqueId;
@@ -80,8 +80,9 @@ export class Feature {
         target.premiumRule = Rule.clone(feat.premiumRule);
 
     }
-    static clone(feat: Feature) : Feature {
-        let toRet:Feature = new Feature();
+
+    static clone(feat: Feature): Feature {
+        let toRet: Feature = new Feature();
         toRet.uniqueId = feat.uniqueId;
         toRet.enabled = feat.enabled;
         toRet.lastModified = feat.lastModified;
@@ -102,7 +103,7 @@ export class Feature {
         toRet.configurationRules = Feature.duplicateArray(feat.configurationRules);
         toRet.orderingRules = Feature.duplicateArray(feat.orderingRules);
         toRet.owner = feat.owner;
-        toRet.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown)?false:feat.defaultIfAirlockSystemIsDown;
+        toRet.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown) ? false : feat.defaultIfAirlockSystemIsDown;
         toRet.rolloutPercentage = feat.rolloutPercentage;
         toRet.rolloutPercentageBitmap = feat.rolloutPercentageBitmap;
         toRet.uniqueId = feat.uniqueId;
@@ -115,14 +116,15 @@ export class Feature {
         toRet.configuration = feat.configuration;
         toRet.maxFeaturesOn = feat.maxFeaturesOn;
         toRet.noCachedResults = feat.noCachedResults;
-        toRet.sendToAnalytics=feat.sendToAnalytics;
+        toRet.sendToAnalytics = feat.sendToAnalytics;
         toRet.branchStatus = feat.branchStatus;
         toRet.premium = feat.premium;
         toRet.entitlement = feat.entitlement;
         toRet.premiumRule = Rule.clone(feat.premiumRule);
         return toRet;
     }
-    setFromFeature(feat: Feature){
+
+    setFromFeature(feat: Feature) {
         this.uniqueId = feat.uniqueId;
         this.enabled = feat.enabled;
         this.lastModified = feat.lastModified;
@@ -142,7 +144,7 @@ export class Feature {
         this.configurationRules = Feature.duplicateArray(feat.configurationRules);
         this.orderingRules = Feature.duplicateArray(feat.orderingRules);
         this.owner = feat.owner;
-        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown)?false:feat.defaultIfAirlockSystemIsDown;
+        this.defaultIfAirlockSystemIsDown = (!feat.defaultIfAirlockSystemIsDown) ? false : feat.defaultIfAirlockSystemIsDown;
         this.rolloutPercentage = feat.rolloutPercentage;
         this.rolloutPercentageBitmap = feat.rolloutPercentageBitmap;
         this.uniqueId = feat.uniqueId;
@@ -161,25 +163,26 @@ export class Feature {
         this.entitlement = feat.entitlement;
         this.premiumRule = Rule.clone(feat.premiumRule);
     }
-    static duplicateArrayString(array:Array<string>): Array<string> {
+
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })
         }
         return arr;
     }
-
 
 
 }

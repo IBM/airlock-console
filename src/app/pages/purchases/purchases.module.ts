@@ -1,80 +1,77 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgaModule } from '../../theme/nga.module';
-
-import { routing }       from './purchases.routing';
-import { ProgressbarModule } from 'ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/tabs';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {NgaModule} from '../../@theme/nga.module';
+import {routing} from './purchases.routing';
 import {PurchasesPage} from "./purchases.component";
-//import {UiSwitchComponent} from "angular2-ui-switch/dist/ui-switch.component";
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import {ConfigurationCell} from "../../theme/airlock.components/configurationCell/configurationCell.component";
-import { DropdownModule } from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
 import ALCommonsModule from "../common.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {InputTextModule} from 'primeng/primeng';
-import {ListboxModule} from 'primeng/primeng';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-import {SelectModule} from "ng2-select";
-
-import {ImportFeaturesModal} from "../../theme/airlock.components/importFeaturesModal/importFeaturesModal.component";
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import { BrowserModule } from '@angular/platform-browser';
-import {WhitelistSummary} from "../wlpreview/wlsummary.component";
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import {wlAttributesModal} from "../../theme/airlock.components/wlAttributesModal/wlAttributesModal.component";
-import {wlContextModal} from "../../theme/airlock.components/wlContextModal/wlContextModal.component";
-import {TreeModule,TreeNode} from 'primeng/primeng';
-import {ShowDashboardModal} from "../../theme/airlock.components/showDashboardModal/showDashboardModal.component";
-import {PurchaseCell} from "../../theme/airlock.components/purchaseCell/purchaseCell.component";
-import {AddPurchaseModal} from "../../theme/airlock.components/addPurchaseModal";
+import {PurchaseCell} from "../../@theme/airlock.components/purchaseCell/purchaseCell.component";
+import {PurchaseOptionsCell} from "../../@theme/airlock.components/purchaseOptionsCell/purchaseOptionsCell.component";
 import FeaturesCommonModule from "../features.common.module";
-import {AddPurchaseConfigurationModal} from "../../theme/airlock.components/addPurchaseConfigurationModal";
-import {PurchaseOptionsCell} from "../../theme/airlock.components/purchaseOptionsCell/purchaseOptionsCell.component";
-import {EditPurchaseModal} from "../../theme/airlock.components/editPurchaseModal";
-import {AddPurchaseOptionModal} from "../../theme/airlock.components/addPurchaseOptionModal";
-import {ReorderPurchaseMXGroupModal} from "../../theme/airlock.components/reorderPurchaseMXGroupModal";
-import {SelectIncludedPurchases} from "../../theme/airlock.components/selectIncludedPurchases/selectIncludedPurchases.component";
-import {IncludedPurchasesNode} from "../../theme/airlock.components/selectIncludedPurchases/includedPurchasesNode/includedPurchasesNode.component";
-import {EditPurchaseOptionsModal} from "../../theme/airlock.components/editPurchaseOptionsModal";
-import { ImportPurchasesModal } from '../../theme/airlock.components/importPurchasesModal/importPurchasesModal.component';
+import {PopoverModule} from "ngx-bootstrap/popover";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AlertModule} from "ngx-bootstrap/alert";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {AddPurchaseConfigurationModal} from "../../@theme/modals/addPurchaseConfigurationModal";
+import {AddPurchaseOptionModal} from "../../@theme/modals/addPurchaseOptionModal";
+import {AddPurchaseModal} from "../../@theme/modals/addPurchaseModal";
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbLayoutModule,
+    NbPopoverModule,
+    NbSidebarModule,
+    NbTabsetModule
+} from "@nebular/theme";
+import {EditPurchaseModal} from "../../@theme/modals/editPurchaseModal";
+import {EditPurchaseOptionsModal} from "../../@theme/modals/editPurchaseOptionsModal";
+import {ReorderPurchaseMXGroupModal} from "../../@theme/modals/reorderPurchaseMXGroupModal";
+import {NgSelectModule} from "@ng-select/ng-select";
+import {SelectIncludedPurchases} from "../../@theme/airlock.components/selectIncludedPurchases";
+import { IncludedPurchasesNode } from 'app/@theme/airlock.components/selectIncludedPurchases/includedPurchasesNode/includedPurchasesNode.component';
+
+
+//Modal views
+// import {EditPurchaseModal} from "../../theme/airlock.components/editPurchaseModal";
+// import {ReorderPurchaseMXGroupModal} from "../../theme/airlock.components/reorderPurchaseMXGroupModal";
+// import {SelectIncludedPurchases} from "../../theme/airlock.components/selectIncludedPurchases/selectIncludedPurchases.component";
+// import {IncludedPurchasesNode} from "../../theme/airlock.components/selectIncludedPurchases/includedPurchasesNode/includedPurchasesNode.component";
+// import {EditPurchaseOptionsModal} from "../../theme/airlock.components/editPurchaseOptionsModal";
+// import {ImportPurchasesModal} from '../../theme/airlock.components/importPurchasesModal/importPurchasesModal.component';
+// import {SelectModule} from "ng2-select";
+// import {DropdownMultiselectModule} from 'ng2-dropdown-multiselect';
+// import {Ng2Bs3ModalModule} from 'ng2-bs3-modal/ng2-bs3-modal';
+// import {ModalModule} from "angular2-modal/";
+// import {DataTableModule, InputTextModule, ListboxModule, TreeModule} from 'primeng/primeng';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
+        NbCardModule,
         PopoverModule.forRoot(),
+        NbPopoverModule,
         ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
         TooltipModule.forRoot(),
-        TabsModule.forRoot(),
+        NbTabsetModule,
         AccordionModule.forRoot(),
         ButtonsModule.forRoot(),
         AlertModule.forRoot(),
         ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        DropdownMultiselectModule,
-        PushNotificationsModule,ALCommonsModule,
+        ALCommonsModule,
+        NgSelectModule,
         routing,
-        InputTextModule,
-        ListboxModule,
-        DataTableModule,
-        TreeModule,
-        SelectModule,
+        NbCardModule,
+        NbButtonModule,
+        NbLayoutModule,
+        NbSidebarModule,
         FeaturesCommonModule,
     ],
     declarations: [
@@ -87,15 +84,11 @@ import { ImportPurchasesModal } from '../../theme/airlock.components/importPurch
         AddPurchaseOptionModal,
         ReorderPurchaseMXGroupModal,
         SelectIncludedPurchases,
-        IncludedPurchasesNode,
-        ImportPurchasesModal,
+        // IncludedPurchasesNode,
+        // ImportPurchasesModal,
         EditPurchaseOptionsModal
     ],
-    providers: [
-        // TransparentSpinner,
-        // NotificationsService,
-        // FeatureUtilsService,
-
-    ]
+    providers: []
 })
-export default class PurchasesModule {}
+export class PurchasesModule {
+}

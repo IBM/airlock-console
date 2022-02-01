@@ -1,33 +1,22 @@
-<verify-action-modal  #verifyActionModal ></verify-action-modal>
-<add-experiment-modal #addExperimentModal [productId]="selectedProduct?.uniqueId" [possibleGroupsList]="possibleUserGroupsList" (onExperimentAdded)="experimentAdded($event)"></add-experiment-modal>
-<reorder-experiments-modal #reorderExperimentsModal [verifyActionModal]="verifyActionModal" (onReorderExperiments)="experimentsReordered($event)"></reorder-experiments-modal>
-<reorder-variants-modal #reorderVariantsModal [verifyActionModal]="verifyActionModal" (onReorderVariants)="updateExperiment($event)"></reorder-variants-modal>
-<add-variant-modal #addVariantModal [productId]="selectedProduct?.uniqueId" [possibleGroupsList]="possibleUserGroupsList" (onVariantAdded)="variantAdded($event)"></add-variant-modal>
-<edit-experiment-modal [verifyActionModal]="verifyActionModal"  (onEditExperiment)="updateExperiment($event)" (onShowExperiment)="setEditDialog($event)" [product]="selectedProduct" [possibleGroupsList]="possibleUserGroupsList" #editExperimentModal
-    (onEditFeature)="refreshTable($event)"></edit-experiment-modal>
-<edit-variant-modal [verifyActionModal]="verifyActionModal"  (onEditVariant)="updateExperiment($event)" (onShowFeature)="setEditDialog($event)" [product]="selectedProduct" [possibleGroupsList]="possibleUserGroupsList" #editVariantModal
-                    (onEditFeature)="refreshTable($event)"></edit-variant-modal>
 
-
-<div class="container_not">
-    <div>
-        <div id="tloader" [hidden]="!loading">
-            <div></div>
-        </div>
-        <div style="float: right;    display: flex;">
-
-            <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addExperiment()" *ngIf="isShowAddExperiment()">
-                <i class="ion-plus"></i>
-                Add Experiment
-            </button>
-        </div>
-        <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
-                               [showDisabled]="showDisabled" (onShowDisabledChanged)="setShowDisabled($event)"
-                               [showSearch]="true" [showExperiments]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
-                               (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showAnalytics]="showAnalytics"
-                               ></custom-airlock-header>
-
-        <div *ngIf="experimentsContainer?.experiments?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">
+        <div>
+            <div id="tloader" [hidden]="!loading">
+                <div></div>
+            </div>
+            <div style="float: right;    display: flex;">
+                <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addExperiment()" *ngIf="isShowAddExperiment()">
+                    <i class="ion-plus"></i>
+                    Add Experiment
+                </button>
+            </div>
+            <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                                   [showDisabled]="showDisabled" (onShowDisabledChanged)="setShowDisabled($event)"
+                                   [showSearch]="true" [showExperiments]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
+                                   (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showAnalytics]="showAnalytics" [showTableHeader]="!inlineMode"
+                                   ></custom-airlock-header>
+            <div *ngIf="experimentsContainer?.experiments?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
             <div [class.panel]="true" [class.hide]="!hasSomeData()" [class.panel-warning]="true" [class.mx-group-background]="true" [class.full-width]="true" style="margin-bottom: 2px; margin-top: 2px;">
                 <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="false">
                     <ul class="list-group" style="margin: 0px; background-color: transparent">
@@ -42,24 +31,22 @@
                         </div>
                         <experiment-cell *ngFor="let experiment of experimentsContainer?.experiments; let i = index"
                                          [experiment]="experiment" [level]="0"
-                                         [editExperimentModal]="editExperimentModal"
-                                         [editVariantModal]="editVariantModal"
                                          [openExperiments]="openExperiments"
                                          [searchTerm]="searchQueryString"
-                                         [verifyActionModal]="verifyActionModal"
-                                         [addVariantModal]="addVariantModal"
                                          [showDevFeatures]="showDevFeatures"
                                          [showDisabled]="showDisabled"
-                                         [reorderVariantsModal]="reorderVariantsModal"
+                                         [inlineMode]="inlineMode"
                                          [filterlistDict]="filterlistDict"
                                          [shouldOpenCell]="isCellOpen(experiment.uniqueId)"
                                          [selectedId]="selectedId"
                                          (onSearchHit)="experimentIsInFilter($event)"
                                          (onDummySearchHit)="variantIsNotInFilter($event)"
                                          (onCellClick)="experimentChangedStatus($event)"
+                                         (onEditInline)="showEditInline($event)"
+                                         (onEditVariantInline)="showEditVariantInline($event)"
                                          (onUpdate)="refreshTable($event)"
                                          (hideIndicator)="afterUpdate()"
-                                         (beforeUpdate)="beforeUpdate($event)"
+                                         (beforeUpdate)="beforeUpdate()"
                                          (onSelected)="itemIsSelected($event)"
                         ></experiment-cell>
                     </ul>
@@ -67,5 +54,12 @@
             </div>
 
         </div>
+    </div>
+    </div>
+    <div [class.col-md-6]="inlineMode && !inlineVariantMode">
+        <edit-experiment-modal #editInline (onClose)="closeEditInline('')" [visible]="inlineMode && !inlineVariantMode"></edit-experiment-modal>
+    </div>
+    <div [class.col-md-6]="inlineVariantMode">
+        <edit-variant-modal #editVariantInline (onClose)="closeEditInline('')" [visible]="inlineVariantMode"></edit-variant-modal>
     </div>
 </div>

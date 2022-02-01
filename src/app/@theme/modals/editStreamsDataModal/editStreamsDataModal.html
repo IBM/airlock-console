@@ -1,0 +1,171 @@
+<ace-modal #paceModalContainerDialog
+                                    (outputEventFilterUpdate)="filterUpdated($event)">
+</ace-modal>
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header *ngIf="streamsData != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     {{title}}
+                </span>
+        </h4>
+        <div>
+            <h5 class="modal-title">
+                {{getString('edit_streams_data_subtitle')}}
+            </h5>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <nb-tabset *ngIf="isOpen">
+            <nb-tab heading="General" [active]="generalTabActive">
+                <div class="tabContentBackgroud tab-div-container">
+                    <div class="box">
+                        <div class="row row-margin">
+                            <div class="col-md-12">
+                                <div class="no-margin" *ngIf="streamsData != null">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="align-left"><label
+                                                    class="control-label">{{getString('edit_streams_data_enable_historical_events')}}</label>
+                                                <airlock-tooltip [placement]="'right'"
+                                                                 class="FlexContainer leftPad editStreamsDataModalPad"
+                                                                 [content]="getString('edit_streams_data_enable_historical_events_tooltip')"
+                                                                 [title]="getString('edit_streams_data_enable_historical_events_title')"></airlock-tooltip>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="align-left">
+                                                <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                           [(checked)]="streamsData.enableHistoricalEvents"
+                                                           ></nb-toggle>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row row-margin">
+                            <div class="no-margin col-md-4" *ngIf="streamsData != null">
+                                <label for="input921" class="control-label">Days to keep history</label>
+                                <airlock-tooltip class="endFlexContainer"
+                                                 [content]="getString('edit_streams_data_days_to_keep_tooltip')"
+                                                 [title]="getString('edit_streams_data_days_to_keep_title')"></airlock-tooltip>
+                                <div class="input-group rollout">
+                                    <input type="number" tabindex="4" id="input921" [disabled]="isOnlyDisplayMode"
+                                           [placeholder]="'Indefinitely'" pattern="[0-9]{10}" placeholder=""
+                                           [(ngModel)]="streamsData.keepHistoryOfLastNumberOfDays"
+                                           [value]="streamsData.keepHistoryOfLastNumberOfDays || ''"
+                                           class="form-control with-success-addon" type="number" min="0" step="1">
+                                </div>
+                            </div>
+                            <div class="no-margin col-md-4" *ngIf="streamsData != null">
+                                <label for="input913" class="control-label">Maximum total size (KB)</label>
+                                <airlock-tooltip class="endFlexContainer"
+                                                 [content]="getString('edit_streams_max_totle_size_tooltip')"
+                                                 [title]="getString('edit_streams_max_totle_size_title')"></airlock-tooltip>
+                                <div class="input-group rollout">
+                                    <input type="number" id="input913" [disabled]="isOnlyDisplayMode"
+                                           pattern="[0-9]{10}" placeholder=""
+                                           [(ngModel)]="streamsData.maxHistoryTotalSizeKB"
+                                           [value]="streamsData.maxHistoryTotalSizeKB || ''"
+                                           class="form-control with-success-addon" type="number" min="0" step="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nb-tab>
+
+            <nb-tab [active]="filterTabActive" heading="Advanced" *ngIf="streamsData != null">
+                <div class="tabContentBackgroud tab-div-container">
+                    <div class="box">
+                        <div class="">
+                            <div class="row double-row-margin">
+                                <div class="no-margin col-md-4" *ngIf="streamsData != null">
+                                    <label for="input991" class="control-label">Maximum history file size (KB)</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_streams_history_file_max_tooltip')"
+                                                     [title]="getString('edit_streams_history_file_max_title')"></airlock-tooltip>
+                                    <div class="input-group rollout">
+                                        <input type="number" tabindex="4" id="input991" [disabled]="!canEditAdvancede"
+                                               pattern="[0-9]{10}" placeholder=""
+                                               [(ngModel)]="streamsData.historyFileMaxSizeKB"
+                                               [value]="streamsData.historyFileMaxSizeKB || ''"
+                                               class="form-control with-success-addon" type="number" min="0" step="1">
+                                    </div>
+                                </div>
+
+                                <div class="no-margin col-md-4" *ngIf="streamsData != null">
+                                    <label for="input914"
+                                           class="control-label">{{getString('edit_streams_data_bulk_size')}}</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_streams_data_bulk_size_tooltip')"
+                                                     [title]="getString('edit_streams_data_bulk_size_title')"></airlock-tooltip>
+                                    <div class="input-group rollout">
+                                        <input type="number" id="input914" [disabled]="!canEditAdvancede"
+                                               pattern="[0-9]{10}" placeholder="" [(ngModel)]="streamsData.bulkSize"
+                                               [value]="streamsData.bulkSize || ''"
+                                               class="form-control with-success-addon" type="number" min="0" step="1">
+                                    </div>
+                                </div>
+                                <div class="no-margin col-md-4" *ngIf="streamsData != null">
+                                    <label for="input915"
+                                           class="control-label">{{getString('edit_streams_history_buffer_size')}}</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_streams_history_buffer_size_tooltip')"
+                                                     [title]="getString('edit_streams_history_buffer_size_title')"></airlock-tooltip>
+                                    <div class="input-group rollout">
+                                        <input type="number" id="input915" [disabled]="!canEditAdvancede"
+                                               pattern="[0-9]{10}" placeholder=""
+                                               [(ngModel)]="streamsData.historyBufferSize"
+                                               [value]="streamsData.historyBufferSize || ''"
+                                               class="form-control with-success-addon" type="number" min="0" step="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nb-tab>
+
+            <nb-tab heading="{{getString('edit_stream_filter_tab_heading')}}" [active]="advancedTabActive">
+                <div class="tab-div-container">
+                        <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_streams_data_filter_tab_details')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showStreamHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                            </h5>
+                        </span>
+
+                    <div></div>
+                    <span>
+                            <button class="btn btn-expand btn-icon" type="button" (click)="openAceEditorFilterExpand()">
+                            <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div #mytesteditor ace-editor id="input564" (onTextChanged)="filterUpdated($event)"
+                             [markdown]="streamsData.filter" [readonly]="isOnlyDisplayMode"
+                             [mode]="'javascript'"
+                             [sample]="filterInputSchemaSample" [utilitiesinfo]="filterUtilitiesInfo"
+                             [heightSize]="aceEditorRuleHeight">
+                        </div>
+                        </span>
+                </div>
+            </nb-tab>
+
+        </nb-tabset>
+
+    </nb-card-body>
+    <nb-card-footer *ngIf="streamsData != null">
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>
+<!--    </modal>-->

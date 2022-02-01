@@ -5,7 +5,6 @@ import { Routes, RouterModule }  from '@angular/router';
 import {AuthorizationPage} from "./authorization.component";
 import {AuthGuard} from "../../services/auth-guard.service";
 
-
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [
     {

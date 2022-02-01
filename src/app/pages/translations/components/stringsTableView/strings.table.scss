@@ -1,5 +1,9 @@
 $border-light: rgba(255, 255, 255, 0.3);
 
+
+table, th, td {
+  border: none !important;
+}
 .limit-height {
   height:calc(100vh - 320px);
   overflow: auto;
@@ -223,9 +227,9 @@ th {
   line-height: 30px;
 }
 
-/deep/ span.glyphicon{
-  display: none !important;
-}
+///deep/ span.glyphicon{
+//  display: none !important;
+//}
 
 .eyeIcon{
   font-size: 10px;
@@ -238,6 +242,21 @@ th {
   -webkit-transform: translateZ(0);
 }
 
-/deep/ .stringsTableCard .card-body{
-  padding-bottom: 45px !important;
+::ng-deep ng2-smart-table {
+  table {
+    width: fit-content;
+    tr {
+      td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+      }
+    }
+  }
+}
+
+::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li a, .nb-theme-dark ng2-smart-table nav.ng2-smart-pagination-nav .pagination li > span {
+  color: white !important;
 }

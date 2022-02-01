@@ -1,0 +1,234 @@
+<!--<show-dashboard-modal #showDashboardModal></show-dashboard-modal>-->
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+        <div #experimentCell [class.col-sm6]="true">
+            <div [class.panel]="shouldStyleCell()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.mx-group-background]="shouldStyleAsMTX()" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                            <tr *ngIf="isExperiment()">
+
+                                <td style="width: 3%; vertical-align: middle;" (click)="cellClicked()" class="align-right" [style.color]="getNextColorStyle()">
+                                    <i *ngIf="showExpand()" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>
+                                </td>
+                                <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="starDiv" style="padding-top: 5px;">
+                                        <flask-icon [animated]="isExperimentRunning()"></flask-icon>
+                                        <i class="flask-icon ion-erlenmeyer-flask" [class.not-active]="!isExperimentRunning()"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 28%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                    <div class="descpDiv" style="    max-width: 260px;display: inline-flex;    text-overflow: ellipsis;overflow: hidden;">
+                                        <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted" style="text-overflow: ellipsis;overflow: hidden;display: block;">
+
+                                        </a>
+                                        <ng-template #popTemplate>
+                                            <div class="descpPopover">
+                                                <div  class="no-margin "  *ngIf="(experiment?.description?.length > 0)">
+                                                    <label for="input55" class="control-label">Description</label>
+                                                    <p id="input55" [innerHTML]="experiment.description | replaceLineBreak"></p>
+                                                </div>
+                                                <div  class="no-margin "  *ngIf="experiment.hypothesis?.length > 0">
+                                                    <label for="input516" class="control-label">Hypothesis</label>
+                                                    <p id="input516" [innerHTML]="experiment.hypothesis | replaceLineBreak"></p>
+                                                </div>
+                                                <div  class="no-margin "  *ngIf="(experiment?.measurements?.length > 0)">
+                                                    <label for="input526" class="control-label">Measurements</label>
+                                                    <p id="input526" [innerHTML]="experiment.measurements | replaceLineBreak"></p>
+                                                </div>
+                                            </div>
+
+                                        </ng-template>
+
+                                        <i *ngIf="(experiment?.description?.length > 0 || experiment.hypothesis?.length > 0 || experiment?.measurements?.length > 0)" class="ion-ios-information-outline info-icon" [popover]="popTemplate" placement="right" triggers="mouseenter:mouseleave"></i>
+                                        <!--<i *ngIf="(experiment?.description?.length > 0)" class="ion-ios-information-outline info-icon" [tooltip]="getDescriptionTooltip(experiment.description)" [isDisabled]="(experiment?.description?.length <= 0)" ></i>-->
+                                    </div>
+<!--                                    <div class="subHeaderDiv" >-->
+<!--                                        {{getRunningMessage()}}-->
+<!--                                    </div>-->
+                                </td>
+<!--                                <td *ngIf="(showAnalytics && !inlineMode)" style="width: 12%; text-align: center;  vertical-align: middle;" class="align-left" align="left">-->
+<!--                                    <div class="starDiv">-->
+<!--                                        <ng-template #dashTemplate>-->
+<!--                                            <div class="dashPopver">-->
+<!--                                                <div class="dashFlexContainer">-->
+<!--                                                    <img class="tooltip-dashboard" src="{{ ( getDashboardIcon() | baProfilePicture ) }}">-->
+<!--                                                    <span class="popover-stats" *ngIf="hasIndexingData()">-->
+<!--                                                        <span class="dash-title">Number of buckets</span>-->
+<!--                                                        <p>Total: {{experiment?.indexingInfo?.indexingProgress?.totalNumberOfBuckets}}</p>-->
+<!--                                                        <p>Done: {{experiment?.indexingInfo?.indexingProgress?.numberOfDoneBuckets}}</p>-->
+<!--                                                        <p>Error: {{experiment?.indexingInfo?.indexingProgress?.numberOfErrorBuckets}}</p>-->
+<!--                                                    </span>-->
+<!--                                                    <span class="popover-stats" *ngIf="!hasIndexingData()">-->
+<!--                                                        <span class="dash-title">Acquiring data...</span>-->
+<!--                                                    </span>-->
+
+<!--                                                </div>-->
+<!--                                                <p class="last-indexed-text">{{getLastIndexedMessage()}}</p>-->
+<!--                                                <p class="dash-link-message" [class.dash-link-no-permissions]="!isAnalyticsViewer()">{{getDashboardTooltip()}}</p>-->
+<!--                                                <p *ngIf="(shouldSuggestIndexing() && !canClickStartIndexing()) || (!shouldSuggestIndexing() && !hasDashboard())" class="no-dash-message">{{getTooltipForWhyUserCantDoAction()}}</p>-->
+<!--                                            </div>-->
+<!--                                        </ng-template>-->
+<!--                                        <i *ngIf="!shouldSuggestIndexing()" class="dashboard-icon fa" [popover]="dashTemplate" placement="top" triggers="mouseenter:mouseleave" [class.dashboard-not-active]="!isAnalyticsViewer() || !hasDashboard()"[class.cursor]="isAnalyticsViewer() && hasDashboard()" [class.dashboard-active]="isAnalyticsViewer() && hasDashboard()" (click)="isAnalyticsViewer() && showDashboard()" [style.color]="getDashboardColor()">-->
+<!--                                            <img src="{{ ( getDashboardIcon() | baProfilePicture ) }}">-->
+<!--                                        </i>-->
+<!--                                        <i *ngIf="shouldSuggestIndexing()" class="index-icon fa fa-play-circle" [tooltip]="getStartIndexingTooltip()" [class.play-not-active]="!canClickStartIndexing()" [class.play-active]="canClickStartIndexing()" [class.cursor]="canClickStartIndexing()" (click)="canClickStartIndexing() && changeIndexExperiment()"></i>-->
+<!--                                        <i *ngIf="(!shouldSuggestIndexing() && !hasDashboard())" class="index-icon fa fa-exclamation-triangle" [tooltip]="getTooltipForWhyUserCantDoAction()" style="color:#d7ad1d;vertical-align: top;    font-size: 12px; position: absolute"></i>-->
+<!--                                        <i *ngIf="isPausedIndexing() && !shouldSuggestIndexing()" class="index-icon fa fa-pause-circle" [tooltip]="getTooltipForPausedIndexing()" style="color:#89a5be;vertical-align: top;    font-size: 12px; position: absolute;    margin-top: 12px;"></i>-->
+<!--                                    </div>-->
+
+<!--                                </td>-->
+                                <td style="width: 12%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                    <span class="capitalize">{{experiment.stage | lowercase}}</span>
+                                    <i *ngIf="shouldShowUserGroups()" class="ion-ios-people user-groups" [tooltip]="userGroupsText()" [isDisabled]="!(shouldShowUserGroups())" ></i>
+                                </td>
+                                <td *ngIf="!inlineMode" style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" ><span class="">{{experiment.minVersion}}</span></td>
+                                <td *ngIf="!inlineMode" style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" ><span class="">{{experiment.maxVersion}}</span></td>
+                                <td *ngIf="!inlineMode" style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                    <div style="vertical-align: middle; height: 20px;">
+                                        <progressbar class="progress progress-striped" value="{{experiment.rolloutPercentage}}" max="100" type="primary">
+                                            <div class="progress-text-align">
+                                                <span>{{experiment.rolloutPercentage}}%</span>
+                                            </div>
+                                        </progressbar>
+                                    </div>
+                                </td>
+                                <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                    <div style="vertical-align: middle;" class="middle-align-element">
+                                        <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="experiment.enabled"></i>
+                                        <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="!experiment.enabled"></i>
+                                    </div>
+                                </td>
+
+                                <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right">
+                                    <div class="dropdown noExpand maxWidth" dropdown >
+                                        <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd1" data-toggle="dropdown" aria-expanded="false" title="Actions">
+                                            <i class="ion-settings"></i>
+                                        </button>
+                                        <ng-template #templateRef>
+                                            <ul class="menu-items">
+<!--                                        <ul  dropdownMenu role="menu" aria-labelledby="single-button" class="dropdown-menu top-dropdown-menu profile-dropdown">-->
+                                            <li class="dropdown-item"  *ngIf="true"><i class="dropdown-arr"></i></li>
+                                            <li class="dropdown-item" *ngIf="!isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Details</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Edit</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openAddVariantDialog()"><i class="fa ion-help-buoy"></i>Add variant</a></li>
+                                            <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions() && hasDashboard() && canDoActionInProduction() && showAnalytics"><a (click)="resetDashboard()"><i class="fa ion-ios-rewind"></i>Reset dashboard</a></li>
+                                            <li class="dropdown-item" *ngIf="isShowReleaseToProduction()"><a (click)="changeStage()"><i class="fa" [class.ion-code-working]="experiment.stage!='DEVELOPMENT'" [class.fa-flag]="experiment.stage=='DEVELOPMENT'"></i>{{experiment.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                            <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                            <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                        </ul>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <span  *ngIf="isOpen" class="transition" [ngClass]="{'transitionActive':isOpen}" (transitionend)="transitionEnd()" [hidden]="remove">
+                            <div [class.panel]="true" [class.panel-warning]="true" [class.mx-group-background]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="isSubFeature()">
+                                     <ul class="list-group" style="margin: 0px; background-color: transparent">
+                                        <div *ngIf="true" class="mx-group-panel">
+                                        <p class="configTitle">{{getMXTitle()}}</p>
+                                        <span class="flexContainer">
+                                            <button *ngIf="isShowReorder()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="reorder()">
+                                                <i class="fa fa fa-sort"></i>
+                                                Reorder
+                                            </button>
+                                            <button *ngIf="isShowAddVariant()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="openAddVariantDialog()">
+                                                <i class="fa ion-plus-round"></i>
+                                                Add Variant
+                                            </button>
+                                        </span>
+                                        </div>
+                                         <variant-cell *ngFor="let variant of experiment.variants; let i = index"
+                                                       [variant]="variant"
+                                                       [searchTerm]="searchTerm"
+                                                       [filterlistDict]="filterlistDict"
+                                                       [showDevFeatures]="showDevFeatures"
+                                                       [showDisabled]="showDisabled"
+                                                       [inlineMode]="inlineMode"
+                                                       [level]="1"
+                                                       [insideMX]="true"
+                                                       [openFeatures]="openFeatures"
+                                                       [featuresPath]="featuresPath"
+                                                       (onSearchHit)="mySearchHit($event)"
+                                                       (onDummySearchHit)="myDummySearchHit($event)"
+                                                       (onCellClick)="myFeatureChangedStatus($event)"
+                                                       (onUpdate)="myOnUpdate($event)"
+                                                       (onSelected)="mySelected($event)"
+                                                       (hideIndicator)="myHideIndicator($event)"
+                                                       (beforeUpdate)="myBeforeUpdate($event)"
+                                                       (onEditVariantInline)="showEditInline(variant)"
+                                                       [variantIndex]="i"
+                                                       [experiment]="experiment"
+                                                       [selectedId]="selectedId"
+                                         ></variant-cell>
+                                         <div *ngIf="false" class="mx-group-head" style="margin-bottom: 4px; margin-top: 2px;">
+                                             <table class="table table-hover feature-cell" [style.background-color]="getMasterBackgroundStyle()" [style.color]="getColorStyle()">
+
+                                                <tr>
+
+                                                    <td style="width: 3%; vertical-align: middle;" class="align-right" [style.color]="getNextColorStyle()">
+                                                        <!--<i *ngIf="false" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>-->
+                                                    </td>
+                                                    <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                                        <i class="reported-to-analytics-icon ion-merge"></i>
+                                                    </td>
+                                                    <td style="width: 20%; text-align: start;  vertical-align: middle;" class="align-left descpCell" align="left">
+                                                        <div class="descpDiv">
+                                                            Default
+                                                            <i class="ion-ios-information-outline info-icon" [tooltip]="getMasterTooltip()" ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 28%; text-align: start;  vertical-align: middle;" class="align-left descpCell" align="left">
+                                                        <span>
+                                                            MASTER
+                                                        </span>
+                                                    </td>
+                                                    <td style="width: 12%; text-align: start; vertical-align: middle;" class="align-left capitalize" [class.prod]="isInProduction()" >
+
+                                                    </td>
+                                                    <td style="width: 8%; text-align: start; vertical-align: middle;" class="align-left" >
+
+                                                    </td>
+                                                    <td style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" class="align-left" >
+                                                        <div style="vertical-align: middle; height: 20px;">
+                                                            <progressbar class="progress progress-striped master-cell" value="100" max="100" type="primary">
+                                                                <div class="progress-text-align">
+                                                                    <span>100%</span>
+                                                                </div>
+                                                            </progressbar>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                                        <div style="vertical-align: middle;" class="middle-align-element">
+                                                            <i aria-hidden="true" class="ion-checkmark-round featureEnabled master-cell"></i>
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right" (click)="doNothing()">
+                                                        <div class="dropdown buttonMargin">
+                                                            <button style="visibility: hidden;" class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd44" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="ion-settings"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                         </div>
+                                     </ul>
+
+                                </div>
+                            </div>
+
+                        </span>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <!--</div>-->
+
+</div>

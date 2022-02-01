@@ -1,19 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
-
-import { Product } from '../model/product';
-import { Season } from '../model/season';
-import { Feature } from '../model/feature';
-import { UserGroups } from '../model/user-groups';
 import {Base64Utils} from "./Base64Utils";
-import {AirlockService} from "./airlock.service";
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class AuthorizationService {
 
-    private airlockBaseApiUrl = process.env.AIRLOCK_API_URL;
+    private airlockBaseApiUrl = environment.AIRLOCK_API_URL;
     // private airlockBaseApiUrl = 'http://9.148.49.163:8080/airlock/api/admin';
     // private airlockBaseApiUrl = 'http://9.148.54.98:7070/airlock/api/admin'; // console dev
     // private airlockBaseApiUrl = 'http://9.148.54.98:2020/airlock/api/admin'; // rotem/vicky QA
@@ -23,13 +18,15 @@ export class AuthorizationService {
     private airlockGroupsUrl = `${this.airlockBaseApiUrl}/usergroups`;
     private airlockFeaturesUrl = `${this.airlockBaseApiUrl}/features`;
     private airlockOpsUrl = `${this.airlockBaseApiUrl}/../ops/`;
-    private userName:string = "moshe";
-    private curGroupName:string = "";
-    private jwtToken:string;
-    addAuthToHeaders(headers:Headers){
-        // headers.append('sessionToken', this.jwtToken);
+    private userName: string = "moshe";
+    private curGroupName: string = "";
+    private jwtToken: string;
+
+    addAuthToHeaders(headers: HttpHeaders) {
+        headers.append('sessionToken', this.jwtToken);
         return {headers: headers};
     }
+
     private getCookie(name: string) {
         let cookiesArr: Array<string> = document.cookie.split(';');
         let len: number = cookiesArr.length;
@@ -44,41 +41,42 @@ export class AuthorizationService {
         }
         return "";
     }
-    constructor(private http: Http) {
+
+    constructor(private http: HttpClient) {
         console.log("AuthorizationService constructor");
         this.jwtToken = this.getCookie("jwt");
 
-        console.log("JWT:"+this.jwtToken);
+        console.log("JWT:" + this.jwtToken);
     }
 
-    public static getUser(token:string){
+    public static getUser(token: string) {
         var decodedString = Base64Utils.Base64.decode(token);
         var isSecond = 0;
         var startIndex = -1;
         var endIndex = -1;
         var counter = 0;
         var finish = 0;
-        for(var i = 0;i < decodedString.length && finish == 0;++i){
-            if(decodedString[i] == '{'){
-                if(isSecond == 1 && counter == 0){
+        for (var i = 0; i < decodedString.length && finish == 0; ++i) {
+            if (decodedString[i] == '{') {
+                if (isSecond == 1 && counter == 0) {
                     startIndex = i;
                 }
                 counter++;
             }
-            if(decodedString[i] == '}'){
+            if (decodedString[i] == '}') {
                 counter--;
-                if(counter == 0){
-                    if(isSecond == 0){
+                if (counter == 0) {
+                    if (isSecond == 0) {
                         isSecond = 1;
-                    }else{
+                    } else {
                         endIndex = i;
                         finish = 1;
                     }
                 }
             }
         }
-        if(finish == 1 && startIndex != -1 && endIndex != -1){
-            var userData = decodedString.substring(startIndex,endIndex+1);
+        if (finish == 1 && startIndex != -1 && endIndex != -1) {
+            var userData = decodedString.substring(startIndex, endIndex + 1);
             console.log("userData");
             console.log(userData);
             var myobj = JSON.parse(userData);
@@ -89,7 +87,8 @@ export class AuthorizationService {
         // console.log(decodedString);
         return "";
     }
-    init(role:string){
+
+    init(role: string) {
         this.curGroupName = role;
         // if(this.jwtToken != null && this.jwtToken.length > 0){
         //     var userData = AuthorizationService.getUser(this.jwtToken);
@@ -113,66 +112,66 @@ export class AuthorizationService {
 
     }
 
-    public static getActualRole(list:string[]){
-        var role:string = "";
+    public static getActualRole(list: string[]) {
+        var role: string = "";
         if (list) {
-            for(var curRole of list){
-                console.log("role");
-                console.log(curRole);
-                if(role === "") {
-                    if(curRole === "Administrator" || curRole === "ProductLead" || curRole === "Editor" || curRole === "Viewer"){
+            for (var curRole of list) {
+                if (role === "") {
+                    if (curRole === "Administrator" || curRole === "ProductLead" || curRole === "Editor" || curRole === "Viewer") {
                         role = curRole;
                     }
-                }else{
-                    if(role === "Administrator"){
+                } else {
+                    if (role === "Administrator") {
 
-                    }else if (role === "ProductLead"){
-                        if(curRole === "Administrator"){
+                    } else if (role === "ProductLead") {
+                        if (curRole === "Administrator") {
                             role = curRole;
                         }
-                    }else if (role === "Editor"){
-                        if(curRole === "Administrator" || curRole === "ProductLead"){
+                    } else if (role === "Editor") {
+                        if (curRole === "Administrator" || curRole === "ProductLead") {
                             role = curRole;
                         }
-                    }else if (role === "Viewer"){
-                        if(curRole === "Administrator" || curRole === "ProductLead" || curRole === "Editor"){
+                    } else if (role === "Viewer") {
+                        if (curRole === "Administrator" || curRole === "ProductLead" || curRole === "Editor") {
                             role = curRole;
                         }
                     }
 
                 }
-        }
+            }
 
             console.log(role);
-        };
+        }
+        ;
 
         return role;
     }
-    getRoleOfUserInRoles(data:any){
+
+    getRoleOfUserInRoles(data: any) {
         console.log(data);
         var role = "";
-        var userName:string = this.userName;
+        var userName: string = this.userName;
         data.roles.forEach((curRole) => {
             console.log("role");
             console.log(curRole);
             console.log(curRole.users.indexOf(userName));
-            if(curRole.users.indexOf(userName) != -1){
-                console.log("cur role:"+curRole.role);
-                if(role == "") {
+            if (curRole.users.indexOf(userName) != -1) {
+                console.log("cur role:" + curRole.role);
+                if (role == "") {
                     role = curRole.role;
-                }else{
-                    if(role == "Administrator"){
+                } else {
+                    if (role == "Administrator") {
 
-                    }else if (role == "ProductLead"){
-                        if(curRole.role == "Administrator"){
+                    } else if (role == "ProductLead") {
+                        if (curRole.role == "Administrator") {
                             role = curRole.role;
                         }
-                    }else if (role == "Editor"){
-                        if(curRole.role == "Administrator" || curRole.role == "ProductLead"){
+                    } else if (role == "Editor") {
+                        if (curRole.role == "Administrator" || curRole.role == "ProductLead") {
                             role = curRole.role;
                         }
-                    }else if (role == "Viewer"){
-                            role = curRole.role;
+                    } else if (role == "Viewer") {
+                        role = curRole.role;
                     }
                 }
             }
@@ -180,21 +179,23 @@ export class AuthorizationService {
 
         return role;
     }
-    isViewer(){
+
+    isViewer() {
         // console.log("AuthorizationService isViewer " + this.userName)
         // console.log("AuthorizationService isViewer " + this.curGroupName)
-        var b:boolean =  (this.curGroupName == "Viewer");
+        var b: boolean = (this.curGroupName == "Viewer");
         // console.log(b);
         return b;
     }
 
-    isProductLead(){
+    isProductLead() {
         return (this.curGroupName == "Administrator");
     }
 
-    isEditor(){
+    isEditor() {
         return (this.curGroupName == "Editor");
     }
+
     // private getUserData(errorHandler:any = this.handleError){
     //     let url = `${this.airlockOpsUrl}/airlockusers/`;
     //
@@ -217,12 +218,12 @@ export class AuthorizationService {
     //         }]
     // };
 
-        // let url = `${this.airlockProductsUrl}/seasons/`;
-        //
-        // return this.http.get(url)
-        //     .toPromise()
-        //     .then(response => response.json().products as Product[])
-        //     .catch(errorHandler);
+    // let url = `${this.airlockProductsUrl}/seasons/`;
+    //
+    // return this.http.get(url)
+    //     .toPromise()
+    //     .then(response => response.json().products as Product[])
+    //     .catch(errorHandler);
     // }
 
 

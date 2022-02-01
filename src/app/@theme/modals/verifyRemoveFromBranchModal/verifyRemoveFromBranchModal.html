@@ -1,0 +1,32 @@
+
+<nb-card #verifyRemoveFromBranchModal  class="verifyRemoveFromBranchModal"  id="verifyActionModal" style ="z-index:9988 !important;">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Attention
+            </span>
+        </h4>
+        <h5 class="modal-title">
+            {{getString('verify_remove_from_branch_title')}}
+        </h5>
+        <h5 class="modal-title">
+            {{getStringWithFormat('verify_remove_from_branch_message_type_parm',getType())}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body>
+            <span class="checkbox-flex">
+                        <input type="checkbox" id="name" class="form-control blackText check-all"
+                               [(ngModel)]="applyToSubFeatures" name="name" required>
+                    <label for="name" class="control-label small-pad">{{getStringWithFormat('verify_remove_from_branch_apply_all_type_parm',getType())}}</label>
+
+            </span>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Confirm</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

@@ -1,65 +1,65 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgaModule } from '../../theme/nga.module';
-
-import { routing }       from './notifications.routing';
-import { ProgressbarModule } from 'ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import { DropdownModule } from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
-import ALCommonsModule from "../common.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {InputTextModule} from 'primeng/primeng';
-import {ListboxModule} from 'primeng/primeng';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-import {SelectModule} from "ng2-select";
-
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import {TreeModule,TreeNode} from 'primeng/primeng';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {NgaModule} from '../../@theme/nga.module';
+import {routing} from './notifications.routing';
 import {NotificationsPage} from "./notifications.component";
-import {NotificationCell} from "../../theme/airlock.components/notificationCell/notificationCell.component";
-import {AddNotificationModal} from "../../theme/airlock.components/addNotificationModal/addNotificationModal.component";
-import {EditNotificationModal} from "../../theme/airlock.components/editNotificationModal/editNotificationModal.component";
-import {ReorderNotificationsModal} from "../../theme/airlock.components/reorderNotificationsModal/reorderNotificationsModal.component";
-import {LimitNotificationsModal} from "../../theme/airlock.components/limitNotificationsModal/limitNotificationsModal.component";
+import {NotificationCell} from "../../@theme/airlock.components/notificationCell/notificationCell.component";
+import {PopoverModule} from "ngx-bootstrap/popover";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AlertModule} from "ngx-bootstrap/alert";
+import ALCommonsModule from "../common.module";
+import {AddNotificationModal} from "../../@theme/modals/addNotificationModal";
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbLayoutModule,
+    NbPopoverModule,
+    NbSidebarModule,
+    NbTabsetModule
+} from "@nebular/theme";
+import {EditNotificationModal} from "../../@theme/modals/editNotificationModal";
+import {LimitNotificationsModal} from "../../@theme/modals/limitNotificationsModal";
+import {ReorderNotificationsModal} from "../../@theme/modals/reorderNotificationsModal";
+
+// import ALCommonsModule from "../common.module";
+
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
+        NbCardModule,
         PopoverModule.forRoot(),
+        NbPopoverModule,
         ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
         TooltipModule.forRoot(),
-        TabsModule.forRoot(),
+        NbTabsetModule,
         AccordionModule.forRoot(),
         ButtonsModule.forRoot(),
         AlertModule.forRoot(),
-        ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        DropdownMultiselectModule,
-        PushNotificationsModule,ALCommonsModule,
+        ALCommonsModule,
+        NbCardModule,
+        NbButtonModule,
+        NbLayoutModule,
+        NbSidebarModule,
         routing,
-        InputTextModule,
-        ListboxModule,
-        DataTableModule,
-        TreeModule,
-        SelectModule,
-
     ],
     declarations: [
-        NotificationsPage,NotificationCell,AddNotificationModal,EditNotificationModal,ReorderNotificationsModal,LimitNotificationsModal
+        NotificationsPage,
+        NotificationCell,
+        AddNotificationModal,
+        EditNotificationModal,
+        ReorderNotificationsModal,
+        LimitNotificationsModal
     ],
     providers: [
+        NbCardModule
     ]
 })
-export default class NotificationsModule {}
+export class NotificationsModule { }
+

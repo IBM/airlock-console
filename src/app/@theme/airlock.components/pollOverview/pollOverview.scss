@@ -1,0 +1,54 @@
+.littleMargin {
+  margin-bottom: 4px;
+}
+
+.popover-content {
+  color: black !important;
+}
+
+p.poll-id {
+  color: black;
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+}
+p.poll-title {
+  color: black;
+  font-size: large;
+  text-align: center;
+}
+
+p.poll-subtitle {
+  color: black;
+  text-align: center;
+  font-weight: lighter;
+}
+
+.question-div {
+  color: black;
+}
+p.question-id {
+  color: black;
+}
+
+p.question-text {
+  color: black;
+}
+
+p.question-answer {
+  color: black;
+}
+.dashFlexContainer {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+.btn {
+  float: right;
+}
+.btn.btn-default {
+  color: white;
+}

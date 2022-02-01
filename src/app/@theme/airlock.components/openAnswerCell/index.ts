@@ -1,0 +1,1 @@
+export * from './openAnswerCell.component';

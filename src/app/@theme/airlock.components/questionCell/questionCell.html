@@ -1,0 +1,221 @@
+<!--<verify-action-modal  #verifyActionModal ></verify-action-modal>-->
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+    <div #questionCell [class.col-sm6]="true">
+        <div [class.not-in-branch]="!partOfBranch()" [class.panel]="shouldStyleCell()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.main-mx-group-background]="false" [class.mx-group-background]="false" style="margin-bottom: 2px; margin-top: 2px;">
+            <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                <ul class="list-group" style="margin: 0px; background-color: transparent">
+
+                    <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                        <tr>
+                            <td style="width: 3%; vertical-align: middle;" (click)="cellClicked()" class="align-right" [style.color]="getNextColorStyle()">
+                                <i *ngIf="showExpand()" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>
+                            </td>
+                            <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                <div class="">
+                                    <i *ngIf="!isQuestionActive()" class="reported-to-analytics-icon far fa-comment" [style.color]="getVariantColor()"></i>
+                                    <i *ngIf="isQuestionActive()" class="reported-to-analytics-icon fa fa-comment" [style.color]="getVariantColor()"></i>
+                                </div>
+                            </td>
+                            <td style="width: 11%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                <div class="descpDiv" style="display: inline-flex;    text-overflow: ellipsis;overflow: hidden;">
+                                    <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted">
+                                    </a>
+                                    <i *ngIf="question.description && (question?.description.length > 0)" class="ion-ios-information-outline info-icon" [tooltip]="getDescriptionTooltip(question.description)" [isDisabled]="question.description && (question?.description.length <= 0)" ></i>
+                                    <i *ngIf="isDefalut()" class="new-icon" [tooltip]="getString('variant_cell_control_label_text')">Control</i>
+                                </div>
+                            </td>
+                            <td style="width: 29%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                <div class="descpDiv" style="display: inline-flex;    text-overflow: ellipsis;overflow: hidden; width: 100%;">
+                                    <div class="subHeaderDiv" style="text-overflow: ellipsis;overflow: hidden;">
+                                        {{getSubtitleMessage()}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 12%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                <span class="capitalize">{{question.stage | lowercase}}</span>
+                                <i *ngIf="shouldShowUserGroups()" class="ion-ios-people user-groups" [tooltip]="userGroupsText()" [isDisabled]="!(shouldShowUserGroups())" ></i>
+                            </td>
+                            <td *ngIf="!inlineMode" style="width: 16%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                <!--<span class="">{{variant.minAppVersion}}</span>-->
+                            </td>
+                            <td *ngIf="!inlineMode" style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                <div style="vertical-align: middle; height: 20px;">
+                                    <progressbar class="progress progress-striped" value="{{question.rolloutPercentage}}" max="100" type="primary">
+                                        <div class="progress-text-align">
+                                            <span>{{question.rolloutPercentage}}%</span>
+                                        </div>
+                                    </progressbar>
+                                </div>
+                            </td>
+                            <td *ngIf="inlineMode" style="width: 24%"></td>
+                            <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                <div style="vertical-align: middle;text-align: center;padding-left: 10px;" class="middle-align-element1">
+                                    <i aria-hidden="true" class="ion-checkmark-round featureEnabled" *ngIf="question.enabled"></i>
+                                    <i aria-hidden="true" class="ion-close-round featureDisabled" *ngIf="!question.enabled"></i>
+                                </div>
+                            </td>
+
+                            <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right" (click)="doNothing()">
+                                <div class="dropdown noExpand maxWidth dropdown-padding" dropdown>
+                                    <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd33" data-toggle="dropdown" aria-expanded="false" (click)="status.isopen = !status.isopen" title="Actions">
+                                        <i class="ion-settings"></i>
+                                    </button>
+                                    <ng-template #templateRef>
+                                        <ul class="menu-items">
+                                        <li class="dropdown-item" *ngIf="!isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Details</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Edit</a></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openAddAnswerDialog()"><i class="fa fa-bullseye"></i>Add Answer</a></li>
+                                        <li class="dropdown-divider"></li>
+                                        <li class="dropdown-item" *ngIf="isShowReleaseToProduction()"><a (click)="changeStage()"><i class="fa" [class.ion-code-working]="question.stage!='DEVELOPMENT'" [class.fa-flag]="question.stage=='DEVELOPMENT'"></i>{{question.stage=='DEVELOPMENT'? 'Release to production' : 'Revert to development'}}</a></li>
+                                        <li class="dropdown-divider" *ngIf="isShowReleaseToProduction()"></li>
+                                        <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                    </ul>
+                                    </ng-template>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <span  *ngIf="isOpen" class="transition" [ngClass]="{'transitionActive':isOpen}" (transitionend)="transitionEnd()" [hidden]="remove">
+                            <div [class.panel]="true" [class.panel-warning]="true" [class.mx-group-background]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="isSubFeature()">
+                                     <ul class="list-group" style="margin: 0px; background-color: transparent">
+                                        <div *ngIf="true" class="mx-group-panel">
+                                        <p class="configTitle">Answers</p>
+                                            <p *ngIf="hasLastUpdatedTime()" class="last-updated-title">results updated on {{getLastUpdatedTime() | date:'medium'}}</p>
+                                        <span class="flexContainer">
+                                            <button *ngIf="isShowAddAnswer()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="openAddAnswerDialog()">
+                                                <i class="fa ion-plus-round"></i>
+                                                Add Answer
+                                            </button>
+                                            <button *ngIf="isShowAddOpenAnswer()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="openAddOpenAnswerDialog()">
+                                                <i class="fa ion-plus-round"></i>
+                                                Add Open Answer
+                                            </button>
+                                            <button *ngIf="isShowReorder()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="reorder()">
+                                                <i class="fa fa fa-sort"></i>
+                                                Reorder
+                                            </button>
+                                        </span>
+                                        </div>
+                                         <answer-cell *ngFor="let answer of question.predefinedAnswers; let i = index"
+                                                        [question]="question"
+                                                        [answer]="answer"
+                                                        [searchTerm]="searchTerm"
+                                                        [filterlistDict]="filterlistDict"
+                                                        [showDevFeatures]="showDevFeatures"
+                                                        [showDisabled]="showDisabled"
+                                                        [inlineMode]="inlineMode"
+                                                        [level]="1"
+                                                        [poll]="poll"
+                                                        [insideMX]="true"
+                                                        [hasResults]="true"
+                                                        [isPopularAnswer]="getPopularAnswerIdx()==i"
+                                                        [openFeatures]="openFeatures"
+                                                        [featuresPath]="featuresPath"
+                                                        (onSearchHit)="mySearchHit($event)"
+                                                        (onDummySearchHit)="myDummySearchHit($event)"
+                                                        (onCellClick)="myFeatureChangedStatus($event)"
+                                                        (onUpdate)="myOnUpdate($event)"
+                                                        (onSelected)="mySelected($event)"
+                                                        (hideIndicator)="myHideIndicator($event)"
+                                                        (beforeUpdate)="myBeforeUpdate($event)"
+                                                        (onEditAnswerInline)="showEditInline(answer)"
+                                                        [variantIndex]="i"
+                                                        [selectedId]="selectedId"
+                                         ></answer-cell>
+                                         <open-answer-cell *ngIf="question?.openAnswer"
+                                                      [question]="question"
+                                                      [answer]="question.openAnswer"
+                                                      [searchTerm]="searchTerm"
+                                                      [filterlistDict]="filterlistDict"
+                                                      [showDevFeatures]="showDevFeatures"
+                                                      [showDisabled]="showDisabled"
+                                                      [inlineMode]="inlineMode"
+                                                      [level]="1"
+                                                           [isPopularAnswer]="getPopularAnswerIdx()==(question.predefinedAnswers?.length || 0)"
+                                                      [poll]="poll"
+                                                      [insideMX]="true"
+                                                      [hasResults]="true"
+                                                      [openFeatures]="openFeatures"
+                                                      [featuresPath]="featuresPath"
+                                                      (onSearchHit)="mySearchHit($event)"
+                                                      (onDummySearchHit)="myDummySearchHit($event)"
+                                                      (onCellClick)="myFeatureChangedStatus($event)"
+                                                      (onUpdate)="myOnUpdate($event)"
+                                                      (onSelected)="mySelected($event)"
+                                                      (hideIndicator)="myHideIndicator($event)"
+                                                      (beforeUpdate)="myBeforeUpdate($event)"
+                                                      (onEditAnswerInline)="showEditOpenAnswerInline(question.openAnswer)"
+                                                      [variantIndex]="question.predefinedAnswers?.length"
+                                                      [selectedId]="selectedId"
+                                         ></open-answer-cell>
+                                         <div *ngIf="false" class="mx-group-head" style="margin-bottom: 4px; margin-top: 2px;">
+                                             <table class="table table-hover feature-cell" [style.background-color]="getMasterBackgroundStyle()" [style.color]="getColorStyle()">
+
+                                                <tr>
+
+                                                    <td style="width: 3%; vertical-align: middle;" class="align-right" [style.color]="getNextColorStyle()">
+                                                        <!--<i *ngIf="false" [class.ion-arrow-right-b]="!isOpen" [class.ion-arrow-down-b]="isOpen"></i>-->
+                                                    </td>
+                                                    <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                                        <i class="reported-to-analytics-icon ion-merge"></i>
+                                                    </td>
+                                                    <td style="width: 20%; text-align: start;  vertical-align: middle;" class="align-left descpCell" align="left">
+                                                        <div class="descpDiv">
+                                                            Default
+                                                            <i class="ion-ios-information-outline info-icon" [tooltip]="getMasterTooltip()" ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 28%; text-align: start;  vertical-align: middle;" class="align-left descpCell" align="left">
+                                                        <span>
+                                                            MASTER
+                                                        </span>
+                                                    </td>
+                                                    <td style="width: 12%; text-align: start; vertical-align: middle;" class="align-left capitalize" [class.prod]="isInProduction()" >
+
+                                                    </td>
+                                                    <td style="width: 8%; text-align: start; vertical-align: middle;" class="align-left" >
+
+                                                    </td>
+                                                    <td style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" class="align-left" >
+                                                        <div style="vertical-align: middle; height: 20px;">
+                                                            <progressbar class="progress progress-striped master-cell" value="100" max="100" type="primary">
+                                                                <div class="progress-text-align">
+                                                                    <span>100%</span>
+                                                                </div>
+                                                            </progressbar>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                                        <div style="vertical-align: middle;" class="middle-align-element">
+                                                            <i aria-hidden="true" class="ion-checkmark-round featureEnabled master-cell"></i>
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right" (click)="doNothing()">
+                                                        <div class="dropdown buttonMargin">
+                                                            <button style="visibility: hidden;" class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd44" data-toggle="dropdown" aria-expanded="false">
+                                                                <i class="ion-settings"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                         </div>
+                                     </ul>
+
+                                </div>
+                            </div>
+
+                        </span>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

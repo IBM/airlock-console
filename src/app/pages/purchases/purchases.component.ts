@@ -1,34 +1,33 @@
-import {Component, Injectable, trigger, state, transition, animate, style, ElementRef} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Feature} from "../../model/feature";
 import {AirlockService} from "../../services/airlock.service";
 import {Product} from "../../model/product";
 import {Season} from "../../model/season";
-import {ViewChild} from "@angular/core";
-import {TransparentSpinner} from "../../theme/airlock.components/transparentSpinner/transparentSpinner.service";
 import {GlobalState} from "../../global.state";
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
 import {Analytic} from "../../model/analytic";
 import {FeatureUtilsService} from "../../services/featureUtils.service";
 import {AnalyticsDisplay} from "../../model/analyticsDisplay";
 import {AnalyticsQuota} from "../../model/analyticsQuota";
 import {Experiment} from "../../model/experiment";
 import {StringsService} from "../../services/strings.service";
-import {ReorderExperimentsModal} from "../../theme/airlock.components/reorderExperimentsModal/reorderExperimentsModal.component";
-import {ReorderVariantsModal} from "../../theme/airlock.components/reorderVariantsModal/reorderVariantsModal.component";
 import {Variant} from "../../model/variant";
-import {ToastrService} from "ngx-toastr";
-import {AddProductModal} from "../../theme/airlock.components/addProductModal";
 import {Branch} from "../../model/branch";
 import {InAppPurchase} from "../../model/inAppPurchase";
-import {AddPurchaseModal} from "../../theme/airlock.components/addPurchaseModal";
 import {PurchaseOptions} from "../../model/purchaseOptions";
 import {FeaturesPage} from "../featuresPage";
-import { ImportPurchasesModal } from '../../theme/airlock.components/importPurchasesModal';
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NbDialogService, NbGlobalLogicalPosition, NbToastrService} from "@nebular/theme";
+import {AddPurchaseModal} from "../../@theme/modals/addPurchaseModal";
+import {ActivatedRoute} from "@angular/router";
+import {EditPurchaseModal} from "../../@theme/modals/editPurchaseModal";
+import {EditPurchaseOptionsModal} from "../../@theme/modals/editPurchaseOptionsModal";
+import {EditFeatureConfig} from "../../model/editFeatureConfig";
+import {EditFeaturePage} from "../../@theme/airlock.components/editFeaturePage";
+
 @Component({
     selector: 'purchasesPage',
-    providers: [TransparentSpinner,FeatureUtilsService],
-    styles: [require('./purchases.scss'), require('./sideNavStyle.scss')],
-    template: require('./purchases.html'),
+    styleUrls: ['./purchases.scss', './sideNavStyle.scss'],
+    templateUrl: './purchases.html',
     animations: [
         trigger('slideInOut', [
             state('in', style({
@@ -45,34 +44,31 @@ import { ImportPurchasesModal } from '../../theme/airlock.components/importPurch
 
 
 export class PurchasesPage {
-    @ViewChild('addPurchaseModal') _addPurchaseModal : AddPurchaseModal;
-    @ViewChild('verifyActionModal')
-    verifyActionModal:  VerifyActionModal;
 
-    @ViewChild('reorderExperimentsModal') _reorderExperimentsModal : ReorderExperimentsModal;
-    @ViewChild('reorderVariantsModal') _reorderVariantsModal : ReorderVariantsModal;
-    @ViewChild('importFeaturesModal') importFeaturesModal : ImportPurchasesModal;
-
-    public checkModel:any = {left: false, middle: true, right: false};
+    @ViewChild("editInline") editInline: EditPurchaseModal;
+    @ViewChild("editPOInline") editPOInline: EditPurchaseOptionsModal;
+    @ViewChild("editConfigInline") editConfigInline: EditFeaturePage;
+    inlineMode: boolean = false;
+    inlinePOMode: boolean = false;
+    inlineConfigMode: boolean = false;
+    public checkModel: any = {left: false, middle: true, right: false};
     selectedSeason: Season;
-    possibleUserGroupsList :Array<string> = [];
-    selectedEditedFeature:Feature;
+    possibleUserGroupsList: Array<string> = [];
+    selectedEditedFeature: Feature;
     valid: boolean = true;
     showNotInBranch: boolean = true;
-
     showConfig: boolean = true;
     showDevFeatures: boolean = true;
     showDisabled: boolean = true;
-    filterlistDict: {string: Array<string>} = {string:[]};
+    filterlistDict: { string: Array<string> } = {string: []};
     editDialogOpen: boolean = false;
-    rootId:string = "";
-    // experiments: Array<Experiment> = [];
+    rootId: string = "";
     purchasesRoot: InAppPurchase;
     selectedProduct: Product;
-    totalAnaliticsCount : number;
+    totalAnaliticsCount: number;
     seasonSupportAnalytics: boolean = true;
-    totalAnaliticsDevCount : number;
-    totalCountQuota : number;
+    totalAnaliticsDevCount: number;
+    totalCountQuota: number;
     selectedBranch: Branch;
     importExportSupport: boolean = true;
     loading: boolean = false;
@@ -80,73 +76,87 @@ export class PurchasesPage {
     filteredItems: Array<string> = new Array<string>();
     showDialog = false;
     searchQueryString: string = null;
-    analyticDataForDisplay:AnalyticsDisplay;
+    analyticDataForDisplay: AnalyticsDisplay;
     selectedId = null;
     selectedIndex = -1;
     scrolledToSelected = false;
-    totalAnaliticsQuota:AnalyticsQuota;
-    analyticData:Analytic;
-    private DUMMY_APP_MAX_VERSION : string = '100';
+    totalAnaliticsQuota: AnalyticsQuota;
+    analyticData: Analytic;
     showAnalytics: boolean = true;
 
+    public status: { isopen: boolean } = {isopen: false};
+    private pathPurchaseId: any;
+    private pathPurchaseOptionId: any;
 
-    public status: {isopen: boolean} = {isopen: false};
-    constructor(private _airLockService:AirlockService,
-                private _appState: GlobalState, private _stringsSrevice: StringsService,private toastrService: ToastrService) {
+    constructor(private _airlockService: AirlockService,
+                private _appState: GlobalState,
+                private _stringsSrevice: StringsService,
+                private toastrService: NbToastrService,
+                private modalService: NbDialogService,
+                private route: ActivatedRoute) {
         this.loading = true;
     }
-    canImportExport(){
-        return this._airLockService.canExportImport();
+
+    canImportExport() {
+        return this._appState.canExportImport();
     }
+
     setEditDialog(isOpen: boolean) {
         this.editDialogOpen = isOpen;
     }
-    isShowPaste(){
-        if(this.purchasesRoot == null){
+
+    isShowPaste() {
+        if (this.purchasesRoot == null) {
             return false;
         }
-        return !this._airLockService.isViewer() && (this._airLockService.getCopiedPurchase() != null);
+        return !this._airlockService.isViewer() && (this._airlockService.getCopiedPurchase() != null);
     }
-    isShowImport(){
-        if(!this.importExportSupport){
+
+    isShowImport() {
+        if (!this.importExportSupport) {
             return false;
         }
-        if(this.selectedSeason == null){
+        if (this.selectedSeason == null) {
             return false;
         }
-        return !this._airLockService.isViewer();
+        return !this._airlockService.isViewer();
     }
-    isShowOptions(){
-        if(this.selectedProduct == null){
+
+    isShowOptions() {
+        if (this.selectedProduct == null) {
             return false;
         }
-        return (!this._airLockService.isViewer());
+        return (!this._airlockService.isViewer());
     }
+
     resetFilters() {
-        this.filterlistDict = {string:[]};
+        this.filterlistDict = {string: []};
         this.showDevFeatures = true;
         this.showNotInBranch = true;
         this.showConfig = true;
         this.createFilteredList();
     }
-    isViewer():boolean {
-        return this._airLockService.isViewer();
+
+    isViewer(): boolean {
+        return this._airlockService.isViewer();
     }
 
 
-    toggleDataCollectionDetails(){
+    toggleDataCollectionDetails() {
         this.showDialog = !this.showDialog;
     }
-    initData(currentSeason: Season, isSeasonLatest:boolean) {
+
+    initData(currentSeason: Season, isSeasonLatest: boolean) {
 
     }
 
-    hasSomeData():boolean {
+    hasSomeData(): boolean {
         if (this.searchQueryString && this.searchQueryString.length > 0) {
             return (this.filteredItems.length) > 0;
         }
         return true;
     }
+
     getWhitelistCount() {
         let count = 0;
         if (this.analyticDataForDisplay && this.analyticDataForDisplay.analyticsDataCollection) {
@@ -164,124 +174,172 @@ export class PurchasesPage {
     }
 
 
-    static getCurrentProductFromSeason(products:Product[], currentSeason:Season): Product {
+    static getCurrentProductFromSeason(products: Product[], currentSeason: Season): Product {
         if (currentSeason) {
-            console.log("trying to find products! - products:");
-            console.log(products);
-            console.log("season's productID:"+currentSeason.productId);
             if (products.length > 0) {
-                console.log("products.length > 0!");
                 for (let p of products) {
-                    let currProd:Product = p;
-                    console.log(currProd.uniqueId);
-                    console.log(currentSeason.productId);
+                    let currProd: Product = p;
                     if (currProd.uniqueId == currentSeason.productId) {
-                        console.log("yay");
                         return currProd;
-                    } else {
-                        console.log("nah");
                     }
                 }
             }
         }
         if (products.length > 0) {
-            console.log("return first product");
             return products[0];
         } else {
-            console.log("return null from getCurrentProductFromSeason");
             return null;
         }
     }
-    static getCurrentSeasonFromSeason(seasons: Season[], currentSeason: Season) : Season {
+
+    static getCurrentSeasonFromSeason(seasons: Season[], currentSeason: Season): Season {
         if (currentSeason) {
             for (let s of seasons) {
-                let currSeas:Season = s;
+                let currSeas: Season = s;
                 if (currSeas.uniqueId == currentSeason.uniqueId) {
                     return currSeas;
                 }
             }
         }
         if (seasons.length > 0) {
-            return seasons[seasons.length-1];
+            return seasons[seasons.length - 1];
         } else {
             return null;
         }
     }
+
     ngOnInit() {
-        this.showAnalytics = this._airLockService.canUseAnalytics();
-        //let currSeason = this._appState.getData('features.currentSeason');
-        let isLatestStr = this._appState.getData('features.isLatestSeason');
+        this.showAnalytics = this._appState.canUseAnalytics();
         let currProduct = this._appState.getData('features.currentProduct');
         let currBranch = this._appState.getData('features.currentBranch');
         let currSeason = this._appState.getData('features.currentSeason');
         this.selectedBranch = currBranch;
-        console.log("got saved season!!!");
-        //console.log(currSeason);
         this.selectedSeason = currSeason;
         this.updateWhitelist(this.selectedSeason);
-        // this.initData(currSeason, isLatest);
         this.onProductSelection(currProduct);
         this.onBranchSelection(currBranch);
-        this._appState.subscribe('features.currentProduct','entitlements',(product) => {
+        this._appState.subscribe('features.currentProduct', 'entitlements', (product) => {
             this.onProductSelection(product);
         });
-        this._appState.subscribe('features.currentBranch','entitlements',(branch) => {
+        this._appState.subscribe('features.currentBranch', 'entitlements', (branch) => {
             this.onBranchSelection(branch);
         });
-        this._appState.subscribe('features.currentSeason','entitlements',(season) => {
+        this._appState.subscribe('features.currentSeason', 'entitlements', (season) => {
             this.selectedSeason = season;
             this.updateWhitelist(this.selectedSeason);
         });
+        this.loading = false;
+        this.route.params.subscribe(params => {
+            let prodId = params.prodId;
+            let seasonId = params.seasonId;
+            let purchaseId = params.purchaseId;
+            let branchId = params.branchId;
+            if (prodId && seasonId && branchId) {//} && purchaseId) {
+                this._appState.notifyDataChanged('features.pathBranchId', branchId);
+                this._appState.notifyDataChanged('features.pathSeasonId', seasonId);
+                this._appState.notifyDataChanged('features.pathProductId', prodId);
+                if (params.purchaseId) {
+                    console.log("going to purchase edit mode")
+                    this.pathPurchaseId = params.purchaseId;
+                    this.pathPurchaseOptionId = null;
+                } else if (params.purchaseOptionId) {
+                    console.log("going to purchase option edit mode")
+                    this.pathPurchaseOptionId = params.purchaseOptionId;
+                    this.pathPurchaseId = null;
+                }
+            } else {
+                this.pathPurchaseId = null;
+            }
+        });
+    }
 
-    }
     ngOnDestroy() {
-        this._appState.unsubcribe('features.currentProduct','entitlements');
-        this._appState.unsubcribe('features.currentSeason','entitlements');
-        this._appState.unsubcribe('features.currentBranch','entitlements');
+        this._appState.unsubcribe('features.currentProduct', 'entitlements');
+        this._appState.unsubcribe('features.currentSeason', 'entitlements');
+        this._appState.unsubcribe('features.currentBranch', 'entitlements');
     }
-    onProductSelection(product:Product) {
-        if(product) {
+
+    onProductSelection(product: Product) {
+        if (product) {
             this.selectedProduct = product;
-            this.showAnalytics = this._airLockService.canUseAnalytics();
-            this._airLockService.getUserGroups(this.selectedProduct).then(response => {
-                console.log(response);
+            this.showAnalytics = this._appState.canUseAnalytics();
+            this._airlockService.getUserGroups(this.selectedProduct).then(response => {
                 this.possibleUserGroupsList = response.internalUserGroups;
             });
         }
     }
 
-    public onBranchSelection(branch:Branch) {
-        this.selectedBranch = branch;
-        this.importExportSupport = this.canImportExport();
-        this.seasonSupportAnalytics = this.isSupportAnalytics();
-        this.getPurchases();
+    public onBranchSelection(branch: Branch) {
+        if (branch.uniqueId != this.selectedBranch?.uniqueId || this.purchasesRoot == null ) {
+            this.selectedBranch = branch;
+            this.importExportSupport = this.canImportExport();
+            this.seasonSupportAnalytics = this.isSupportAnalytics();
+            this.getPurchases();
+        }
     }
 
-    getPurchases() {
-        if(!this._airLockService.getCapabilities().includes("ENTITLEMENTS")){
+    getPurchases(item = null) {
+        if (!this.selectedProduct?.capabilities.includes("ENTITLEMENTS")) {
             this.loading = false;
-            this._airLockService.redirectToFeaturesPage();
+            this._airlockService.redirectToFeaturesPage();
             return;
         }
         if (this.selectedBranch) {
             this.loading = true;
-            this._airLockService.getInAppPurchases(this.selectedBranch.seasonId, this.selectedBranch).then((root) => {
+            this._airlockService.getInAppPurchases(this.selectedBranch.seasonId, this.selectedBranch).then((root) => {
                 this.purchasesRoot = root;
-                this.rootId=root.uniqueId;
+                this.rootId = root.uniqueId;
                 this.loading = false;
                 this.resetFilters();
+                if (this.pathPurchaseId !== null) {
+                    let patPurchase = this.getPurchaseItemWithId(this.pathPurchaseId);
+                    if (patPurchase) {
+                        this.showEditPurchase(patPurchase);
+                    }
+                    this.pathPurchaseId = null;
+                    return;
+                }
+                if (this.pathPurchaseOptionId !== undefined) {
+                    let patPurchaseOption = this.getPurchaseOptionItemWithId(this.pathPurchaseOptionId);
+                    if (patPurchaseOption) {
+                        this.showEditPurchaseOption(patPurchaseOption);
+                    }
+                    this.pathPurchaseId = null;
+                    return;
+                }
+                if (item != null){
+                    let purchase = this.getPurchaseItemWithId(item.uniqueId);
+                    this.showEditInline(purchase);
+                }
             }).catch(
                 error => {
                     this.handleError(error);
                 }
             );
         }
-
     }
 
+    getPurchaseItemWithId(fId: string): InAppPurchase {
+        for (let purchase of this.purchasesRoot.entitlements) {
+            if (purchase.uniqueId === fId) {
+                return purchase
+            }
+        }
+        return null;
+    }
 
-    purchaseChangedStatus(expID:string) {
-        console.log("variant changed status:"+expID);
+    getPurchaseOptionItemWithId(fId: string): PurchaseOptions {
+        for (let purchase of this.purchasesRoot.entitlements) {
+            for (let purchaseOption of purchase.purchaseOptions) {
+                if (purchaseOption.uniqueId === fId) {
+                    return purchaseOption
+                }
+            }
+        }
+        return null;
+    }
+
+    purchaseChangedStatus(expID: string) {
         var index = this.openPurchases.indexOf(expID, 0);
         if (index > -1) {
             this.openPurchases.splice(index, 1);
@@ -290,18 +348,40 @@ export class PurchasesPage {
         }
     }
 
-    isCellOpen(expID:string): boolean {
+    purchaseStatusOpen(featureID: string) {
+        let index = this.openPurchases.indexOf(featureID, 0);
+        if (index == -1) {
+            this.openPurchases.push(featureID);
+        }
+    }
+
+    isCellOpen(expID: string): boolean {
         var index = this.openPurchases.indexOf(expID, 0);
         return index > -1;
     }
 
-    public isShowAddPurchase(){
-        return !this._airLockService.isViewer();
+    public isShowAddPurchase() {
+        return !this._airlockService.isViewer();
     }
-    public addPurchase(){
-        this._addPurchaseModal.open(this.purchasesRoot);
+
+    public addPurchase() {
+        this.modalService.open(AddPurchaseModal, {
+            closeOnBackdropClick: false,
+            context: {
+                purchasesPage: this,
+                parentId: this.purchasesRoot.uniqueId,
+                parent: this.purchasesRoot,
+                title: "Add Entitlement",
+            }
+        }).onClose.subscribe(item=>{
+            if (item != null){
+                this.refreshTable(item);
+                this.getPurchases(item);
+            }
+        });
     }
-    setShowConfig(show:boolean) {
+
+    setShowConfig(show: boolean) {
         this.showConfig = show;
         if (show) {
             this.filterlistDict["type"] = [];
@@ -310,9 +390,10 @@ export class PurchasesPage {
         }
         this.createFilteredList();
     }
-    onShowNotInBranchChanged(show:boolean) {
+
+    onShowNotInBranchChanged(show: boolean) {
         this.showNotInBranch = show;
-        if (show || (this.selectedBranch && this.selectedBranch.uniqueId && this.selectedBranch.uniqueId.toLowerCase()=="master")) {
+        if (show || (this.selectedBranch && this.selectedBranch.uniqueId && this.selectedBranch.uniqueId.toLowerCase() == "master")) {
             this.filterlistDict["branchStatus"] = [];
         } else {
             this.filterlistDict["branchStatus"] = ["NONE"];
@@ -320,7 +401,7 @@ export class PurchasesPage {
         this.createFilteredList();
     }
 
-    setShowDevFeatures(show:boolean) {
+    setShowDevFeatures(show: boolean) {
         this.showDevFeatures = show;
         if (show) {
             this.filterlistDict["stage"] = [];
@@ -330,7 +411,7 @@ export class PurchasesPage {
         this.createFilteredList();
     }
 
-    setShowDisabled(show:boolean) {
+    setShowDisabled(show: boolean) {
         this.showDisabled = show;
         if (show) {
             this.filterlistDict["enabled"] = [];
@@ -341,7 +422,13 @@ export class PurchasesPage {
     }
 
 
-    public refreshTable() {
+    public refreshTable(parentItem = null, item = null) {
+        if (parentItem !== null){
+            this.purchaseStatusOpen(parentItem);
+        }
+        if (item !== null){
+            this.showEditInline(item);
+        }
         this.getPurchases();
     }
 
@@ -352,36 +439,37 @@ export class PurchasesPage {
     public afterUpdate() {
         this.loading = false;
     }
-    public deleteFeature(feature:Feature) {
+
+    public deleteFeature(feature: Feature) {
 
     }
 
-    public changeStateHandler(feature:Experiment) {
-        console.log('in changeFeatureState():'+this._airLockService);
+    public changeStateHandler(feature: Experiment) {
         this.loading = true;
-        if (feature.stage=='PRODUCTION') {
+        if (feature.stage == 'PRODUCTION') {
             feature.stage = 'DEVELOPMENT';
         } else {
-            feature.stage='PRODUCTION';
+            feature.stage = 'PRODUCTION';
         }
     }
+
     /*
      public editFeature(variant:Feature, featurePath: Array<Feature>){
      this.editFeatureModal.open(variant,featurePath);
      }
      */
 
-    purchaseIsInFilter(expID:string) {
+    purchaseIsInFilter(expID: string) {
         // this.filteredExperiments.push(expID);
     }
 
-    variantIsNotInFilter(varID:string) {
+    variantIsNotInFilter(varID: string) {
         // this.filteredExperiments.push(varID);
         // this.filteredVariants.push(varID);
     }
 
     private updateWhitelist(currentSeason: Season) {
-        if(!currentSeason){
+        if (!currentSeason) {
             currentSeason = this.selectedSeason;
         }
 
@@ -392,7 +480,7 @@ export class PurchasesPage {
                 return;
 
             this.analyticDataForDisplay = new AnalyticsDisplay();
-            this._airLockService.getAnalyticsForDisplay(currentSeason.uniqueId, this.selectedBranch.uniqueId).then(result => {
+            this._airlockService.getAnalyticsForDisplay(currentSeason.uniqueId, this.selectedBranch.uniqueId).then(result => {
                 this.analyticDataForDisplay = result;
                 this.totalAnaliticsCount = this.getWhitelistCount();
                 this.totalAnaliticsDevCount = this.getWhitelistDevCount();
@@ -404,7 +492,7 @@ export class PurchasesPage {
                 this.totalAnaliticsDevCount = 0;
                 //this._airLockService.notifyDataChanged("error-notification", "Failed to get Utilitystring");
             });
-            this._airLockService.getQuota(currentSeason.uniqueId).then(result => {
+            this._airlockService.getQuota(currentSeason.uniqueId).then(result => {
                 this.totalAnaliticsQuota = result;
                 this.totalCountQuota = this.totalAnaliticsQuota.analyticsQuota;
             }).catch(error => {
@@ -414,14 +502,15 @@ export class PurchasesPage {
         }
     }
 
-    public purchaseAdded(purchase : InAppPurchase) {
+    public purchaseAdded(purchase: InAppPurchase) {
         this.getPurchases();
     }
 
     public purchaseOptionAdded(option: PurchaseOptions) {
         this.getPurchases();
     }
-    public updateExperiment(experiment : Experiment) {
+
+    public updateExperiment(experiment: Experiment) {
         this.getPurchases();
     }
 
@@ -429,11 +518,12 @@ export class PurchasesPage {
         this.getPurchases();
     }
 
-    public onSearchQueryChanged(term:string) {
+    public onSearchQueryChanged(term: string) {
         this.filteredItems = [];
         this.searchQueryString = term;
         this.createFilteredList();
     }
+
     getString(name: string) {
         return this._stringsSrevice.getString(name);
     }
@@ -442,41 +532,37 @@ export class PurchasesPage {
         // this._reorderExperimentsModal.open(this.experimentsContainer);
     }
 
-    experimentsReordered(obj:any) {
+    experimentsReordered(obj: any) {
         this.getPurchases();
     }
 
-    itemIsSelected(itemObj:any) {
-        if (itemObj.id && itemObj.id == this.selectedId && !this.scrolledToSelected) {
-            let y = itemObj.offset;
-            this.checkIfInView(y);
-            this.scrolledToSelected = true;
-        }
+    itemIsSelected(itemObj: any) {
+        itemObj.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    checkIfInView(top: number){
+    checkIfInView(top: number) {
         let windowScroll = jQuery(window).scrollTop();
         if (top > 0) {
             var offset = top - windowScroll;
 
-            if(offset > window.innerHeight  || offset < 0){
+            if (offset > window.innerHeight || offset < 0) {
                 // Not in view so scroll to it
-                // jQuery('html,body').animate({scrollTop: offset-300}, 500);
                 var scrollNode = document.scrollingElement ?
                     document.scrollingElement : document.body;
-                scrollNode.scrollTop = top-200;
+                scrollNode.scrollTop = top - 200;
                 return false;
             }
         }
         return true;
     }
+
     handleError(error: any) {
         this.loading = false;
-
         let errorMessage = FeatureUtilsService.parseErrorMessage(error) || "Failed to load Experiments. Please try again.";
-        console.log("handleError in Experiments:"+errorMessage);
+        console.log("handleError in Experiments:" + errorMessage);
         this.create(errorMessage);
     }
+
     createFilteredList() {
         this.filteredItems = [];
         this.selectedId = null;
@@ -487,17 +573,15 @@ export class PurchasesPage {
             for (var purchase of this.purchasesRoot.entitlements) {
                 this.isFilteredOut(purchase);
             }
-            // jQuery('html, body').animate({scrollTop:700}, {duration:3.0});
         }
-
     }
 
-    shouldPurchaseBeFilteredOut(feature:any): boolean {
-        if(!this.filterlistDict) {
+    shouldPurchaseBeFilteredOut(feature: any): boolean {
+        if (!this.filterlistDict) {
             return false;
         }
         let keys = Object.keys(this.filterlistDict);
-        if(!keys) {
+        if (!keys) {
             return false;
         }
         var isFilteredOut = false;
@@ -505,8 +589,7 @@ export class PurchasesPage {
             let valuesArr = this.filterlistDict[key];
             if (feature[key] && valuesArr) {
                 for (var value of valuesArr) {
-                    console.log(feature[key]);
-                    if (feature[key].toString().toLowerCase()==value.toString().toLowerCase()) {
+                    if (feature[key].toString().toLowerCase() == value.toString().toLowerCase()) {
                         isFilteredOut = true;
                         break;
                     }
@@ -536,11 +619,12 @@ export class PurchasesPage {
 
         return isFilteredOut;
     }
-    isSupportAnalytics(){
-        if(!this._airLockService.canUseAnalytics()){
+
+    isSupportAnalytics() {
+        if (!this._appState.canUseAnalytics()) {
             return false;
         }
-        if (this.selectedSeason){
+        if (this.selectedSeason) {
             if (Number(this.selectedSeason.serverVersion) < FeaturesPage.SERVER_ANALYTICS_SUPPORT_VERSION)
                 return false;
             else
@@ -548,10 +632,9 @@ export class PurchasesPage {
         }
         return false;
     }
-    isFilteredOutOptions(purchaseOptions:PurchaseOptions): boolean {
-        // console.log("is filtered out:"+this.feature.name+", " + this.searchTerm);
+
+    isFilteredOutOptions(purchaseOptions: PurchaseOptions): boolean {
         if (this.shouldPurchaseBeFilteredOut(purchaseOptions)) {
-            // console.log("feature is filtered:"+this.feature.name);
             return true;
         }
         let hasSearchHit = this.isPartOfSearch(this.searchQueryString, purchaseOptions);
@@ -571,10 +654,9 @@ export class PurchasesPage {
 
         return !hasSearchHit;
     }
-    isFilteredOut(purchase:InAppPurchase): boolean {
-        // console.log("is filtered out:"+this.feature.name+", " + this.searchTerm);
+
+    isFilteredOut(purchase: InAppPurchase): boolean {
         if (this.shouldPurchaseBeFilteredOut(purchase)) {
-            // console.log("feature is filtered:"+this.feature.name);
             return true;
         }
         let hasSearchHit = this.isPartOfSearch(this.searchQueryString, purchase);
@@ -595,10 +677,8 @@ export class PurchasesPage {
         return !hasSearchHit;
     }
 
-    isVariantFilteredOut(variant:Variant): boolean {
-        // console.log("is filtered out:"+this.feature.name+", " + this.searchTerm);
+    isVariantFilteredOut(variant: Variant): boolean {
         if (this.shouldPurchaseBeFilteredOut(variant)) {
-            // console.log("feature is filtered:"+this.feature.name);
             return true;
         }
         let hasSearchHit = this.isVariantPartOfSearch(this.searchQueryString, variant);
@@ -608,8 +688,8 @@ export class PurchasesPage {
         return !hasSearchHit;
     }
 
-    isPartOfSearch(term:string, purchase:Feature):boolean {
-        if (!term || term=="") {
+    isPartOfSearch(term: string, purchase: Feature): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -620,8 +700,8 @@ export class PurchasesPage {
         return displayName.includes(lowerTerm) || fullName.includes((lowerTerm));
     }
 
-    isVariantPartOfSearch(term:string, variant:Variant):boolean {
-        if (!term || term=="") {
+    isVariantPartOfSearch(term: string, variant: Variant): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -635,17 +715,17 @@ export class PurchasesPage {
     }
 
 
-    showNextSearchResult(forward:boolean) {
+    showNextSearchResult(forward: boolean) {
         if (this.filteredItems.length > 0) {
             if (forward) {
-                if (this.selectedIndex >= (this.filteredItems.length-1)) {
+                if (this.selectedIndex >= (this.filteredItems.length - 1)) {
                     this.selectedIndex = 0;
                 } else {
                     this.selectedIndex++;
                 }
             } else {
                 if (this.selectedIndex == 0) {
-                    this.selectedIndex = this.filteredItems.length-1;
+                    this.selectedIndex = this.filteredItems.length - 1;
                 } else {
                     this.selectedIndex--;
                 }
@@ -655,15 +735,135 @@ export class PurchasesPage {
             this.scrolledToSelected = false;
         }
     }
-    create(message:string) {
-        this.toastrService.error(message, "Error", {
-            timeOut: 0,
-            closeButton: true,
-            positionClass: 'toast-bottom-full-width',
-            toastClass: 'airlock-toast simple-webhook bare toast',
-            titleClass: 'airlock-toast-title',
-            messageClass: 'airlock-toast-text'
+
+    create(message: string) {
+        this.toastrService.danger(message, "Error", {
+            duration: 60000,
+            position: NbGlobalLogicalPosition.BOTTOM_START,
+            preventDuplicates: true,
+            toastClass: 'big-toast'
         });
     }
+
+    private showEditPurchase(pathPurchase: InAppPurchase) {
+        this._airlockService.getUtilitiesInfo(pathPurchase.seasonId, pathPurchase.stage, pathPurchase.minAppVersion).then(result => {
+            let ruleUtilitieInfo = result as string;
+            this._airlockService.getInputSample(pathPurchase.seasonId, pathPurchase.stage, pathPurchase.minAppVersion).then(result1 => {
+                let ruleInputSchemaSample = result1 as string;
+                // this.hideIndicator.emit(pathPurchase);
+                let purchases: InAppPurchase[] = this.purchasesRoot.entitlements;
+                this.modalService.open(EditPurchaseModal,
+                    {
+                        closeOnBackdropClick: false,
+                        context: {
+                            purchasesPage: this,
+                            inlineMode: false,
+                            visible: true,
+                            season: this.selectedSeason,
+                            possibleGroupsList: this.possibleUserGroupsList,
+                            rootId: this.rootId,
+                            root: this.purchasesRoot,
+                            rootFeatuteGroups: this.purchasesRoot?.entitlements,
+                            branch: this.selectedBranch,
+                            feature: InAppPurchase.clone(pathPurchase),
+                            featurePath: [],
+                            ruleInputSchemaSample: ruleInputSchemaSample,
+                            ruleUtilitiesInfo: ruleUtilitieInfo,
+                            // featureCell: this,
+                            configurationCell: null,
+                            showConfiguration: false,
+                            sourceFeature: null,
+                            orderCell: null,
+                            inAppPurchases: purchases,
+                        },
+                    }
+                )
+            }).catch(error => {
+                console.log('Error in getting InAppPurchases');
+                let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Purchases ");
+                this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                // this.hideIndicator.emit(error);
+            });
+        });
+    }
+
+    private showEditPurchaseOption(pathPurchaseOption: PurchaseOptions) {
+        this._airlockService.getUtilitiesInfo(pathPurchaseOption.seasonId, pathPurchaseOption.stage, pathPurchaseOption.minAppVersion).then(result => {
+            let ruleUtilitieInfo = result as any;
+            this._airlockService.getInputSample(pathPurchaseOption.seasonId, pathPurchaseOption.stage, pathPurchaseOption.minAppVersion).then(result1 => {
+                let ruleInputSchemaSample = result1 as any;
+                this.modalService.open(EditPurchaseOptionsModal, {
+                        closeOnBackdropClick: false,
+                        context: {
+                            purchasesPage: this,
+                            inlineMode: false,
+                            visible: true,
+                            root: this.purchasesRoot,
+                            rootId: this.rootId,
+                            title: this.getString("edit_purchase_option_title"),
+                            branch: this.selectedBranch,
+                            feature: PurchaseOptions.clone(pathPurchaseOption),
+                            // parentPurchaseId: this.parentFeatureId,
+                            // featurePath: this.featuresPath,
+                            ruleInputSchemaSample: ruleInputSchemaSample,
+                            ruleUtilitiesInfo: ruleUtilitieInfo,
+                            // featureCell: this,
+                            configurationCell: null,
+                            showConfiguration: false,
+                            sourceFeature: null,
+                            orderCell: null,
+                            inAppPurchases: [],
+                        },
+                    }
+                )
+            }).catch(error => {
+                console.log('Error in getting InAppPurchases');
+                let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Purchases ");
+                this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                // this.hideIndicator.emit(error);
+            });
+        });
+    }
+
+    showEditInline(item: any) {
+        console.log("showEditExperimentInline");
+        this.inlineMode = true;
+        if (item.type === 'ENTITLEMENT' ) {
+            this.inlineMode = true;
+            this.inlinePOMode = false;
+            this.inlineConfigMode = false;
+            this.editInline.open(this.selectedBranch, item, this.purchasesRoot, [], null, null);
+        } else if (item.type === 'PURCHASE_OPTIONS' ) {
+            this.inlinePOMode = true;
+            this.inlineConfigMode = false;
+            //open(branch: Branch, feature: PurchaseOptions, parentPurchaseId: string, featurePath: Array<Feature>, strInputSchemaSample: string, strUtilitiesInfo: string,
+            this.editPOInline.open(this.selectedBranch, item, this.purchasesRoot, this.purchasesRoot.uniqueId, [], null, null);
+        } else if (item instanceof EditFeatureConfig) {
+            this.inlineConfigMode = true;
+            this.inlinePOMode = false;
+            console.log("showEditExperimentConfigInline");
+            this.editConfigInline.open(this.selectedSeason, item.branch, item.feature, item.featurePath, item.strInputSchemaSample, item.strUtilitiesInfo, item.featureCell, item.configurationCell,
+                item.showConfiguration, item.sourceFeature, item.orderCell, item.inAppPurchases, this.purchasesRoot);
+        } else if (item.type === 'CONFIGURATION_RULE'){
+            this.inlineConfigMode = true;
+            this.inlinePOMode = false;
+            item.seasonId = this.selectedSeason.uniqueId;
+            this.editConfigInline.open(this.selectedSeason, this.selectedBranch, item, item.featurePath, item.strInputSchemaSample, item.strUtilitiesInfo, item.featureCell, item.configurationCell,
+                item.showConfiguration, item.sourceFeature, item.orderCell, item.inAppPurchases, this.purchasesRoot);
+        }
+    }
+    closeEditInline(value) {
+        console.log("closeEditInline");
+        this.inlineMode = false;
+        this.inlinePOMode = false;
+        this.inlineConfigMode = false;
+        this.loading = false;
+    }
+
+    clearPathVariables() {
+        this.pathPurchaseOptionId = null;
+        this.pathPurchaseId = null;
+    }
+
 }
 

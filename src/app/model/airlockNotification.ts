@@ -1,10 +1,10 @@
-import { Rule } from './rule';
+import {Rule} from './rule';
 
 export class AirlockNotification {
     uniqueId: string;
     seasonId: string;
     name: string;
-    displayName:string;
+    displayName: string;
     lastModified: number;
     stage: string;
     description: string;
@@ -20,7 +20,8 @@ export class AirlockNotification {
     registrationRule: Rule;
     maxNotifications;
     minInterval: number;
-    static cloneToAirlockNotification(src: AirlockNotification,target:AirlockNotification){
+
+    static cloneToAirlockNotification(src: AirlockNotification, target: AirlockNotification) {
         target.uniqueId = src.uniqueId;
 
         target.seasonId = src.seasonId;
@@ -42,8 +43,8 @@ export class AirlockNotification {
         target.minInterval = src.minInterval;
     }
 
-    static clone(src: AirlockNotification) : AirlockNotification {
-        let toRet:AirlockNotification = new AirlockNotification();
+    static clone(src: AirlockNotification): AirlockNotification {
+        let toRet: AirlockNotification = new AirlockNotification();
         toRet.uniqueId = src.uniqueId;
         toRet.seasonId = src.seasonId;
         toRet.name = src.name;
@@ -64,7 +65,8 @@ export class AirlockNotification {
         toRet.minInterval = src.minInterval;
         return toRet;
     }
-    setFromAirlockNotification(src: AirlockNotification){
+
+    setFromAirlockNotification(src: AirlockNotification) {
         this.uniqueId = src.uniqueId;
         this.seasonId = src.seasonId;
         this.name = src.name;
@@ -84,22 +86,44 @@ export class AirlockNotification {
         this.maxNotifications = src.maxNotifications;
         this.minInterval = src.minInterval;
     }
-    static duplicateArrayString(array:Array<string>): Array<string> {
+
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })
         }
         return arr;
+    }
+
+    equals(notification: AirlockNotification): boolean {
+        return this.name === notification.name &&
+        this.displayName === notification.displayName &&
+        this.stage === notification.stage &&
+        this.description === notification.description &&
+        this.enabled === notification.enabled &&
+        this.minAppVersion ===  notification.minAppVersion &&
+        this.rolloutPercentage === notification.rolloutPercentage &&
+        (
+            (!this.internalUserGroups && !notification.internalUserGroups) ||
+            (this.internalUserGroups.join() === notification.internalUserGroups.join())
+        ) &&
+        this.internalUserGroups === notification.internalUserGroups &&
+        this.configuration === notification.configuration &&
+        this.cancellationRule.ruleString === notification.cancellationRule.ruleString &&
+        this.registrationRule.ruleString === notification.registrationRule.ruleString &&
+        this.maxNotifications === notification.maxNotifications &&
+        this.minInterval === notification.minInterval;
     }
 }

@@ -1,6 +1,3 @@
-
-import { Season } from './season';
-
 export class StringToTranslate {
     /**
      {
@@ -24,37 +21,40 @@ export class StringToTranslate {
   "status": "IN_TRANSLATION"
 }
      */
-    owner:string;
-    lastSourceModification:string;
-    stage:string;
-    internationalFallback:string;
-    translationInstruction:string;
-    smartlingId:string;
-    seasonId:string;
-    lastModified:string;
+    owner: string;
+    lastSourceModification: string;
+    stage: string;
+    internationalFallback: string;
+    translationInstruction: string;
+    smartlingId: string;
+    seasonId: string;
+    lastModified: string;
     creator: string;
-    key:string;
-    value:string;
-    status:string;
-    uniqueId:string;
-    translations:any[];
-    maxStringSize:number;
-    constructor(s?:StringToTranslate){
+    key: string;
+    value: string;
+    status: string;
+    uniqueId: string;
+    translations: any[];
+    maxStringSize: number;
+    prettyStage: string;
+    translatedSummary: string;
+
+    constructor(s?: StringToTranslate) {
 
         if (s) {
-            this.uniqueId =s.uniqueId;
-            this.owner=s.owner;
-            this.creator=s.creator;
-            this.lastModified=s.lastModified;
+            this.uniqueId = s.uniqueId;
+            this.owner = s.owner;
+            this.creator = s.creator;
+            this.lastModified = s.lastModified;
             this.lastSourceModification = s.lastSourceModification;
             this.seasonId = s.seasonId;
-            this.smartlingId=s.smartlingId;
-            this.internationalFallback=s.internationalFallback;
-            this.key=s.key;
-            this.status=s.status;
-            this.value=s.value;
+            this.smartlingId = s.smartlingId;
+            this.internationalFallback = s.internationalFallback;
+            this.key = s.key;
+            this.status = s.status;
+            this.value = s.value;
             this.translations = [];
-            this.stage=s.stage;
+            this.stage = s.stage;
             this.translationInstruction = s.translationInstruction;
             this.maxStringSize = s.maxStringSize;
             if (s.translations) {
@@ -64,37 +64,38 @@ export class StringToTranslate {
             }
         } else {
             this.translations = [];
-            this.uniqueId ='';
-            this.key='';
-            this.status='';
+            this.uniqueId = '';
+            this.key = '';
+            this.status = '';
             this.creator = '';
-            this.value='';
-            this.owner=null;
-            this.lastModified=null;
+            this.value = '';
+            this.owner = null;
+            this.lastModified = null;
             this.lastSourceModification = null;
             this.seasonId = null;
-            this.smartlingId=null;
-            this.internationalFallback='';
+            this.smartlingId = null;
+            this.internationalFallback = '';
             this.translationInstruction = '';
-            this.stage='DEVELOPMENT';
+            this.stage = 'DEVELOPMENT';
             this.maxStringSize = null;
         }
     }
-    setFromString(s:any){
-        this.uniqueId =s.uniqueId;
-        this.owner=s.owner;
-        this.creator=s.creator;
-        this.lastModified=s.lastModified;
+
+    setFromString(s: any) {
+        this.uniqueId = s.uniqueId;
+        this.owner = s.owner;
+        this.creator = s.creator;
+        this.lastModified = s.lastModified;
         this.lastSourceModification = s.lastSourceModification;
         this.seasonId = s.seasonId;
-        this.smartlingId=s.smartlingId;
-        this.internationalFallback=s.internationalFallback;
-        this.key=s.key;
-        this.status=s.status;
-        this.value=s.value;
+        this.smartlingId = s.smartlingId;
+        this.internationalFallback = s.internationalFallback;
+        this.key = s.key;
+        this.status = s.status;
+        this.value = s.value;
         this.translations = [];
-        this.stage=s.stage;
-        this.translationInstruction=s.translationInstruction;
+        this.stage = s.stage;
+        this.translationInstruction = s.translationInstruction;
         this.maxStringSize = s.maxStringSize;
         if (s.translations) {
             for (var i = 0; i < s.translations.length; i++) {

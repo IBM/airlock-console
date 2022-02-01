@@ -1,5 +1,4 @@
-
-import { Season } from './season';
+import {Season} from './season';
 
 export class Product {
     seasons: Season[];
@@ -11,7 +10,7 @@ export class Product {
     isCurrentUserFollower: boolean;
     capabilities: string[];
 
-    constructor(p?:Product){
+    constructor(p?: Product) {
 
         if (p) {
 
@@ -24,7 +23,7 @@ export class Product {
             this.capabilities = p.capabilities.slice();
 
             this.isCurrentUserFollower = p.isCurrentUserFollower
-            if(p.seasons != null) {
+            if (p.seasons != null) {
                 for (var i = 0; i < p.seasons.length; i++) {
                     this.seasons[i] = new Season(p.seasons[i]);
                 }

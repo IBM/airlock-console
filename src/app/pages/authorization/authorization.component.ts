@@ -1,23 +1,25 @@
-import {Component, Injectable, trigger, state, transition, animate, style, ElementRef} from '@angular/core';
+import {Component} from '@angular/core';
 import {AirlockService} from "../../services/airlock.service";
 import {Season} from "../../model/season";
-import {ViewChild} from "@angular/core";
-import {TransparentSpinner} from "../../theme/airlock.components/transparentSpinner/transparentSpinner.service";
 import {GlobalState} from "../../global.state";
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
 import {FeatureUtilsService} from "../../services/featureUtils.service";
 import {StringsService} from "../../services/strings.service";
 import {Product} from "../../model/product";
 import {User} from "../../model/user";
 import {Role} from "../../model/role";
-import {AddUserModal} from "../../theme/airlock.components/addUserModal";
-import {Modal} from "angular2-modal/plugins/bootstrap/modal";
+import {VerifyActionModal} from "../../@theme/modals/verifyActionModal";
+import {TransparentSpinner} from "../../@theme/airlock.components/transparentSpinner";
+import {AddUserModal} from "../../@theme/modals/addUserModal";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NbDialogService} from "@nebular/theme";
+import {CustomCheckboxComponent} from "./custom.checkbox.component";
+import {CustomDeleteComponent} from "./custom.delete.component";
 
 @Component({
     selector: 'authorization',
     providers: [TransparentSpinner,FeatureUtilsService],
-    styles: [require('./authorization.scss')],
-    template: require('./authorization.html'),
+    styleUrls: ['./authorization.scss'],
+    templateUrl: './authorization.html',
     animations: [
         trigger('slideInOut', [
             state('in', style({
@@ -36,17 +38,29 @@ import {Modal} from "angular2-modal/plugins/bootstrap/modal";
 export class AuthorizationPage {
     products: Array<Product>;
     selectedProduct: Product;
-    @ViewChild('verifyActionModal')
-    verifyActionModal:  VerifyActionModal;
-    @ViewChild('addUserModal')
-    addUserModal:  AddUserModal;
     productDropDownWidth: string = '1000px';
     valid: boolean = true;
     filteredItems: Array<string> = new Array<string>();
     selectedId = null;
     selectedIndex = -1;
     public sortBy;
-    data;
+    // loaded: Promise<boolean>;
+    settings = {
+        hideSubHeader: true,
+        actions: false,
+        columns: {
+            id: {
+                filter: false,
+                title: 'ID'
+            }
+        }
+    };
+    data = [
+
+    ];
+
+    sampleUser = {}
+
     public sortOrder = "asc";
     scrolledToSelected = false;
     filterlistDict: {string: Array<string>} = {string:[]};
@@ -60,9 +74,12 @@ export class AuthorizationPage {
     allProductsProd: Product;
 
     public status: {isopen: boolean} = {isopen: false};
+    private dynamicRoles: any = [];
+    private testMode: boolean = false;
     constructor(private _airLockService:AirlockService,
-                private _appState: GlobalState, private _stringsSrevice: StringsService,
-                public modal: Modal) {
+                private _appState: GlobalState,
+                private _stringsSrevice: StringsService,
+                private modalService: NbDialogService) {
         this.allProductsProd = new Product();
         this.allProductsProd.name = "Default for new products";
         this.allProductsProd.uniqueId = null;
@@ -79,10 +96,10 @@ export class AuthorizationPage {
         return this._airLockService.isViewer();
     }
 
-
     toggleDataCollectionDetails(){
         this.showDialog = !this.showDialog;
     }
+
     initData(currentSeason: Season, isSeasonLatest:boolean) {
 
     }
@@ -104,14 +121,20 @@ export class AuthorizationPage {
     initProductList() {
         console.log("authorization initProductList");
         this.loading  = true;
+        if (this.testMode){
+            let prods = this._appState.getData('products');
+            this.products = prods;
+            this.selectProduct(this.getFirstProductAvailable());
+            this.loading  = false;
+            return;
+        }
         this._airLockService.getUserRoles().then((users) => {
             let prods = this._appState.getData('products');
-
             this.products = this.createProductsList(users, prods);
             if (this.products.length > 0) {
                 let currProduct = this._appState.getData('features.currentProduct');
                 if(currProduct != null){
-                    var isFound:boolean = false;
+                    let isFound: boolean = false;
                     for (let prod of this.products){
                         if(prod.uniqueId == currProduct.uniqueId){
                             this.selectProduct(prod);
@@ -120,10 +143,10 @@ export class AuthorizationPage {
                         }
                     }
                     if(!isFound){
-                        this.selectProduct(this.products[0]);
+                        this.selectProduct(this.getFirstProductAvailable());
                     }
                 }else {
-                    this.selectProduct(this.products[0]);
+                    this.selectProduct(this.getFirstProductAvailable());
                 }
             } else {
                 this.loading = false;
@@ -135,24 +158,29 @@ export class AuthorizationPage {
         });
     }
 
+    getFirstProductAvailable(): Product{
+        for (let index = 0; index < this.products.length; index++){
+            if (this.products[index].isCurrentUserFollower){
+                return this.products[index];
+            }
+        }
+        return this.products[0];
+    }
+
     createProductsList(users: User[], products: Product[]): Product[] {
         console.log("createProductsList");
-        console.log(products);
         let toRet = [];
         for (let user of users || []) {
-            console.log("user:" + user);
             if (user.roles && user.roles.indexOf("Administrator") > -1) {
                 if (user.productId == null) {
                     console.log("pushing addProductsProd");
                     toRet.push(this.allProductsProd);
                 } else {
-                    console.log("pushing product");
                     let prod = this.getProductFromID(user.productId, products);
                     toRet.push(prod);
                 }
             }
         }
-        console.log(toRet);
         if (toRet.length > 0) {
             toRet = toRet.sort((n1,n2) => {
                 //put master on top - otherwise sort alphabetically
@@ -201,7 +229,6 @@ export class AuthorizationPage {
 
     }
 
-
     public refreshTable() {
         this.selectProduct(this.selectedProduct);
     }
@@ -211,7 +238,7 @@ export class AuthorizationPage {
     }
 
     public afterUpdate() {
-        this.loading = false;
+        // this.loading = false;
     }
     public onSearchQueryChanged(term:string) {
         this.loading = true;
@@ -219,7 +246,6 @@ export class AuthorizationPage {
             this.filteredItems = [];
             this.searchQueryString = term;
             this.createFilteredList();
-            this.loading = false;
         }, 100);
     }
     getString(name: string) {
@@ -227,6 +253,9 @@ export class AuthorizationPage {
     }
 
     createFilteredList() {
+        this.loading = true;
+        console.log("createFilteredList");
+        this.data = [];
         this.filteredItems = [];
         let filtered: Array<User> = [];
         if (!this.searchQueryString || this.searchQueryString.length <= 0) {
@@ -239,8 +268,20 @@ export class AuthorizationPage {
             }
         }
         this.filteredUsers = filtered;
-        this.data = this.filteredUsers;
-
+        for (var user of this.filteredUsers){
+            console.log("printing roles for user " + ":" + user.identifier + " roles:"+ user.roles);
+            let singleUserData = {
+                id: user.identifier
+            }
+            for (let userRole of this.dynamicRoles){
+                singleUserData[userRole] = userRole + ":" + user.roles.includes(userRole);
+            }
+            singleUserData["uniqueId"] = user.uniqueId;
+            singleUserData["user"] = user;
+            singleUserData["authPage"] = this;
+            this.data.push(singleUserData);
+        }
+        this.loading = false;
     }
     getNumItems() {
         if (this.filteredUsers && this.searchQueryString && this.searchQueryString.length > 0) {
@@ -258,8 +299,8 @@ export class AuthorizationPage {
         return (str.toLowerCase().indexOf(term.toLowerCase()) > -1);
     }
 
-    isPartOfSearch(term:string, stream:any):boolean {
-        if (!term || term=="") {
+    isPartOfSearch(term: string, stream: any): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -271,7 +312,7 @@ export class AuthorizationPage {
         return displayName.includes(lowerTerm) || fullName.includes((lowerTerm));
     }
 
-    showNextSearchResult(forward:boolean) {
+    showNextSearchResult(forward: boolean) {
         if (this.filteredItems.length > 0) {
             if (forward) {
                 if (this.selectedIndex >= (this.filteredItems.length-1)) {
@@ -292,7 +333,7 @@ export class AuthorizationPage {
         }
     }
 
-    itemIsSelected(itemObj:any) {
+    itemIsSelected(itemObj: any) {
         if (itemObj.id && itemObj.id == this.selectedId && !this.scrolledToSelected) {
             let y = itemObj.offset;
             this.checkIfInView(y);
@@ -303,12 +344,12 @@ export class AuthorizationPage {
     checkIfInView(top: number){
         let windowScroll = jQuery(window).scrollTop();
         if (top > 0) {
-            var offset = top - windowScroll;
+            const offset = top - windowScroll;
 
             if(offset > window.innerHeight  || offset < 0){
                 // Not in view so scroll to it
                 // jQuery('html,body').animate({scrollTop: offset-300}, 500);
-                var scrollNode = document.scrollingElement ?
+                const scrollNode = document.scrollingElement ?
                     document.scrollingElement : document.body;
                 scrollNode.scrollTop = top-200;
                 return false;
@@ -317,10 +358,10 @@ export class AuthorizationPage {
         return true;
     }
 
-    onProductsClick(){
-        var longestProdName;
-        var longestProdSize = 0;
-        for (var i = 0; i < this.products.length; i++){
+    onProductsClick() {
+        let longestProdName;
+        let longestProdSize = 0;
+        for (let i = 0; i < this.products.length; i++){
             if (this.products[i].name.length > longestProdSize){
                 longestProdSize = this.products[i].name.length;
                 longestProdName = this.products[i].name;
@@ -329,20 +370,21 @@ export class AuthorizationPage {
         this.productDropDownWidth = (9 * longestProdSize).toString() +'px';
         console.log('productDropDownWidth:', this.productDropDownWidth);
     }
-    getProductsForSelect():any[] {
-        var toRet = [];
+
+    getProductsForSelect(): any[] {
+        const toRet = [];
         // let allProds = {id:this.allProductsProd, text:this.allProductsProd.name};
         // toRet.push(allProds);
         if (this.selectedProduct) {
-            let selected = {id:this.selectedProduct, text:this.selectedProduct.name};
+            let selected = {id: this.selectedProduct, text: this.selectedProduct.name};
             toRet.push(selected);
         }
         if (this.products) {
-            for (var product of this.products) {
+            for (let product of this.products) {
                 if (product) {
-                    if(this.selectedProduct == null || product.uniqueId!=this.selectedProduct.uniqueId) {
-                        let productObj = {id:product,
-                            text:product.name};
+                    if (this.selectedProduct == null || product.uniqueId != this.selectedProduct.uniqueId) {
+                        let productObj = {id: product,
+                            text: product.name};
                         toRet.push(productObj);
                     }
                 }
@@ -351,38 +393,85 @@ export class AuthorizationPage {
         return toRet;
     }
 
-    getSelectedProductForSelect():any {
+    getSelectedProductForSelect(): any {
+        console.log("getSelectedProductForSelect");
         if (this.selectedProduct) {
-            return [{id:this.selectedProduct, text:this.selectedProduct.name}];
+            return [{id: this.selectedProduct, text: this.selectedProduct.name}];
         }
         return [];
     }
     selectProductFromSelect(productObj:any) {
+        console.log("selectProductFromSelect " +  productObj.value);
         if (productObj) {
-            if (productObj.id && productObj.id != this.selectedProduct) {
-                this.selectProduct(productObj.id);
+            if (productObj.value && productObj.value != this.selectedProduct.uniqueId) {
+                console.log("selectProductFromSelect#1");
+                this.selectProduct(this.getProductFromID(productObj.value, this.products));
             }
         }
     }
+
     selectProduct(prod:Product){
-    if(prod == null){
-        console.log("Auth product is null: ");
-        return;
-    }
+        if(prod == null){
+            console.log("Auth product is null: ");
+            return;
+        }
         this.loading = true;
         this.selectedProduct = prod;
         console.log("product selected: "+prod.name);
+        if (this.testMode){
+            let roleNames = ["Viewer","Editor"]
+            for (let role of roleNames){
+                (this.settings.columns as any)[role] = {
+                    filter: false,
+                    type: 'custom',
+                    title: role,
+                    width: '40px',
+                    renderComponent: CustomCheckboxComponent}
+                this.dynamicRoles.push(role);
+            }
+            this.settings.columns["delete"] = {
+                filter: false,
+                type: 'custom',
+                renderComponent: CustomDeleteComponent,
+                width: '88px'}
 
+            this.dynamicRoles = ["Viewer","Editor"];
+            let singleUserData = {
+                id: "aaaa"
+            }
+            for (let userRole of this.dynamicRoles){
+                singleUserData[userRole] = userRole + ":true";
+            }
+            singleUserData["uniqueId"] = "aaaaa";
+            singleUserData["user"] = "user1";
+            singleUserData["authPage"] = this;
+            this.data.push(singleUserData);
+            return;
+        }
         this._airLockService.getUsers(this.selectedProduct.uniqueId).then(response  => {
             this.users = response;
-            this.createFilteredList();
-            this.data = this.filteredUsers;
             this._airLockService.getRoles(this.selectedProduct.uniqueId).then(response => {
                 this.roles = response;
-                this.loading = false;
+                console.log("returned roles: " + JSON.stringify(response));
+                for (let role of this.roles){
+                    (this.settings.columns as any)[role.name] = {
+                        filter: false,
+                        type: 'custom',
+                        title: role.name,
+                        width: '40px',
+                        renderComponent: CustomCheckboxComponent}
+                        this.dynamicRoles.push(role.name);
+                }
+                this.settings.columns["delete"] = {
+                    filter: false,
+                    type: 'custom',
+                    renderComponent: CustomDeleteComponent,
+                    width: '88px'}
+                this.createFilteredList();
             });
         });
     }
+
     hasRole(user: User, role: Role) {
         let roles = user.roles || [];
         return roles.indexOf(role.name) > -1;
@@ -395,8 +484,11 @@ export class AuthorizationPage {
         }
         return true;
     }
-    canUncheckRole(user: User, role: Role): boolean {
-        if (!user.roles || user.roles.indexOf(role.name) <= -1) {
+    canUncheckRole(user: User, role: string): boolean {
+        if (this.testMode){
+            return true;
+        }
+        if (!user.roles || user.roles.indexOf(role) <= -1) {
             return true;
         }
         if (user.roles && user.roles.length == 1) {
@@ -407,7 +499,7 @@ export class AuthorizationPage {
             let otherRole = this.getRoleWithName(otherRoleName);
             if (otherRole) {
                 for (let dependedRole of otherRole.dependencies || []) {
-                    if (dependedRole === role.name) {
+                    if (dependedRole === role) {
                         return false;
                     }
                 }
@@ -423,50 +515,55 @@ export class AuthorizationPage {
         }
         return null;
     }
-    setRole(user: User, role: Role, event) {
+    setRole(user: User, role: string, event) {
         if (this.selectedProduct.uniqueId == null && event.target.checked
-            && role.name === "Administrator") {
-            this.modal.confirm()
-                .title(`This would make this user Administrator on all products. Are you sure?`)
-                .open()
-                .catch(err => console.log("ERROR")) // catch error not related to the result (modal open...)
-                .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-                .then(result => {
+            && role === "Administrator") {
+            this.modalService.open(VerifyActionModal, {
+                closeOnBackdropClick: false,
+                context: {
+                    text: `Are you sure you want to delete the user ${user.identifier}?`,
+                }
+            }).onClose.subscribe(confirmed => {
+                if (confirmed) {
                     console.log("confirmed");
                     this._setRole(user, role, event);
-                }) // if were here ok was clicked.
-                .catch(err => {
-                    console.log("CANCELED")
-                    this.refreshTable();
-                });
+                }});
         } else {
             this._setRole(user, role, event)
         }
 
     }
-    _setRole(user: User, role: Role, event) {
-        this.loading = true;
+    _setRole(user: User, role: string, event) {
+        this.loading = false;
         if (event.target.checked) {
             if (!user.roles) {
                 user.roles = [];
             }
-            user.roles.push(role.name);
-            for (let dependency of role.dependencies || []) {
+            user.roles.push(role);
+            console.log("pushed role : " + role);
+            let roleObj = this.getRoleWithName(role);
+            for (let dependency of roleObj.dependencies || []) {
                 if (user.roles.indexOf(dependency) <= -1) {
                     user.roles.push(dependency);
                 }
             }
         } else {
             if (user.roles) {
-                var index = user.roles.indexOf(role.name);
+                const index = user.roles.indexOf(role);
                 if (index !== -1) {
+                    console.log("removed role : " + role);
                     user.roles.splice(index, 1);
                 }
             }
         }
         //update user
+        if (this.testMode){
+            this.loading = false;
+            return;
+        }
         this._airLockService.updateUser(user, this.selectedProduct.uniqueId).then((response) => {
             this.refreshTable();
+            this.loading = false;
         }).catch((error) => {
             let errorMessage = this._airLockService.parseErrorMessage(error, "Failed to update user role");
             this._airLockService.notifyDataChanged("error-notification",errorMessage);
@@ -475,28 +572,40 @@ export class AuthorizationPage {
     }
 
     addUser(event) {
-        this.addUserModal.open(this.selectedProduct.uniqueId);
+        this.modalService.open(AddUserModal, {
+            closeOnBackdropClick: false,
+            context: {
+                productId: this.selectedProduct?.uniqueId
+            }
+        }).onClose.subscribe(item => {
+            if (item) {
+                this.refreshTable();
+            }
+        });
+        // this.addUserModal.open(this.selectedProduct.uniqueId);
     }
     deleteUser(user:User) {
-        this.modal.confirm()
-            .title(`Are you sure you want to delete the user ${user.identifier}?`)
-            .open()
-            .catch(err => console.log("ERROR")) // catch error not related to the result (modal open...)
-            .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-            .then(result => {
+        this.modalService.open(VerifyActionModal, {
+            closeOnBackdropClick: false,
+            context: {
+                text: `Are you sure you want to delete the user ${user.identifier}?`,
+            }
+        }).onClose.subscribe(confirmed => {
+            if (confirmed) {
                 console.log("confirmed");
-                this._airLockService.deleteUser(user).then((res) =>{
+                this._airLockService.deleteUser(user).then((res) => {
                     this.refreshTable();
                 }).catch((error) => {
                     let errorMessage = this._airLockService.parseErrorMessage(error, "Failed to delete user");
-                    this._airLockService.notifyDataChanged("error-notification",errorMessage);
+                    this._airLockService.notifyDataChanged("error-notification", errorMessage);
                     this.refreshTable();
                 });
+            }
+        });
+    }
 
-            }) // if were here ok was clicked.
-            .catch(err => {
-                console.log("CANCELED")
-            });
+    customEvent($event: any) {
+        console.log("customEvent " + $event.name);
     }
 }
 

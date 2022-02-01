@@ -1,0 +1,51 @@
+    <nb-card #myModal  class="stringUsageModal">
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <nb-card-header>
+            <div class="modal-title">
+                <span>
+                    <h5 class="stringHeader">{{key}}</h5>
+                    String Usage
+                </span>
+            </div>
+       </nb-card-header>
+
+        <nb-card-body [hidden]="loading">
+            <div *ngIf="branchNames?.length == 0" class="whiteText">
+                This string is not being used by any feature.
+            </div>
+            <div *ngIf="branchNames?.length > 0" class="box limit-height whiteText">
+                <div class="featureCountDiv">
+                    This string is used in {{feturesCount}} feature{{feturesCount>1?"s":""}} in {{branchNames.length}} branch{{branchNames.length>1?"es":""}}.
+                </div>
+                <accordion>
+                    <ng-template ngFor let-branchName [ngForOf]="branchNames">
+                    <accordion-group #group class="accordionGroup">
+                        <div accordion-heading class="accordionHead">
+                            <span class="openIndicator">
+                               <i  [class.ion-arrow-right-b]="!group.isOpen" [class.ion-arrow-down-b]="group.isOpen"></i>
+                            </span>
+                            <span class="branchNameSpan">
+                                {{branchName}}
+                            </span>
+                        </div>
+                        <ul class="usageList list-group">
+                            <li *ngFor="let i of this.usage[branchName]" class="list-group-item">
+                                <div>
+                                <span class="usageLabel">Feature:</span><span class="stringData">{{i["featureName"]}}</span>
+                                </div>
+                                <div>
+                                <span class="usageLabel">Configuration:</span><span class="stringData">{{i["configName"]}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </accordion-group>
+                    </ng-template>
+                </accordion>
+            </div>
+       </nb-card-body>
+        <nb-card-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+       </nb-card-footer>
+   </nb-card>

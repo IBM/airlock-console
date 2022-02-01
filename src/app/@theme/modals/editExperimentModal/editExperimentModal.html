@@ -1,0 +1,406 @@
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header *ngIf="experiment != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{experiment.name}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body [class.noAnalytics]="!canUseAnalytics">
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+                    <span *ngIf="experiment != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_experiment_rule_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_experiment_rule_tab_heading')}}</button>
+                    </span>
+
+                    <span *ngIf="experiment != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="descriptionTabActive" (click)="selectTab('Description')">{{getString('edit_experiment_description_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!descriptionTabActive" (click)="selectTab('Description')">{{getString('edit_experiment_description_tab_heading')}}</button>
+                    </span>
+
+                    <span *ngIf="experiment != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="analyticsTabActive" (click)="selectTab('Analytics')">{{getString('edit_experiment_analytics_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!analyticsTabActive" (click)="selectTab('Analytics')">{{getString('edit_experiment_analytics_tab_heading')}}</button>
+                    </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                    <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="row no-margin" *ngIf="experiment != null">
+                                                <label for="input01" class="control-label">Short Name</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_experiment_name')"
+                                                                 [title]="getString('edit_experiment_name_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="isOnlyDisplayMode" id="input01" placeholder=""
+                                                       [(ngModel)]="experiment.name" class="form-control blackText" tabindex="1">
+                                            </div>
+                                            <div class="row no-margin" *ngIf="experiment != null">
+                                                <label for="input01" class="control-label">Display Name</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_experiment_displayname')"
+                                                                 [title]="getString('edit_experiment_displayname_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="isOnlyDisplayMode" id="input101" placeholder=""
+                                                       [(ngModel)]="experiment.displayName" class="form-control blackText"
+                                                       tabindex="1">
+                                            </div>
+                                            <div class="row no-margin" *ngIf="experiment != null">
+                                                <div class="col-md-6 no-padding-left">
+                                                    <div class="no-margin " *ngIf="experiment != null">
+                                                        <label for="input07" class="control-label">Stage</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_experiment_stage')"
+                                                                         [title]="getString('edit_experiment_stage_title')"></airlock-tooltip>
+                                                        <input type="text" id="input07" placeholder=""
+                                                               [(ngModel)]="experiment.stage" class="form-control blackText"
+                                                               disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <table style="width: 100%;">
+                                                        <tr>
+                                                            <td class="align-right"><label class="control-label">Enabled</label></td>
+                                                            <airlock-tooltip class="endFlexContainer"
+                                                                             [content]="getString('edit_experiment_enabled')"
+                                                                             [title]="getString('edit_experiment_enabled_title')"></airlock-tooltip>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="align-right">
+                                                                <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                           [(checked)]="experiment.enabled"
+                                                                           tabindex="8"></nb-toggle>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                </div>
+                                            <div class="row no-margin" *ngIf="experiment != null">
+                                                <label for="input287" class="control-label">Rollout Percentage</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_experiment_rollout')"
+                                                                 [title]="getString('edit_experiment_rollout_title')"></airlock-tooltip>
+                                                <div class="input-group rollout">
+                                                    <input id="input287" [disabled]="isOnlyDisplayMode"
+                                                           aria-label="Rollout percentage"
+                                                           step="0.0001"
+                                                           class="form-control with-success-addon numberInput" type="number" min="0"
+                                                           max="100" [(ngModel)]="experiment.rolloutPercentage" tabindex="2"
+                                                           style="width: 100px;height: 33px;">
+                                                </div>
+                                            </div>
+                                            <div class="row no-margin">
+                                                <div class="col-md-6 no-padding-left">
+                                                    <div class="no-margin " *ngIf="experiment != null">
+                                                        <label for="input08" class="control-label">Minimum App Version</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_experiment_min_app_version')"
+                                                                         [title]="getString('edit_experiment_min_app_version_title')"></airlock-tooltip>
+                                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input08"
+                                                               placeholder="" [(ngModel)]="experiment.minVersion"
+                                                               class="form-control blackText " tabindex="5">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 no-padding-right">
+                                                    <div class="no-margin " *ngIf="experiment != null">
+                                                        <label for="input09" class="control-label">Maximum App Version</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_experiment_max_app_version')"
+                                                                         [title]="getString('edit_experiment_max_app_version_title')"></airlock-tooltip>
+                                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input09"
+                                                               placeholder="" [(ngModel)]="experiment.maxVersion"
+                                                               class="form-control blackText " tabindex="6">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row no-margin ">
+                                                <label class="control-label">User Groups</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_experiment_groups')"
+                                                                 [title]="getString('edit_experiment_groups_title')"></airlock-tooltip>
+                                                <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="experiment.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                            </div>
+                                            <div class="row no-margin">
+                                                <div class="col-md-6 no-padding-left">
+                                                    <div class="no-margin " *ngIf="experiment != null">
+                                                        <label for="input80" class="control-label">Creation Date</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_experiment_creation_date')"
+                                                                         [title]="getString('edit_experiment_creation_date_title')"></airlock-tooltip>
+                                                        <input type="text" id="input80" disabled placeholder=""
+                                                               [value]="creationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 no-padding-right">
+                                                    <div class="no-margin " *ngIf="experiment != null">
+                                                        <label for="input82" class="control-label">Last Modified</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_experiment_last_modified')"
+                                                                         [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                                                        <input type="text" id="input82" disabled placeholder=""
+                                                               [value]="lastModificationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row no-margin" *ngIf="experiment != null"
+                                                 style="margin-bottom: 2px;">
+                                                <label for="input10" class="control-label">Creator</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_experiment_creator')"
+                                                                 [title]="getString('edit_experiment_creator_title')"></airlock-tooltip>
+                                                <input type="text" id="input10" disabled placeholder=""
+                                                       [(ngModel)]="experiment.creator" class="form-control blackText">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #ruleTab *ngIf="ruleTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                                    <div class="row no-margin  tab-div-container">
+                        <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_experiment_rule_tab_details')}}
+                                <br>
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showRuleHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                            </h5>
+                        </span>
+                    <div></div>
+                    <span class="editor-span">
+                            <button class="btn btn-expand btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorRuleExpand()">
+                            <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div *ngIf="!loading" #mytesteditor ace-editor id="input57" (onTextChanged)="ruleUpdated($event)"
+                             [markdown]="experiment.rule.ruleString" [readonly]="isOnlyDisplayMode"
+                             [mode]="'javascript'"
+                             [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo"
+                             [heightSize]="aceEditorRuleHeight">
+                        </div>
+                    </span>
+                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #descriptionTab *ngIf="descriptionTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="no-margin  tab-div-container">
+                    <div class="no-margin " *ngIf="experiment != null">
+                        <label for="input55" class="control-label">Description</label>
+                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_experiment_description')"
+                                         [title]="getString('edit_experiment_description_title')"></airlock-tooltip>
+                        <textarea id="input55" [disabled]="isOnlyDisplayMode" placeholder=""
+                                  [(ngModel)]="experiment.description" value="FEATURE"
+                                  class="form-control description-text blackText" style="height: 70px; resize:none"
+                                  tabindex="8"></textarea>
+                    </div>
+                    <div class="no-margin " *ngIf="experiment != null">
+                        <label for="input58" class="control-label">Hypothesis</label>
+                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_experiment_description')"
+                                         [title]="getString('edit_experiment_description_title')"></airlock-tooltip>
+                        <textarea id="input58" [disabled]="isOnlyDisplayMode" placeholder=""
+                                  [(ngModel)]="experiment.hypothesis" value="FEATURE"
+                                  class="form-control description-text blackText" style="height: 55px; resize:none"
+                                  tabindex="9"></textarea>
+                    </div>
+                    <div class="no-margin " *ngIf="experiment != null">
+                        <label for="input59" class="control-label">Measurements</label>
+                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_experiment_description')"
+                                         [title]="getString('edit_experiment_description_title')"></airlock-tooltip>
+                        <textarea id="input59" [disabled]="isOnlyDisplayMode" placeholder=""
+                                  [(ngModel)]="experiment.measurements" value="FEATURE"
+                                  class="form-control description-text blackText" style="height: 55px; resize:none"
+                                  tabindex="10"></textarea>
+                    </div>
+                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #analyticsTab *ngIf="analyticsTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="no-margin  tab-div-container-analytics">
+                    {{getString('analytics_summary_leading_txt_1')}} <span
+                        style="font-weight:bolder;">{{totalCountQuota}}</span> {{getString('analytics_summary_leading_txt_2')}}
+                    <br>
+                    {{getString('analytics_summary_leading_txt_total')}} <span
+                        style="font-weight:bolder;">{{totalAnaliticsCount}}</span>
+                    <br>
+                    {{getString('analytics_summary_leading_dev_txt_total')}} <span
+                        style="font-weight:bolder;">{{totalAnaliticsDevCount}}</span>
+                    <br>
+                    <button class="modalLink modalLinkButton"
+                            (click)="showAnaliticsHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                    <p>
+                    <div style="font-size: small; color: ghostwhite;position:relative;font-weight: bold">Context Fields
+                        <airlock-tooltip
+                                [content]="getString('edit_experiment_analytics_summary_context_field_tooltip')"
+                                [title]="getString('edit_experiment_analytics_summary_context_field_tooltip_title')"></airlock-tooltip>
+                    </div>
+                    <div></div>
+                    <div style="font-style: italic"
+                         *ngIf="analyticsExperiment.inputFieldsForAnalytics && analyticsExperiment.inputFieldsForAnalytics.length == 0">
+                        {{getString('edit_experiment_analytics_no_context_selected')}}
+                    </div>
+                    <ul class="small_pading">
+                        <li *ngFor="let ctxAttribute of analyticsExperiment.inputFieldsForAnalytics">
+                              <span>
+                                <i class="ion-checkmark" tooltip="Context field"></i>
+                                  {{ctxAttribute.name}}
+                              </span>
+                        </li>
+                    </ul>
+
+
+                    <div style="font-size: small; color: ghostwhite;position:relative;font-weight: bold">Features,
+                        Configurations, Attributes, and Ordering Rules
+                        <airlock-tooltip
+                                [content]="getString('edit_experiment_analytics_summary_features_field_tooltip')"
+                                [title]="getString('edit_experiment_analytics_summary_features_field_tooltip_title')"></airlock-tooltip>
+                    </div>
+                    <div style="font-style: italic"
+                         *ngIf="analyticsExperiment.analyticsDataCollectionByFeatureNames && analyticsExperiment.analyticsDataCollectionByFeatureNames.length == 0">
+                        {{getString('edit_experiment_analytics_no_items_selected')}}
+                    </div>
+                    <ul class="small_pading" style="list-style: none;">
+                        <li *ngFor="let feature of analyticsExperiment.analyticsDataCollectionByFeatureNames">
+                            <ng-template #popTemplateFeaturesBranch>
+                                <div class="descpPopover">
+                                    <div class="no-margin ">
+                                        <label for="input55"
+                                               style="font-weight: bold">{{getString('edit_experiment_analytics_appeared_in')}}</label>
+                                        <p *ngFor="let ftrbranch of feature?.branches" class="descpPopover"
+                                           style="color:black">{{ftrbranch.branch}} (ver. {{ftrbranch.season}})</p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #popTemplateFeatureBranchAll>
+                                <div class="descpPopover">
+                                    <label for="input55"
+                                           style="font-weight: bold">{{getString('edit_experiment_analytics_appeared_in_all')}}</label>
+                                </div>
+                            </ng-template>
+
+                            <span *ngIf="isFeatureSendToAnalytics(feature)">
+                                    <i class="ion-radio-waves" style="color: white"
+                                       tooltip="Feature"></i> {{feature.name}}
+                                <i *ngIf="isFeatureExistInAllBranches(feature)"
+                                   class="ion-ios-information-outline info-icon" [popover]="popTemplateFeatureBranchAll"
+                                   placement="right" triggers="mouseenter:mouseleave"></i>
+                                    <i *ngIf="!isFeatureExistInAllBranches(feature)"
+                                       class="ion-ios-information-outline info-icon"
+                                       [popover]="popTemplateFeaturesBranch" placement="right"
+                                       triggers="mouseenter:mouseleave"></i>
+                                </span>
+                            <span *ngIf="!isFeatureSendToAnalytics(feature)">
+                                    <span class="grayout-text"><i class="ion-eye-disabled"
+                                                                  tooltip="Feature is not reported"></i> </span>
+                                    <span class="grayout"> {{feature.name}} </span>
+                                </span>
+                            <!--
+                            <ul class="small_pading" style="list-style: none;">
+                                <li *ngFor="let ftrbranch of feature.branches" style="padding-left: 20px">
+                                    <i class="ion-merge" style="color: white" tooltip="Branch"></i> {{ftrbranch.branch}} - {{ftrbranch.season}}
+                                </li>
+                            </ul>
+-->
+                            <ul class="small_pading" style="list-style: none;">
+                                <li *ngFor="let attribute of feature.attributes" style="padding-left: 20px">
+                                      <span>
+                                        <i class="ion-ios-pricetag" tooltip="Attribute"></i>
+                                          {{attribute}}
+                                      </span>
+                                </li>
+                            </ul>
+
+                            <ul class="small_pading" style="list-style: none;">
+                                <li *ngFor="let conf of feature.configurationRules" style="padding-left: 20px">
+                                    <ng-template #popTemplateConfigurationBranch>
+                                        <div class="descpPopover">
+                                            <div class="no-margin ">
+                                                <label for="input55"
+                                                       style="font-weight: bold">{{getString('edit_experiment_analytics_appeared_in')}}</label>
+                                                <p *ngFor="let confbranch of conf?.branches" class="descpPopover"
+                                                   style="color:black">{{confbranch.branch}} (ver. {{confbranch.season}}
+                                                    )</p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    <i class="ion-wrench" style="color: white"
+                                       tooltip="Configuration"></i> {{conf.name}}
+                                    <i class="ion-ios-information-outline info-icon"
+                                       [popover]="popTemplateConfigurationBranch" placement="right"
+                                       triggers="mouseenter:mouseleave"></i>
+                                </li>
+                                <li *ngFor="let conf of feature.orderingRules" style="padding-left: 20px">
+                                    <ng-template #popTemplateConfigurationBranch>
+                                        <div class="descpPopover">
+                                            <div class="no-margin ">
+                                                <label for="input55"
+                                                       style="font-weight: bold">{{getString('edit_experiment_analytics_appeared_in')}}</label>
+                                                <p *ngFor="let confbranch of conf?.branches" class="descpPopover"
+                                                   style="color:black">{{confbranch.branch}} (ver. {{confbranch.season}}
+                                                    )</p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    <i class="ion-shuffle" style="color: white"
+                                       tooltip="Ordering Rule"></i> {{conf.name}}
+                                    <i class="ion-ios-information-outline info-icon"
+                                       [popover]="popTemplateConfigurationBranch" placement="right"
+                                       triggers="mouseenter:mouseleave"></i>
+                                </li>
+                            </ul>
+
+                        </li>
+                    </ul>
+
+
+                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="experiment != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isOnlyDisplayMode">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

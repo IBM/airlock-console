@@ -1,0 +1,23 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 {{text}}
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div #mytesteditor ace-editor id="input56" [mode]="'javascript'"
+             [markdown]="errorStr" [readonly]="true" [heightSize]="'350px'">
+        </div>
+        <!--        <button class="btn btn-outline-secondary ion-ios-copy copy-button" [xngClipboard]="errorStr"></button>-->
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+    </nb-card-footer>
+</nb-card>
+<!--</modal>-->

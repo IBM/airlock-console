@@ -1,307 +1,202 @@
-import {Component, Input, ViewEncapsulation, OnInit, Output, EventEmitter, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {StringToTranslate} from "../../../../model/stringToTranslate";
 import {Season} from "../../../../model/season";
 import {AirlockService} from "../../../../services/airlock.service";
-import {FeatureUtilsService} from "../../../../services/featureUtils.service";
-import {Modal} from "angular2-modal/plugins/bootstrap/modal";
-import {OverrideStringModal} from "../../../../theme/airlock.components/overrideStringModal/overrideStringModal.component";
-import {EditStringModal} from "../../../../theme/airlock.components/editStringModal/editStringModal.component";
-import {VerifyActionModal, VeryfyDialogType} from "../../../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
 import {StringsService} from "../../../../services/strings.service";
-import {StringUsageModal} from "../../../../theme/airlock.components/stringUsageModal/stringUsageModal.component";
+import {NbPopoverDirective} from "@nebular/theme";
+import {CustomStatusComponent} from "./smartTableCustom/custom.status.compunent";
+import {CustomTranslationComponent} from "./smartTableCustom/custom.translation.component";
+import {CustomActionComponent} from "./smartTableCustom/custom.action.component";
+
+interface TreeNode<T> {
+    data: T;
+    children?: TreeNode<T>[];
+    expanded?: boolean;
+}
 
 @Component({
     selector: 'strings-table',
-    styles: [require('./strings.table.scss')],
-    template: require('./strings.table.html'),
-    //providers: [StringDetail]
+    styleUrls: ['./strings.table.scss'],
+    templateUrl: './strings.table.html',
 })
-export class StringsTableView implements OnInit{
+export class StringsTableView implements OnInit {
+    @ViewChild(NbPopoverDirective) popover: NbPopoverDirective;
     @Input() selectedStrings: StringToTranslate[];
     @Input() selectedSeason: Season;
-    @Input() verifyActionModal:  VerifyActionModal;
     @Input() supportedLocales: string[];
-    selectedStringToTranslate:StringToTranslate;
-    @Output() reloadTranslations : EventEmitter<any> = new EventEmitter();
+    selectedStringToTranslate: StringToTranslate;
+    // @Output() reloadTranslations: EventEmitter<any> = new EventEmitter();
     @Output() onSelectedChanged: EventEmitter<string[]> = new EventEmitter<string[]>();
 
-    @ViewChild('overrideStringModal')
-    overrideStringModal: OverrideStringModal;
-
-    @ViewChild('editStringModal')
-    editStringModal:  EditStringModal;
-
-    @ViewChild('stringUsageModal')
-    stringUsageModal: StringUsageModal;
+    actionsColumn = 'actions';
+    statusColumn = 'status';
+    allColumns = [];
+    sortColumn: string;
 
     public data;
-    public sortBy; //= "key";
-    public sortOrder = "asc";
+    private staticColumns = {
+        actions: {
+            filter: false,
+            title: '',
+            type: 'custom',
+            renderComponent: CustomActionComponent,
+            width: '88px'
+        },
+        key: {
+            title: 'String ID',
+        },
+        value: {
+            title: 'String Value'
+        },
+        translatedSummary: {
+            filter: false,
+            title: 'Translated'
+        },
+        prettyStage: {
+            filter: false,
+            title: 'Stage'
+        },
+        status: {
+            filter: false,
+            title: 'Status',
+            type: 'custom',
+            renderComponent: CustomStatusComponent,
+        }
+    };
+    public settings = {
+        pager: {
+            display: true,
+            perPage: 25
+        },
+        actions: false,
+        // hideSubHeader: true,
+        columns: this.staticColumns
+        };
     loading: boolean = false;
-    private sub:any = null;
+    private sub: any = null;
     private showTranslations = {};
-    curSelectedStringID:string = null;
-    selectedRowsIDs:string[] = [];
+    curSelectedStringID: string = null;
+    selectedRowsIDs: string[] = [];
 
-    constructor(private _airlockService : AirlockService,public modal: Modal,private cd: ChangeDetectorRef,private _stringsSrevice: StringsService) {
+    constructor(private _airlockService: AirlockService,
+                private cd: ChangeDetectorRef,
+                private _stringsService: StringsService) {
     }
 
-    isShowingTranslation(locale): boolean {
-        if (typeof(this.showTranslations[locale]) === 'undefined')
-            return false;
-        return this.showTranslations[locale];
+    ngOnInit(): void {
+        for (let locale of this.supportedLocales){
+            (this.settings.columns as any).locale = { title: locale,
+                type: 'custom',
+                renderComponent: CustomTranslationComponent}
+        }
+    }
+
+    ngOnChanges(change: any): void {
+        this.data = this.selectedStrings;
+        if (change.supportedLocales !== undefined){
+
+            if (change.supportedLocales.currentValue?.length < change.supportedLocales.previousValue?.length){
+                for (let locale of change.supportedLocales.previousValue){
+                    let exists = false;
+                    for (let newLocale of change.supportedLocales.currentValue){
+                        if (locale === newLocale){
+                            exists = true;
+                        }
+                    }
+                    if (!exists){
+                        delete this.settings.columns[locale];
+                        break;
+                    }
+                }
+            }
+        }
+        if (this.data != undefined && this.data.length > 0) {
+            for (let locale of this.supportedLocales){
+                (this.settings.columns as any)[locale] = { title: locale,
+                    type: 'custom',
+                    filter: false,
+                    width: '40px',
+                    renderComponent: CustomTranslationComponent}
+            }
+            for (let selectedStrings of this.selectedStrings){
+                selectedStrings.prettyStage = selectedStrings.stage.charAt(0).toUpperCase() + selectedStrings.stage.substring(1).toLowerCase();
+                selectedStrings.translatedSummary = "(" + this.getNumberOfTranslatedLocales(selectedStrings) + "/" + selectedStrings.translations.length + ")";
+                for (let locale of this.supportedLocales){
+                    (selectedStrings as any)[locale] =  locale;
+                }
+            }
+            this.loaded = Promise.resolve(true); // Setting the Promise as resolved after I have the needed data
+            this.loading = false;
+        }
+    }
+
+    getShowOn(index: number) {
+        const minWithForMultipleColumns = 400;
+        const nextColumnStep = 100;
+        return minWithForMultipleColumns + (nextColumnStep * index);
+    }
+
+    getNotShowingTranslationWithStatus(item: StringToTranslate, status: String): any {
+        for (let translation of item.translations) {
+            if (typeof (this.showTranslations[translation.locale]) === 'undefined') {
+                if (translation.translationStatus === status){
+                    return translation;
+                }
+            } else {
+                if (!this.showTranslations[translation.locale] && translation.translationStatus === status){
+                    return translation;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    isTranslationWithNoneStatuses(item: StringToTranslate, status1: String, status2: String): boolean {
+        for (let translation of item.translations) {
+            if (translation.translationStatus !== status1 && translation.translationStatus !== status2) {
+                return true;
+            }
+        }
+        return false;
     }
 
     localeClicked(locale): void {
-        if (typeof(this.showTranslations[locale]) === 'undefined'){
+        if (typeof (this.showTranslations[locale]) === 'undefined') {
             this.showTranslations[locale] = true;
-        }
-        else{
+        } else {
             this.showTranslations[locale] = !this.showTranslations[locale];
         }
     }
 
-    ngOnInit(): void {
-        console.log("on Init")
-    }
-
-    ngOnDestroy(){
-        if(this.sub != null){
+    ngOnDestroy() {
+        if (this.sub != null) {
             this.sub.unsubscribe();
         }
     }
 
-    ngOnChanges(): void{
-        this.data = this.selectedStrings;
-    }
-
-    canUserOpenActions(s : StringToTranslate) {
-        return (this.canUserEditString(s) ||
-        this.canMarkForTranslation(s) ||
-        this.canReviewForTranslation(s) ||
-        this.canSendForTranslation(s) ||
-        this.canUserChangeProduction() ||
-            this.canUserCopyString() ||
-            this.canUserExportString() ||
-            this.canViewUsage(s) ||
-        this.canUserDeleteString(s));
-    }
-
-    canUserEditString(stringToTranslate : StringToTranslate){
-        if(stringToTranslate.stage == 'PRODUCTION'){
-            return this._airlockService.isAdministrator() || this._airlockService.isProductLead() || this._airlockService.isUserHasStringTranslateRole();
-        }else{
-            return !this._airlockService.isViewer() || this._airlockService.isUserHasStringTranslateRole();
-        }
-
-    }
-
-    canViewUsage(s:StringToTranslate){
-        return !this._airlockService.isViewer() || this._airlockService.isUserHasStringTranslateRole();
-    }
-
-    viewStringUsage(s:StringToTranslate){
-        this.stringUsageModal.open(s.uniqueId,s.key);
-    }
-
-    canShowActionsMenu() {
-        return !this._airlockService.isViewer()  || this._airlockService.isUserHasStringTranslateRole();
-    }
-
-    markStringForTranslation(stringToTranslate : StringToTranslate){
-        this.loading=true;
-        this._airlockService.markStringForTranslation(this.selectedSeason.uniqueId, [stringToTranslate.uniqueId]).then(res => {
-            this.loading=false;
-            this.reloadTranslations.emit(null);
-            this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this._stringsSrevice.getString("mark_for_translation_success_message")});
-        }).catch(error => {
-            console.log(error);
-            this.loading = false;
-            
-            this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-
-        });
-    }
-    reviewStringForTranslation(stringToTranslate : StringToTranslate){
-        this.loading=true;
-        this._airlockService.reviewStringForTranslation(this.selectedSeason.uniqueId, [stringToTranslate.uniqueId]).then(res => {
-            this.loading=false;
-            this.reloadTranslations.emit(null);
-            this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this._stringsSrevice.getString("review_for_translation_success_message")});
-        }).catch(error => {
-            console.log(error);
-            this.loading = false;
-            this._airlockService.navigateToLoginIfSessionProblem(error);
-            this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-
-        });
-    }
-    sendStringForTranslation(stringToTranslate : StringToTranslate){
-        this.loading=true;
-        this._airlockService.sendStringForTranslation(this.selectedSeason.uniqueId, [stringToTranslate.uniqueId]).then(res => {
-            this.loading=false;
-            this.reloadTranslations.emit(null);
-            this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:this._stringsSrevice.getString("sent_for_translation_success_message")});
-        }).catch(error => {
-            console.log(error);
-            this.loading = false;
-            this._airlockService.navigateToLoginIfSessionProblem(error);
-            this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-
-        });
-    }
-    canUserDeleteString(stringToTranslate : StringToTranslate){
-        if(stringToTranslate.stage == 'PRODUCTION'){
-            return this._airlockService.isAdministrator() || this._airlockService.isProductLead() || this._airlockService.isUserHasStringTranslateRole();
-        }else{
-            return !this._airlockService.isViewer() || this._airlockService.isUserHasStringTranslateRole();
-        }
-
-    }
-    canUserChangeProduction(){
-        return (this._airlockService.isProductLead() || this._airlockService.isAdministrator() || this._airlockService.isUserHasStringTranslateRole())
-    }
-    canMarkForTranslation(stringToTranslate : StringToTranslate){
-        if(stringToTranslate.status != 'NEW_STRING'){
-            return false;
-        }
-        if(stringToTranslate.stage == 'PRODUCTION'){
-            return this._airlockService.isAdministrator() || this._airlockService.isProductLead()  || this._airlockService.isUserHasStringTranslateRole();;
-        }else{
-            return !this._airlockService.isViewer()  || this._airlockService.isUserHasStringTranslateRole();
-        }
-    }
-    canReviewForTranslation(stringToTranslate : StringToTranslate){
-        if(stringToTranslate.status != 'READY_FOR_TRANSLATION'){
-            return false;
-        }
-        return this._airlockService.isAdministrator() || this._airlockService.isUserHasStringTranslateRole();
-    }
-    canSendForTranslation(stringToTranslate : StringToTranslate){
-        if(stringToTranslate.status != 'REVIEWED_FOR_TRANSLATION'){
-            return false;
-        }
-        return this._airlockService.isAdministrator() || this._airlockService.isProductLead() || this._airlockService.isUserHasStringTranslateRole();
-    }
-
-    canUserCopyString(){
-        return this._airlockService.isEditor() || this._airlockService.isProductLead() || this._airlockService.isAdministrator() || this._airlockService.isUserHasStringTranslateRole();
-    }
-    canUserExportString(){
-        return this._airlockService.isEditor() || this._airlockService.isProductLead() || this._airlockService.isAdministrator() || this._airlockService.isUserHasStringTranslateRole();
-    }
-
-
-    copyString(stringToCopy : StringToTranslate){
-        this._airlockService.setCopiedStrings([stringToCopy.uniqueId])
-    }
-    exportString(stringToExport: StringToTranslate){
-        this._airlockService.downloadStrings(this.selectedSeason.uniqueId,[stringToExport.uniqueId]);
-    }
-
-    getDeleteColor(str:StringToTranslate) {
-        if (str.stage=='PRODUCTION') {
-            return "rgba(0,0,0,0.2)";
-        } else {
-            return "red";
-        }
-    }
-
-    changeStage(selectedString:StringToTranslate) {
-        let message = "";
-        if (selectedString.stage=='PRODUCTION') {
-            message = 'Are you sure you want to revert the stage of this string to development?';
-        } else {
-            message = 'Are you sure you want to release this string to production?';
-        }
-        message += ` This operation can impact your app in production.`;
-        this.verifyActionModal.actionApproved$.subscribe(
-            astronaut => {
-                this._changeStage(selectedString);
-            });
-        console.log("open verifyActionModal");
-        this.verifyActionModal.open(message,null, VeryfyDialogType.STRING_TYPE);
-
-    }
-    _changeStage(selectedString:StringToTranslate){
-        this.loading=true;
-        this._airlockService.getStringFullInformation(selectedString.uniqueId).then(res => {
-            if(res.stage ==  "DEVELOPMENT"){
-                res.stage = "PRODUCTION";
-            }else {
-                res.stage = "DEVELOPMENT";
-            }
-            this._airlockService.updateStringToTranslation(selectedString.uniqueId,res).then(() => {
-                this.loading = false;
-                this.reloadTranslations.emit(null);
-            }).catch(
-                error => {
-                    console.log(`Failed to revertToDevelopment: ${error}`);
-                    this.loading = false;
-                    this._airlockService.navigateToLoginIfSessionProblem(error);
-                    this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-                }
-            );
-
-        }).catch(error => {
-            this.loading = false;
-            this._airlockService.navigateToLoginIfSessionProblem(error);
-            this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-
-        });
-    }
-
-    getNumberOfSupportedLocales(stringToTranslate : StringToTranslate){
-        // if(this.supportedLocales != null){
-        //     return this.supportedLocales.length;
-        // }else{
-        return stringToTranslate.translations.length;
-        // }
-    }
-    getNumberOfTranslatedLocales(stringToTranslate : StringToTranslate){
-        var counter:number = 0;
-        for(let item of stringToTranslate.translations){
-            if(item.translationStatus == 'TRANSLATED' || item.translationStatus == 'OVERRIDE'){
+    getNumberOfTranslatedLocales(stringToTranslate: StringToTranslate) {
+        let counter: number = 0;
+        for (let item of stringToTranslate.translations) {
+            if (item.translationStatus == 'TRANSLATED' || item.translationStatus == 'OVERRIDE') {
                 counter++;
             }
         }
         return counter;
     }
-    reloadString(event:any){
-        this.reloadTranslations.emit(null);
-    }
-    showEditString(_selectedString:StringToTranslate){
-        this.editStringModal.open(_selectedString);
-    }
-    isSupportedLocale(locale:string){
-        if(!this.supportedLocales){
+
+    isSupportedLocale(locale: string) {
+        if (!this.supportedLocales) {
             return true;
         }
-        return this.supportedLocales.some(x=>x==locale);
+        return this.supportedLocales.some(x => x == locale);
     }
 
-    getStringStatus(status:string): string{
-        if(status == 'TRANSLATION_COMPLETE')
-            return "Translation Completed";
-        if(status == 'IN_TRANSLATION')
-            return "In Translation";
-        if(status == 'NEW_STRING')
-            return "New String";
-        if(status == 'READY_FOR_TRANSLATION'){
-            return "Ready for Review";
-        }
-        if(status == 'REVIEWED_FOR_TRANSLATION'){
-            return "Review Complete";
-        }
-        return status;
-    }
-
-    rowSelected(stringToTranslateID : string) {
+    rowSelected(stringToTranslateID: string) {
         console.log("rowSelected");
         this.curSelectedStringID = stringToTranslateID;
         if (this.isRowSelected(stringToTranslateID)) {
             let index = this.selectedRowsIDs.indexOf(stringToTranslateID);
-            this.selectedRowsIDs.splice(index,1);
+            this.selectedRowsIDs.splice(index, 1);
         } else {
             this.selectedRowsIDs.push(stringToTranslateID);
         }
@@ -313,121 +208,8 @@ export class StringsTableView implements OnInit{
         this.onSelectedChanged.emit(this.selectedRowsIDs);
     }
 
-    isRowSelected(stringToTranslateID: string):boolean {
+    isRowSelected(stringToTranslateID: string): boolean {
         return this.selectedRowsIDs.indexOf(stringToTranslateID) > -1;
     }
-
-    private sortByTranslated = (a:any) => {
-        return this.getNumberOfTranslatedLocales(a);
-    };
-
-    private sortByStatus = (a:any) => {
-        if(a.status == 'NEW_STRING')
-            return 1;
-        if(a.status == 'READY_FOR_TRANSLATION'){
-            return 2;
-        }
-        if(a.status == 'REVIEWED_FOR_TRANSLATION'){
-            return 3;
-        }
-        if(a.status == 'IN_TRANSLATION')
-            return 4;
-        if(a.status == 'TRANSLATION_COMPLETE')
-            return 5;
-        return 10;
-    };
-
-    canShowDelete(){
-        return this._airlockService.isAdministrator;
-    }
-
-    deleteString(strToTranslate: StringToTranslate) {
-        if (strToTranslate.stage != 'PRODUCTION') {
-            this.remove(strToTranslate.uniqueId, strToTranslate.key);
-        }
-    }
-    remove(id:string,name:string){
-
-        let message = 'Are you sure you want to delete this string ('+name+")?";
-        this.modal.confirm()
-            .title(message)
-            .open()
-            .catch(err => console.log("ERROR")) // catch error not related to the result (modal open...)
-            .then(dialog => dialog.result) // dialog has more properties,lets just return the promise for a result.
-            .then(result => {
-                console.log("confirmed");
-                this.loading=true;
-                this._airlockService.deleteStringToTranslation(id).then(()=>{
-                    this.loading=false;
-                    this.reloadTranslations.emit(null);
-                    this._airlockService.notifyDataChanged("success-notification",{title:"Success",message:"String deleted"});
-                }).catch(error => {
-                    console.log(error);
-                    this.loading = false;
-                    this._airlockService.navigateToLoginIfSessionProblem(error);
-                    this._airlockService.notifyDataChanged("error-notification",FeatureUtilsService.parseErrorMessage(error));
-                });
-            }) // if were here ok was clicked.
-            .catch(err => console.log("CANCELED:"+err));
-    }
-
-
-    getTranslationTooltip(translation:string, stage:string, locale:string):string {
-        var toRet = translation;
-        if(toRet == null){
-            toRet = "";
-        }
-        if (this.canUserOverrideLocale(stage)) {
-            if (toRet.length > 0) {
-                toRet += "\n";
-            }
-            toRet = toRet + "Click to override (" +locale+")";
-        }
-        //&#013
-        return toRet;
-    }
-
-    canUserOverrideLocale(stage:string){
-        if(stage == 'PRODUCTION'){
-            return this._airlockService.isAdministrator() || this._airlockService.isProductLead() || this._airlockService.isUserHasStringTranslateRole();
-        }else{
-            return !this._airlockService.isViewer() || this._airlockService.isUserHasStringTranslateRole();
-        }
-    }
-
-    overrideTranslation(stringId:string,translation/*locale:string,str:string*/,key:string, stage:string){
-        //this._stringDetail.overrideTranslation(stringId,locale,str);
-        console.log("STAGE:"+stage);
-        if (!this.canUserOverrideLocale(stage)) {
-            let message = this._stringsSrevice.getString("cannot_modify_production_string");
-            this.modal.alert()
-                .title(message)
-                .open();
-            return;
-        }
-        if(this.sub != null){
-            this.sub.unsubscribe();
-        }
-        this.sub = this.overrideStringModal.stringToOverridsSubject$.subscribe(
-            astronaut => {
-                console.log("changed:"+astronaut);
-                // map[locale] = astronaut;
-                if(astronaut != null) {
-                    translation.translation = astronaut;
-                    translation.translationStatus = "OVERRIDE";
-                }else {
-                    translation.translationStatus = "NOT_TRANSLATED";
-                    translation.translation = null;
-                }
-                this.cd.markForCheck();
-            });
-        this.overrideStringModal.open(translation.translation,stringId,translation.locale,key, translation.translationStatus=='OVERRIDE');
-    }
-
-    getLocaleTitle(locale:string): string {
-        if(this.isShowingTranslation(locale)){
-            return "Click to hide translations"
-        }
-        return "Click to show translations";
-    }
+    loaded: Promise<boolean>;
 }

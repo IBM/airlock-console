@@ -1,0 +1,213 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="queryConditionUpdated($event)"
+                                     (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+                                    (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<!---->
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header *ngIf="job != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     {{title}} - {{job.name}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body [class.noAnalytics]="!canUseAnalytics">
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                   <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+                    <span *ngIf="job != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="statusTabActive" (click)="selectTab('Status')">{{getString('show_job_status_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!statusTabActive" (click)="selectTab('Status')">{{getString('show_job_status_tab_heading')}}</button>
+                    </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                    <div #general *ngIf="generalTabActive">
+                            <span>
+                                <div class="tabContentBackgroud tab-div-container">
+                                    <div class="box">
+                                        <div class="row1">
+                                            <div class="col-md-12">
+                                                <div class="row no-margin " *ngIf="job != null">
+                                    <label for="input01" class="control-label">Name</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('show_dataimport_name')"
+                                                     [title]="getString('show_dataimport_name_title')"></airlock-tooltip>
+                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input01" placeholder=""
+                                           [(ngModel)]="job.name" class="form-control blackText" tabindex="1">
+                                </div>
+                                                <div class="row no-margin " *ngIf="job != null">
+                                    <label for="input0101" class="control-label">Status</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_cohort_number_of_users')"
+                                                     [title]="getString('edit_cohort_number_of_users_title')"></airlock-tooltip>
+                                    <input type="text" disabled id="input0104" placeholder="" [(ngModel)]="job.status"
+                                           class="form-control blackText" tabindex="1">
+                                </div>
+                                                <div class="row no-margin " *ngIf="job != null" style="margin-bottom: 8px;">
+                                    <label for="input0018" class="control-label">Job ID</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_experiment_creator')"
+                                                     [title]="getString('edit_experiment_creator_title')"></airlock-tooltip>
+                                    <input type="text" id="input0018" disabled placeholder="" [(ngModel)]="job.uniqueId"
+                                           class="form-control blackText">
+                                </div>
+                                                <div class="row no-margin">
+                                    <div class="col-md-6 no-padding-left">
+                                        <div class="no-margin " *ngIf="job != null">
+                                            <label for="input80" class="control-label">Creation Date</label>
+                                            <airlock-tooltip class="endFlexContainer"
+                                                             [content]="getString('edit_experiment_creation_date')"
+                                                             [title]="getString('edit_experiment_creation_date_title')"></airlock-tooltip>
+                                            <input type="text" id="input80" disabled placeholder=""
+                                                   [value]="creationDate | date:'medium'"
+                                                   class="form-control blackText">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 no-padding-right">
+                                        <div class="no-margin " *ngIf="job != null">
+                                            <label for="input82" class="control-label">Last Modified</label>
+                                            <airlock-tooltip class="endFlexContainer"
+                                                             [content]="getString('edit_experiment_last_modified')"
+                                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                                            <input type="text" id="input82" disabled placeholder=""
+                                                   [value]="lastModificationDate | date:'medium'"
+                                                   class="form-control blackText">
+                                        </div>
+                                    </div>
+                                </div>
+                                                <div class="row no-margin " *ngIf="job != null">
+                                                        <div class="col-md-12 no-padding-right">
+                                                            <div class="no-margin " *ngIf="job != null" style="margin-bottom: 2px;">
+                                                                <label for="input008" class="control-label">Creator</label>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_experiment_creator')"
+                                                                                 [title]="getString('edit_experiment_creator_title')"></airlock-tooltip>
+                                                                <input type="text" id="input008" disabled placeholder=""
+                                                                       [(ngModel)]="job.creator" class="form-control blackText">
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                <div class="row no-margin">
+                                    <div class="col-md-6 no-padding-left">
+                                        <div class="no-margin " *ngIf="job != null">
+                                            <label for="input86" class="control-label">Import Type</label>
+                                            <airlock-tooltip class="endFlexContainer"
+                                                             [content]="getString('edit_experiment_creation_date')"
+                                                             [title]="getString('edit_experiment_creation_date_title')"></airlock-tooltip>
+                                            <input type="text" id="input86" disabled placeholder="" [value]="importType"
+                                                   class="form-control blackText">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 no-padding-right">
+                                        <div class="no-margin " *ngIf="job != null">
+                                            <label for="input88" class="control-label">Destination Table</label>
+                                            <airlock-tooltip class="endFlexContainer"
+                                                             [content]="getString('edit_experiment_last_modified')"
+                                                             [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                                            <input type="text" id="input88" disabled placeholder=""
+                                                   [value]="destinationTableName" class="form-control blackText">
+                                        </div>
+                                    </div>
+                                </div>
+                                                <div class="row no-margin " *ngIf="job != null" style="margin-bottom: 8px;">
+                                    <label for="input0028" class="control-label">S3 Path</label>
+                                    <airlock-tooltip class="endFlexContainer"
+                                                     [content]="getString('edit_experiment_creator')"
+                                                     [title]="getString('edit_experiment_creator_title')"></airlock-tooltip>
+                                    <input type="text" id="input0028" disabled placeholder="" [(ngModel)]="job.s3File"
+                                           class="form-control blackText">
+                                </div>
+                                                <div class="row no-margin " *ngIf="job != null">
+                                <label for="input55" class="control-label">Description</label>
+                                <airlock-tooltip class="endFlexContainer"
+                                                 [content]="getString('edit_experiment_description')"
+                                                 [title]="getString('edit_experiment_description_title')"></airlock-tooltip>
+                                <textarea id="input55" [disabled]="isOnlyDisplayMode" placeholder=""
+                                          [(ngModel)]="job.description" value="FEATURE"
+                                          class="form-control description-text blackText"
+                                          style="height: 70px; resize:none" tabindex="8"></textarea>
+                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                    </div>
+                    <div #statusTab *ngIf="statusTabActive">
+                        <div class="no-margin  tab-div-container" style="margin-bottom: 0">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="no-margin " *ngIf="job != null">
+                                        <label for="input031" class="control-label">Status</label>
+                                        <airlock-tooltip class="endFlexContainer" [content]="getString('show_dataimport_name')"
+                                                         [title]="getString('show_dataimport_name_title')"></airlock-tooltip>
+                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input032" placeholder=""
+                                               [(ngModel)]="job.status" class="form-control blackText" tabindex="1">
+                                    </div>
+                                    <div class="no-margin " *ngIf="job != null">
+                                        <label for="input0101" class="control-label">Status Message</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_cohort_number_of_users')"
+                                                         [title]="getString('edit_cohort_number_of_users_title')"></airlock-tooltip>
+                                        <input type="text" disabled id="input0101" placeholder=""
+                                               [(ngModel)]="job.statusMessage" class="form-control blackText" tabindex="1">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="no-margin " *ngIf="job != null">
+                                        <label for="input031" class="control-label">Detailed Message</label>
+                                        <airlock-tooltip class="endFlexContainer" [content]="getString('show_dataimport_name')"
+                                                         [title]="getString('show_dataimport_name_title')"></airlock-tooltip>
+                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input031" placeholder=""
+                                               [(ngModel)]="job.detailedMessage" class="form-control blackText" tabindex="1">
+                                    </div>
+                                    <div class="no-margin " *ngIf="job != null">
+                                        <label for="input0101" class="control-label">Number of users affected</label>
+                                        <airlock-tooltip class="endFlexContainer"
+                                                         [content]="getString('edit_cohort_number_of_users')"
+                                                         [title]="getString('edit_cohort_number_of_users_title')"></airlock-tooltip>
+                                        <input type="text" disabled id="input0102" placeholder=""
+                                               [ngModel]="job.successfulImports | number" class="form-control blackText"
+                                               tabindex="1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="valueExpressionRow"></div>
+                            <span>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="input031" class="control-label">Affected Columns</label>
+                                </div>
+
+                            </div>
+
+                        <div #mytesteditor ace-editor id="input56"
+                             [mode]="'javascript'"
+                             [markdown]="affectedColumsStr" [readonly]="isOnlyDisplayMode"
+                             [heightSize]="aceEditorRuleHeight" [sql]="true">
+                        </div>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="job != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+    </nb-card-footer>
+</nb-card>
+<!--    </modal>-->

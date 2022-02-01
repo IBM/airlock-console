@@ -1,5 +1,5 @@
-exports.client_id = "clinet_id";
-exports.client_secret = "client_secret";
+exports.client_id = "ZDFhMDExMDgtZjJiMC00";
+exports.client_secret = "YzA1NDBkNzktNzIwOC00";
 exports.authorization_url = "https://prepiam.toronto.ca.ibm.com/idaas/oidc/endpoint/default/authorize";
 exports.token_url = "https://prepiam.toronto.ca.ibm.com/idaas/oidc/endpoint/default/token";
 exports.issuer_id = "https://prepiam.toronto.ca.ibm.com";

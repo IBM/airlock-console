@@ -1,12 +1,10 @@
-
-
 export class IndexingInfo {
 
     owner: string;
     dashboardURL: string;
     missingDashboardExplanation: string;
     productId: string;
-    ranges:IndexRange[];
+    ranges: IndexRange[];
     endDate: number;
     description: string;
     variants: string[];
@@ -14,16 +12,16 @@ export class IndexingInfo {
     indexExperiment: boolean;
     controlGroupVariants: string[];
     stage: string;
-    indexingProgress:IndexingProgress;
-    uniqueUsers:{string:number};
+    indexingProgress: IndexingProgress;
+    uniqueUsers: { string: number };
     name: string;
     experimentId: string;
     hypothesis: string;
     variantsDescriptions: string[];
     startDate: number;
 
-    static clone(info: IndexingInfo) : IndexingInfo {
-        let toRet:IndexingInfo = new IndexingInfo();
+    static clone(info: IndexingInfo): IndexingInfo {
+        let toRet: IndexingInfo = new IndexingInfo();
         if (info) {
             toRet.owner = info.owner;
             toRet.dashboardURL = info.dashboardURL;
@@ -38,7 +36,7 @@ export class IndexingInfo {
             toRet.controlGroupVariants = IndexingInfo.duplicateArrayString(info.controlGroupVariants);
             toRet.stage = info.stage;
             toRet.indexingProgress = IndexingProgress.clone(info.indexingProgress);
-            if(info.uniqueUsers != null) {
+            if (info.uniqueUsers != null) {
                 toRet.uniqueUsers = JSON.parse(JSON.stringify(info.uniqueUsers));
             }
             toRet.name = info.name;
@@ -53,9 +51,9 @@ export class IndexingInfo {
 
     }
 
-    static duplicateArrayString(array:Array<string>): Array<string> {
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
@@ -63,9 +61,9 @@ export class IndexingInfo {
         return arr;
     }
 
-    static duplicateArrayRange(array:Array<IndexRange>): Array<IndexRange> {
+    static duplicateArrayRange(array: Array<IndexRange>): Array<IndexRange> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(IndexRange.clone(x));
             })
@@ -75,9 +73,9 @@ export class IndexingInfo {
         return arr;
     }
 
-    static duplicateArray(array:Array<any>): Array<any> {
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })
@@ -86,14 +84,14 @@ export class IndexingInfo {
     }
 
 
-
 }
 
 export class IndexRange {
     start: number;
-    end:number;
-    public static clone(other:IndexRange):IndexRange{
-        var retObj:IndexRange = new IndexRange();
+    end: number;
+
+    public static clone(other: IndexRange): IndexRange {
+        var retObj: IndexRange = new IndexRange();
         retObj.start = other.start;
         retObj.end = other.end;
         return retObj;
@@ -101,11 +99,12 @@ export class IndexRange {
 }
 
 export class IndexingProgress {
-    totalNumberOfBuckets:number;
-    numberOfDoneBuckets:number;
-    numberOfErrorBuckets:number;
-    public static clone(other:IndexingProgress):IndexingProgress{
-        var retObj:IndexingProgress = new IndexingProgress();
+    totalNumberOfBuckets: number;
+    numberOfDoneBuckets: number;
+    numberOfErrorBuckets: number;
+
+    public static clone(other: IndexingProgress): IndexingProgress {
+        var retObj: IndexingProgress = new IndexingProgress();
         if (other) {
             retObj.totalNumberOfBuckets = other.totalNumberOfBuckets;
             retObj.numberOfDoneBuckets = other.numberOfDoneBuckets;

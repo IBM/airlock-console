@@ -1,0 +1,8 @@
+    <nb-card>
+        <nb-card-header *ngIf="title?.length > 0">{{ title }}</nb-card-header>
+        <nb-card-body > {{ message }}</nb-card-body>
+        <nb-card-footer>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="submit(false)">{{defaultTitle}}</button>
+            <button type="button" *ngIf="shouldDisplaySubmit" class="btn btn-primary" (click)="submit(true)">{{defaultActionTitle}}</button>
+        </nb-card-footer>
+    </nb-card>

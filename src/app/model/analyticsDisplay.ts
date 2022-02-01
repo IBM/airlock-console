@@ -1,4 +1,4 @@
-import { Rule } from './rule';
+import {Rule} from './rule';
 
 export class AnalyticsDisplay {
     analyticsDataCollection: AnalyticsDataCollection = null;
@@ -7,10 +7,11 @@ export class AnalyticsDisplay {
     seasonId: string = "";
     rolloutPercentage: number = 0;
 
-    constructor(){
+    constructor() {
         this.analyticsDataCollection = new AnalyticsDataCollection();
     }
 }
+
 export class AnalyticsDataCollection {
     analyticsDataCollectionByFeatureNames: AnalyticsDataCollectionByFeatureNames[];
     //inputFieldsForAnalytics: string[];
@@ -18,7 +19,7 @@ export class AnalyticsDataCollection {
     developmentItemsReportedToAnalytics: number;
     productionItemsReportedToAnalytics: number;
 
-    constructor(){
+    constructor() {
         this.analyticsDataCollectionByFeatureNames = [];
         this.inputFieldsForAnalytics = [];
     }
@@ -33,12 +34,13 @@ export class AnalyticsDataCollectionByFeatureNames {
     id: string;
     name: string;
     branchName: string;
-    warning:string;
+    warning: string;
     sendToAnalytics: boolean;
     configurationRules: ConfigurationRules[];
     attributes: Atributes[];
     orderingRules: OrderingRules[];
-    constructor(){
+
+    constructor() {
         this.configurationRules = [];
         this.attributes = [];
         this.orderingRules = [];
@@ -49,10 +51,12 @@ export class ConfigurationRules {
     name: string;
     branchName: string;
 }
+
 export class OrderingRules {
     name: string;
     branchName: string;
 }
+
 export class Atributes {
     name: string;
     branchName: string;

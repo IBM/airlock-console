@@ -1,0 +1,290 @@
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+    <nb-card-header id="editModal">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close(null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+            <span>
+                     <span *ngIf="isDirty()">*</span>{{title}} - {{poll.pollId}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+
+                <span *ngIf="poll != null">
+                    <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="ruleTabActive" (click)="selectTab('Rule')">Rule</button>
+                    <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!ruleTabActive" (click)="selectTab('Rule')">Rule</button>
+                </span>
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                                    <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin" *ngIf="poll != null">
+                                                    <label for="input05" class="control-label">Name</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_name')"
+                                                                     [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input05" placeholder=""
+                                                           [(ngModel)]="poll.pollId" class="form-control blackText" tabindex="1" disabled>
+                                                </div>
+
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin"
+                                                     *ngIf="poll != null">
+                                                    <label for="input06" class="control-label">Title</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_poll_title')"
+                                                                     [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                    <textarea id="input06" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                              [(ngModel)]="poll.title" value="poll"
+                                                              class="form-control description-text blackText"
+                                                              style="height: 68px;resize:none" tabindex="8"></textarea>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" id="checkboxname" class="form-checkbox blackText check-all"
+                                                   [(ngModel)]="poll.usedOnlyByPushCampaign" name="checkboxname">
+                                            <label class="control-label answer-label">To be delivered only by push campaign</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="no-margin " *ngIf="poll != null">
+                                                        <label for="input02" class="control-label">Stage</label>
+                                                        <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_stage')"
+                                                                         [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                        <input type="text" id="input02" placeholder="" [(ngModel)]="poll.stage"
+                                                               class="form-control blackText" disabled>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="no-margin " *ngIf="poll != null">
+                                                    <label for="input19" class="control-label">Minimum app version</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_poll_min_app_version')"
+                                                                     [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input19"
+                                                           placeholder="" [(ngModel)]="poll.minVersion"
+                                                           class="form-control blackText " tabindex="5">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="no-margin " *ngIf="poll != null">
+                                                    <label for="input08" class="control-label">Max app version</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_poll_max_app_version')"
+                                                                     [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                    <input type="text" [disabled]="isOnlyDisplayMode" id="input08"
+                                                           placeholder="" [(ngModel)]="poll.maxVersion"
+                                                           class="form-control blackText " tabindex="5">
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                                <div class="no-margin " *ngIf="poll != null">
+                                                    <label for="input07" class="control-label">Rollout percentage</label>
+                                                    <airlock-tooltip class="endFlexContainer" [content]="getString('edit_poll_rollout')"
+                                                                     [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                                                    <div class="input-group rollout">
+                                                        <input id="input07" [disabled]="isOnlyDisplayMode"
+                                                               aria-label="Rollout percentage"
+                                                               class="form-control with-success-addon numberInput" type="number"
+                                                               step="0.0001" min="0" max="100"
+                                                               [(ngModel)]="poll.rolloutPercentage" tabindex="3"
+                                                               style="width: 100px;height: 35px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="no-margin " *ngIf="poll != null">
+                                                    <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="align-right no-pa-top"><label class="control-label">Enabled</label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="align-right">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="poll.enabled"
+                                                                    ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="no-margin" *ngIf="poll!=null">
+                                                <label for="input222" class="control-label">Number of views before dismissal</label>
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('add_poll_group')"></airlock-tooltip>
+                                                <input type="number" [disabled]="isOnlyDisplayMode" id="input222"
+                                                       placeholder="" [(ngModel)]="poll.numberOfViewsBeforeDismissal"
+                                                       step="1"
+                                                       class="form-control blackText " tabindex="5">
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="no-margin" *ngIf="poll!=null">
+                                                <label for="select05" class="control-label">User groups</label>
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('add_poll_group')"></airlock-tooltip>
+                                                <br>
+                                                <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="poll.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="no-margin" *ngIf="poll!=null">
+                                                <label for="select05" class="control-label">Start date</label>
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('add_poll_group')"></airlock-tooltip>
+                                                <span class="flexcontainer">
+<!--                                                    <input #inputStartDate [disabled]="isOnlyDisplayMode" nbInput placeholder="Unlimited"-->
+<!--                                                           class="no-padding-middle date-row date-picker form-control with-success-addon no-width right-margin"-->
+<!--                                                           [nbDatepicker]="ngmodelStart" [ngModel]="poll?.startDate" (ngModelChange)="startDateChanged($event)">-->
+<!--                                                    <nb-datepicker #ngmodelStart></nb-datepicker>-->
+                                                    <ngx-datetime-picker
+                                                            [disableButton]="isOnlyDisplayMode"
+                                                            [disablePicker]="isOnlyDisplayMode"
+                                                            [use24HourClock]="true"
+                                                            [selectedDateTime]="startDate"
+                                                            (selectedDateTimeChange)="startDateChanged($event)"
+                                                    ></ngx-datetime-picker>
+                                                    <button type="button" [disabled]="isOnlyDisplayMode"
+                                                                    class="btn btn-default date-row" (click)="clearStartDate()">
+                                                        Clear
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="no-margin" *ngIf="poll!=null">
+                                                <label for="select05" class="control-label">End date</label>
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('add_poll_group')"></airlock-tooltip>
+                                                <span class="flexcontainer">
+<!--                                                    <input #inputEndDate [disabled]="isOnlyDisplayMode" nbInput placeholder="Unlimited"-->
+<!--                                                           class="no-padding-middle date-row date-picker form-control with-success-addon no-width right-margin"-->
+<!--                                                           [nbDatepicker]="ngmodel" [(ngModel)]="endDate" (ngModelChange)="endDateChanged($event)">-->
+<!--                                                    <nb-datepicker format="YYYY-MM-DD HH:mm:ss" #ngmodel></nb-datepicker>-->
+                                                    <ngx-datetime-picker
+                                                            [disableButton]="isOnlyDisplayMode"
+                                                            [disablePicker]="isOnlyDisplayMode"
+                                                            [use24HourClock]="true"
+                                                            [selectedDateTime]="endDate"
+                                                            (selectedDateTimeChange)="endDateChanged($event)"
+                                                    ></ngx-datetime-picker>
+                                                    <button type="button" [disabled]="isOnlyDisplayMode"
+                                                            class="btn btn-default date-row" (click)="clearEndDate()">
+                                                        Clear
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="no-margin" *ngIf="poll != null">
+                                                <label for="input09" class="control-label">Description</label>
+                                                <textarea id="input09" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                          [(ngModel)]="poll.description" value="poll"
+                                                          class="form-control description-text blackText"
+                                                          style="height: 68px;resize:none" tabindex="8"></textarea>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="no-margin " *ngIf="poll != null">
+                                                        <label for="input11" class="control-label">Creator</label>
+                                                        <input type="text" id="input11" disabled placeholder=""
+                                                               [(ngModel)]="poll.creator" class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="no-margin" *ngIf="poll != null">
+                                                        <label for="input12" class="control-label">Creation date</label>
+                                                        <input type="text" id="input12" disabled placeholder=""
+                                                               [value]="creationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="no-margin " *ngIf="poll != null">
+                                                        <label for="input13" class="control-label">Last modified</label>
+                                                        <input type="text" id="input13" disabled placeholder=""
+                                                               [value]="lastModificationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                </div>
+                <div tabTitle="Rule" #rule *ngIf="poll != null && ruleTabActive">
+                        <span>
+                            <div class="no-margin  tab-div-container">
+                                <span class="flexcontainer">
+                                    <h5 class="modal-title">
+                                        {{getString('edit_variant_rule_tab_details')}}
+                                        <br>
+                                        <button class="modalLink modalLinkButton"
+                                                (click)="showRuleHelp()">{{getString('edit_variant_rule_tab_learn_more')}}</button>
+                                    </h5>
+                                </span>
+                                <span>
+                        <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorRuleExpand()">
+                            <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div *ngIf="!loading" #mytesteditor ace-editor class="ace-github" id="input56" (onTextChanged)="ruleUpdated($event)"
+                             [markdown]="poll.rule.ruleString" [readonly]="isOnlyDisplayMode"
+                             [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo"
+                             [mode]="'javascript'"
+                             [heightSize]="aceEditorRuleHeight">
+                        </div>
+                    </span>
+                            </div>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer *ngIf="poll != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode && showDeepLink" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()"
+                [disabled]="isOnlyDisplayMode && !allowChangeParent">Save
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Cancel</button>
+    </nb-card-footer>
+</nb-card>

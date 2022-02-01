@@ -1,4 +1,3 @@
-
 export class Utility {
     /*
      {
@@ -14,11 +13,11 @@ export class Utility {
     seasonId: string;
     stage: string;
     type: string;
-    name:string;
+    name: string;
     utility: string;
     lastModified: number;
 
-    constructor(u?:Utility){
+    constructor(u?: Utility) {
 
         if (u) {
             this.uniqueId = u.uniqueId;

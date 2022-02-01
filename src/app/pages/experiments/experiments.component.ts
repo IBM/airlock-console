@@ -1,40 +1,30 @@
-import {Component, Injectable, trigger, state, transition, animate, style, ElementRef} from '@angular/core';
+import {Component, EventEmitter, HostListener, Output, ViewChild} from '@angular/core';
 import {Feature} from "../../model/feature";
 import {AirlockService} from "../../services/airlock.service";
 import {Product} from "../../model/product";
 import {Season} from "../../model/season";
-import {AddFeatureModal} from "../../theme/airlock.components/addFeatureModal/addFeatureModal.component";
-import {EditFeatureModal} from "../../theme/airlock.components/editFeatureModal/editFeatureModal.component";
-import {ViewChild} from "@angular/core";
-import {TransparentSpinner} from "../../theme/airlock.components/transparentSpinner/transparentSpinner.service";
-import {ReorderMXGroupModal} from "../../theme/airlock.components/reorderMXGroupModal/reorderMXGroupModal.component";
-import {AddFeatureToGroupModal} from "../../theme/airlock.components/addFeatureToGroupModal/addFeatureToGroupModal.component";
-import {AddConfigurationModal} from "../../theme/airlock.components/addConfigurationModal/addConfigurationModal.component";
 import {GlobalState} from "../../global.state";
-import {ImportFeaturesModal} from "../../theme/airlock.components/importFeaturesModal/importFeaturesModal.component";
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
 import {Analytic} from "../../model/analytic";
-import {wlAttributesModal} from "../../theme/airlock.components/wlAttributesModal/wlAttributesModal.component";
-import {EditInputSchemaModal} from "../../theme/airlock.components/editInputSchemaModal/editInputSchemaModal.component";
-import {DocumentlinksModal} from "../../theme/airlock.components/documentlinksModal/documentlinksModal.component";
-import {wlContextModal} from "../../theme/airlock.components/wlContextModal/wlContextModal.component";
 import {FeatureUtilsService} from "../../services/featureUtils.service";
 import {AnalyticsDisplay} from "../../model/analyticsDisplay";
 import {AnalyticsQuota} from "../../model/analyticsQuota";
 import {Experiment} from "../../model/experiment";
-import {AddExperimentModal} from "../../theme/airlock.components/addExperimentModal/addExperimentModal.component";
 import {StringsService} from "../../services/strings.service";
 import {ExperimentsContainer} from "../../model/experimentsContainer";
-import {ReorderExperimentsModal} from "../../theme/airlock.components/reorderExperimentsModal/reorderExperimentsModal.component";
-import {ReorderVariantsModal} from "../../theme/airlock.components/reorderVariantsModal/reorderVariantsModal.component";
 import {Variant} from "../../model/variant";
-import {ShowDashboardModal} from "../../theme/airlock.components/showDashboardModal/showDashboardModal.component";
-import {ToastrService} from "ngx-toastr";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NbDialogService, NbGlobalLogicalPosition, NbToastrService} from "@nebular/theme";
+import {AddExperimentModal} from "../../@theme/modals/addExperimentModal";
+import {ReorderExperimentsModal} from "../../@theme/modals/reorderExperimentsModal";
+import {ActivatedRoute} from "@angular/router";
+import {EditExperimentModal} from "../../@theme/modals/editExperimentModal";
+import {EditVariantModal} from "../../@theme/modals/editVariantModal";
+import {ExperimentVariantPair} from "../../model/experimentVariantPair";
+
 @Component({
     selector: 'experimentsPage',
-    providers: [TransparentSpinner,FeatureUtilsService],
-    styles: [require('./experiments.scss'), require('./sideNavStyle.scss')],
-    template: require('./experiments.html'),
+    styleUrls: ['./experiments.scss', './sideNavStyle.scss'],
+    templateUrl: './experiments.html',
     animations: [
         trigger('slideInOut', [
             state('in', style({
@@ -51,25 +41,20 @@ import {ToastrService} from "ngx-toastr";
 
 
 export class ExperimentsPage {
-    @ViewChild('addExperimentModal') _addExperimentModal : AddExperimentModal;
-    @ViewChild('verifyActionModal')
-    verifyActionModal:  VerifyActionModal;
+    @ViewChild("editInline") editExperimentInline: EditExperimentModal;
+    @ViewChild("editVariantInline") editVarianttInline: EditVariantModal;
+    inlineMode: boolean = false;
+    inlineVariantMode: boolean = false;
 
-    @ViewChild('reorderExperimentsModal') _reorderExperimentsModal : ReorderExperimentsModal;
-    @ViewChild('reorderVariantsModal') _reorderVariantsModal : ReorderVariantsModal;
-
-    public checkModel:any = {left: false, middle: true, right: false};
+    public checkModel: any = {left: false, middle: true, right: false};
     //selectedSeason: Season;
-    possibleUserGroupsList :Array<string> = [];
-    //selectedEditedFeature:Feature;
+    possibleUserGroupsList: Array<string> = [];
     valid: boolean = true;
     showConfig: boolean = true;
     showDevFeatures: boolean = true;
     showDisabled: boolean = true;
-    filterlistDict: {string: Array<string>} = {string:[]};
+    filterlistDict: { string: Array<string> } = {string: []};
     editDialogOpen: boolean = false;
-    //rootId:string = "";
-    // experiments: Array<Experiment> = [];
     experimentsContainer: ExperimentsContainer;
     selectedProduct: Product;
     loading: boolean = false;
@@ -77,19 +62,24 @@ export class ExperimentsPage {
     filteredItems: Array<string> = new Array<string>();
     showDialog = false;
     searchQueryString: string = null;
-    analyticDataForDisplay:AnalyticsDisplay;
+    analyticDataForDisplay: AnalyticsDisplay;
     selectedId = null;
     selectedIndex = -1;
     scrolledToSelected = false;
-    totalAnaliticsQuota:AnalyticsQuota;
-    analyticData:Analytic;
-    private DUMMY_APP_MAX_VERSION : string = '100';
+    totalAnaliticsQuota: AnalyticsQuota;
+    analyticData: Analytic;
+    private DUMMY_APP_MAX_VERSION: string = '100';
     showAnalytics: boolean = true;
 
+    public status: { isopen: boolean } = {isopen: false};
+    private pathExperimentId: any;
+    private pathVariantId: any;
 
-    public status: {isopen: boolean} = {isopen: false};
-    constructor(private _airLockService:AirlockService,
-                private _appState: GlobalState, private _stringsSrevice: StringsService,private toastrService: ToastrService) {
+    constructor(private _airlockService: AirlockService,
+                private _appState: GlobalState, private _stringsSrevice: StringsService,
+                private toastrService: NbToastrService,
+                private modalService: NbDialogService,
+                private route: ActivatedRoute) {
         this.loading = true;
     }
 
@@ -97,31 +87,33 @@ export class ExperimentsPage {
         this.editDialogOpen = isOpen;
     }
 
-    isShowOptions(){
-        if(this.selectedProduct == null){
+    isShowOptions() {
+        if (this.selectedProduct == null) {
             return false;
         }
-        return (!this._airLockService.isViewer());
+        return (!this._airlockService.isViewer());
     }
 
-    isViewer():boolean {
-        return this._airLockService.isViewer();
+    isViewer(): boolean {
+        return this._airlockService.isViewer();
     }
 
 
-    toggleDataCollectionDetails(){
+    toggleDataCollectionDetails() {
         this.showDialog = !this.showDialog;
     }
-    initData(currentSeason: Season, isSeasonLatest:boolean) {
+
+    initData(currentSeason: Season, isSeasonLatest: boolean) {
 
     }
 
-    hasSomeData():boolean {
+    hasSomeData(): boolean {
         if (this.searchQueryString && this.searchQueryString.length > 0) {
             return (this.filteredItems.length) > 0;
         }
         return true;
     }
+
     getWhitelistCount() {
         let count = 0;
         if (this.analyticDataForDisplay && this.analyticDataForDisplay.analyticsDataCollection) {
@@ -139,22 +131,14 @@ export class ExperimentsPage {
     }
 
 
-    static getCurrentProductFromSeason(products:Product[], currentSeason:Season): Product {
+    static getCurrentProductFromSeason(products: Product[], currentSeason: Season): Product {
         if (currentSeason) {
-            console.log("trying to find products! - products:");
-            console.log(products);
-            console.log("season's productID:"+currentSeason.productId);
             if (products.length > 0) {
                 console.log("products.length > 0!");
                 for (let p of products) {
-                    let currProd:Product = p;
-                    console.log(currProd.uniqueId);
-                    console.log(currentSeason.productId);
+                    let currProd: Product = p;
                     if (currProd.uniqueId == currentSeason.productId) {
-                        console.log("yay");
                         return currProd;
-                    } else {
-                        console.log("nah");
                     }
                 }
             }
@@ -167,59 +151,94 @@ export class ExperimentsPage {
             return null;
         }
     }
-    static getCurrentSeasonFromSeason(seasons: Season[], currentSeason: Season) : Season {
+
+    static getCurrentSeasonFromSeason(seasons: Season[], currentSeason: Season): Season {
         if (currentSeason) {
             for (let s of seasons) {
-                let currSeas:Season = s;
+                let currSeas: Season = s;
                 if (currSeas.uniqueId == currentSeason.uniqueId) {
                     return currSeas;
                 }
             }
         }
         if (seasons.length > 0) {
-            return seasons[seasons.length-1];
+            return seasons[seasons.length - 1];
         } else {
             return null;
         }
     }
+
     ngOnInit() {
-        this.showAnalytics = this._airLockService.canUseAnalytics();
+        this.showAnalytics = this._appState.canUseAnalytics();
         //let currSeason = this._appState.getData('features.currentSeason');
         let isLatestStr = this._appState.getData('features.isLatestSeason');
         let currProduct = this._appState.getData('features.currentProduct');
-        console.log("got saved season!!!");
-        //console.log(currSeason);
         //this.selectedSeason = currSeason;
         // this.initData(currSeason, isLatest);
         this.onProductSelection(currProduct);
-        this._appState.subscribe('features.currentProduct','exp',(product) => {
+        this._appState.subscribe('features.currentProduct', 'exp', (product) => {
             this.onProductSelection(product);
         });
-    }
-    ngOnDestroy() {
-        this._appState.unsubcribe('features.currentProduct','exp');
-    }
-    onProductSelection(product:Product) {
-        this.selectedProduct = product;
-        this.showAnalytics = this._airLockService.canUseAnalytics();
-        this._airLockService.getUserGroups(this.selectedProduct).then(response  => {
-            console.log(response);
-            this.possibleUserGroupsList = response.internalUserGroups;
+        this.route.params.subscribe(params => {
+            let prodId = params.prodId;
+            let seasonId = params.seasonId;
+            let branchId = params.branchId;
+            let experimentId = params.experimentId;
+            let variantId = params.variantId;
+
+            if (prodId && seasonId && branchId) {
+                console.log("going to edit mode")
+                this._appState.notifyDataChanged('features.pathBranchId', branchId);
+                this._appState.notifyDataChanged('features.pathSeasonId', seasonId);
+                this._appState.notifyDataChanged('features.pathProductId', prodId);
+                this.pathExperimentId = experimentId;
+                this.pathVariantId = variantId;
+            } else {
+                this.pathExperimentId = null;
+                this.pathVariantId = null;
+            }
         });
-        this.getExperiments();
     }
 
-    getExperiments() {
-        if(!this._airLockService.getCapabilities().includes("EXPERIMENTS")){
-            this.loading = false;
-            this._airLockService.redirectToFeaturesPage();
-            return;
+    ngOnDestroy() {
+        this._appState.unsubcribe('features.currentProduct', 'exp');
+    }
+
+    onProductSelection(product: Product) {
+        if (product.uniqueId != this.selectedProduct?.uniqueId || this.experimentsContainer == null) {
+            this.selectedProduct = product;
+            this.showAnalytics = this._appState.canUseAnalytics();
+            this._airlockService.getUserGroups(this.selectedProduct).then(response => {
+                console.log(response);
+                this.possibleUserGroupsList = response.internalUserGroups;
+            });
+            this.getExperiments();
         }
+    }
+
+    getExperiments(item: any = null) {
         if (this.selectedProduct) {
             this.loading = true;
-            this._airLockService.getExperiments(this.selectedProduct.uniqueId).then((container) => {
+            this._airlockService.getExperiments(this.selectedProduct.uniqueId).then((container) => {
                 // this.experiments = products;
                 this.experimentsContainer = container;
+                if (item != null) {
+                    if (item instanceof Experiment){
+                        this.showEditInline(this.getItemWithId((item as Experiment).uniqueId));
+                    }
+                } else if (this.pathExperimentId) {
+                    let pathExperiment = this.getItemWithId(this.pathExperimentId);
+                    if (pathExperiment) {
+                        this.showEditExperiment(pathExperiment);
+                    }
+                    this.pathExperimentId = null;
+                } else if (this.pathVariantId){
+                    let pathVariant = this.getvariantWithId(this.pathVariantId);
+                    if (pathVariant) {
+                        this.showEditVariant(pathVariant);
+                    }
+                    this.pathExperimentId = null;
+                }
                 this.loading = false;
             }).catch(
                 error => {
@@ -227,12 +246,18 @@ export class ExperimentsPage {
                 }
             );
         }
-
     }
 
+    getItemWithId(fId: string): Experiment {
+        for (let experiment of this.experimentsContainer.experiments) {
+            if (experiment.uniqueId === fId){
+                return experiment
+            }
+        }
+        return null;
+    }
 
-    experimentChangedStatus(expID:string) {
-        console.log("variant changed status:"+expID);
+    experimentChangedStatus(expID: string) {
         var index = this.openExperiments.indexOf(expID, 0);
         if (index > -1) {
             this.openExperiments.splice(index, 1);
@@ -241,18 +266,33 @@ export class ExperimentsPage {
         }
     }
 
-    isCellOpen(expID:string): boolean {
+    openExperimentCell(expID: string) {
+        var index = this.openExperiments.indexOf(expID, 0);
+        if (index == -1) {
+            this.openExperiments.push(expID);
+        }
+    }
+
+    isCellOpen(expID: string): boolean {
         var index = this.openExperiments.indexOf(expID, 0);
         return index > -1;
     }
 
-    public isShowAddExperiment(){
-        return !this._airLockService.isViewer();
+    public isShowAddExperiment() {
+        return !this._airlockService.isViewer();
     }
-    public addExperiment(){
-        this._addExperimentModal.open();
+
+    public addExperiment() {
+        this.modalService.open(AddExperimentModal, {
+            context: {
+                experimentsPage: this
+            }
+        }).onClose.subscribe(experiment => {
+            this.experimentAdded(experiment);
+        });
     }
-    setShowConfig(show:boolean) {
+
+    setShowConfig(show: boolean) {
         this.showConfig = show;
         if (show) {
             this.filterlistDict["type"] = [];
@@ -262,7 +302,7 @@ export class ExperimentsPage {
         this.createFilteredList();
     }
 
-    setShowDevFeatures(show:boolean) {
+    setShowDevFeatures(show: boolean) {
         this.showDevFeatures = show;
         if (show) {
             this.filterlistDict["stage"] = [];
@@ -272,7 +312,7 @@ export class ExperimentsPage {
         this.createFilteredList();
     }
 
-    setShowDisabled(show:boolean) {
+    setShowDisabled(show: boolean) {
         this.showDisabled = show;
         if (show) {
             this.filterlistDict["enabled"] = [];
@@ -283,8 +323,8 @@ export class ExperimentsPage {
     }
 
 
-    public refreshTable() {
-        this.getExperiments();
+    public refreshTable(event) {
+        this.getExperiments(event);
     }
 
     public beforeUpdate() {
@@ -294,39 +334,41 @@ export class ExperimentsPage {
     public afterUpdate() {
         this.loading = false;
     }
-    public deleteFeature(feature:Feature) {
+
+    public deleteFeature(feature: Feature) {
 
     }
 
-    public changeStateHandler(feature:Experiment) {
-        console.log('in changeFeatureState():'+this._airLockService);
+    public changeStateHandler(feature: Experiment) {
+        console.log('in changeFeatureState():' + this._airlockService);
         this.loading = true;
-        if (feature.stage=='PRODUCTION') {
+        if (feature.stage == 'PRODUCTION') {
             feature.stage = 'DEVELOPMENT';
         } else {
-            feature.stage='PRODUCTION';
+            feature.stage = 'PRODUCTION';
         }
     }
+
     /*
      public editFeature(variant:Feature, featurePath: Array<Feature>){
      this.editFeatureModal.open(variant,featurePath);
      }
      */
 
-    experimentIsInFilter(expID:string) {
+    experimentIsInFilter(expID: string) {
         // this.filteredExperiments.push(expID);
     }
 
-    variantIsNotInFilter(varID:string) {
+    variantIsNotInFilter(varID: string) {
         // this.filteredExperiments.push(varID);
         // this.filteredVariants.push(varID);
     }
 
-    public experimentAdded(experiment : Experiment) {
-        this.getExperiments();
+    public experimentAdded(experiment: Experiment) {
+        this.getExperiments(experiment);
     }
 
-    public updateExperiment(experiment : Experiment) {
+    public updateExperiment(experiment: Experiment) {
         this.getExperiments();
     }
 
@@ -334,54 +376,64 @@ export class ExperimentsPage {
         this.getExperiments();
     }
 
-    public onSearchQueryChanged(term:string) {
+    public onSearchQueryChanged(term: string) {
         this.filteredItems = [];
         this.searchQueryString = term;
         this.createFilteredList();
     }
+
     getString(name: string) {
         return this._stringsSrevice.getString(name);
     }
 
     reorder() {
-        this._reorderExperimentsModal.open(this.experimentsContainer);
+        this.modalService.open(ReorderExperimentsModal, {
+            closeOnBackdropClick: false,
+            context: {
+                _experimentsContainer: ExperimentsContainer.clone(this.experimentsContainer)
+            }
+        })
+        // this._reorderExperimentsModal.open(this.experimentsContainer);
     }
 
-    experimentsReordered(obj:any) {
+    experimentsReordered(obj: any) {
         this.getExperiments();
     }
 
-    itemIsSelected(itemObj:any) {
-        if (itemObj.id && itemObj.id == this.selectedId && !this.scrolledToSelected) {
-            let y = itemObj.offset;
-            this.checkIfInView(y);
-            this.scrolledToSelected = true;
-        }
+    itemIsSelected(itemObj: any) {
+        // if (itemObj.id && itemObj.id == this.selectedId && !this.scrolledToSelected) {
+        //     let y = itemObj.offset;
+        //     this.checkIfInView(y);
+        //     this.scrolledToSelected = true;
+        // }
+        itemObj.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    checkIfInView(top: number){
+    checkIfInView(top: number) {
         let windowScroll = jQuery(window).scrollTop();
         if (top > 0) {
             var offset = top - windowScroll;
 
-            if(offset > window.innerHeight  || offset < 0){
+            if (offset > window.innerHeight || offset < 0) {
                 // Not in view so scroll to it
                 // jQuery('html,body').animate({scrollTop: offset-300}, 500);
                 var scrollNode = document.scrollingElement ?
                     document.scrollingElement : document.body;
-                scrollNode.scrollTop = top-200;
+                scrollNode.scrollTop = top - 200;
                 return false;
             }
         }
         return true;
     }
+
     handleError(error: any) {
         this.loading = false;
 
         let errorMessage = FeatureUtilsService.parseErrorMessage(error) || "Failed to load Experiments. Please try again.";
-        console.log("handleError in Experiments:"+errorMessage);
+        console.log("handleError in Experiments:" + errorMessage);
         this.create(errorMessage);
     }
+
     createFilteredList() {
         this.filteredItems = [];
         this.selectedId = null;
@@ -397,12 +449,12 @@ export class ExperimentsPage {
 
     }
 
-    shouldExperimentBeFilteredOut(feature:any): boolean {
-        if(!this.filterlistDict) {
+    shouldExperimentBeFilteredOut(feature: any): boolean {
+        if (!this.filterlistDict) {
             return false;
         }
         let keys = Object.keys(this.filterlistDict);
-        if(!keys) {
+        if (!keys) {
             return false;
         }
         var isFilteredOut = false;
@@ -411,7 +463,7 @@ export class ExperimentsPage {
             if (feature[key] && valuesArr) {
                 for (var value of valuesArr) {
                     console.log(feature[key]);
-                    if (feature[key].toString().toLowerCase()==value.toString().toLowerCase()) {
+                    if (feature[key].toString().toLowerCase() == value.toString().toLowerCase()) {
                         isFilteredOut = true;
                         break;
                     }
@@ -432,7 +484,7 @@ export class ExperimentsPage {
         return isFilteredOut;
     }
 
-    isFilteredOut(experiment:Experiment): boolean {
+    isFilteredOut(experiment: Experiment): boolean {
         // console.log("is filtered out:"+this.feature.name+", " + this.searchTerm);
         if (this.shouldExperimentBeFilteredOut(experiment)) {
             // console.log("feature is filtered:"+this.feature.name);
@@ -451,7 +503,7 @@ export class ExperimentsPage {
         return !hasSearchHit;
     }
 
-    isVariantFilteredOut(variant:Variant): boolean {
+    isVariantFilteredOut(variant: Variant): boolean {
         // console.log("is filtered out:"+this.feature.name+", " + this.searchTerm);
         if (this.shouldExperimentBeFilteredOut(variant)) {
             // console.log("feature is filtered:"+this.feature.name);
@@ -464,8 +516,8 @@ export class ExperimentsPage {
         return !hasSearchHit;
     }
 
-    isPartOfSearch(term:string, experiment:Experiment):boolean {
-        if (!term || term=="") {
+    isPartOfSearch(term: string, experiment: Experiment): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -476,8 +528,8 @@ export class ExperimentsPage {
         return displayName.includes(lowerTerm) || fullName.includes((lowerTerm));
     }
 
-    isVariantPartOfSearch(term:string, variant:Variant):boolean {
-        if (!term || term=="") {
+    isVariantPartOfSearch(term: string, variant: Variant): boolean {
+        if (!term || term == "") {
             return true;
         }
         let lowerTerm = term.toLowerCase();
@@ -491,17 +543,17 @@ export class ExperimentsPage {
     }
 
 
-    showNextSearchResult(forward:boolean) {
+    showNextSearchResult(forward: boolean) {
         if (this.filteredItems.length > 0) {
             if (forward) {
-                if (this.selectedIndex >= (this.filteredItems.length-1)) {
+                if (this.selectedIndex >= (this.filteredItems.length - 1)) {
                     this.selectedIndex = 0;
                 } else {
                     this.selectedIndex++;
                 }
             } else {
                 if (this.selectedIndex == 0) {
-                    this.selectedIndex = this.filteredItems.length-1;
+                    this.selectedIndex = this.filteredItems.length - 1;
                 } else {
                     this.selectedIndex--;
                 }
@@ -511,15 +563,172 @@ export class ExperimentsPage {
             this.scrolledToSelected = false;
         }
     }
-    create(message:string) {
-        this.toastrService.error(message, "Error", {
-            timeOut: 0,
-            closeButton: true,
-            positionClass: 'toast-bottom-full-width',
-            toastClass: 'airlock-toast simple-webhook bare toast',
-            titleClass: 'airlock-toast-title',
-            messageClass: 'airlock-toast-text'
+
+    create(message: string) {
+        this.toastrService.danger(message, "Error", {
+            duration: 60000,
+            position: NbGlobalLogicalPosition.BOTTOM_START,
+            preventDuplicates: true,
+            toastClass: 'big-toast'
         });
+    }
+
+
+    private showEditVariant(pathVariant: any) {
+        console.log("RETRIEVING utilities and inputSchema");
+        this._airlockService.getAvailableBranches(pathVariant.experiment.uniqueId).then(result => {
+            let availableBranches = result;
+            this._airlockService.getExperimentUtilitiesInfo(pathVariant.experiment.uniqueId, pathVariant.experiment.stage, pathVariant.experiment.minVersion).then(result1 => {
+                let ruleUtilitieInfo = result1 as string;
+                this._airlockService.getExperimentInputSample(pathVariant.experiment.uniqueId, pathVariant.experiment.stage, pathVariant.experiment.minVersion).then(result2 => {
+                    let ruleInputSchemaSample = result2 as string;
+                    this.modalService.open(EditVariantModal, {
+                        closeOnBackdropClick: false,
+                        context: {
+                            inlineMode: false,
+                            visible: true,
+                            variant: Variant.clone(pathVariant.variant),
+                            experiment: Experiment.clone(pathVariant.experiment),
+                            title: this.getString("edit_variant_title"),
+                            availableBranches: availableBranches,
+                            ruleInputSchemaSample: ruleInputSchemaSample,
+                            ruleUtilitiesInfo: ruleUtilitieInfo,
+                            variantCell: null,
+                        }
+                    })
+                    // this.editVariantModal.open(this.variant, this.availableBranches.availableInAllSeasons, this.ruleInputSchemaSample, this.ruleUtilitieInfo, this);
+                }).catch(error => {
+                    console.log('Error in getting Experiment Input Schema Sample');
+                    let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Experiment Input Sample Schema");
+                    this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                });
+            }).catch(error => {
+                console.log('Error in getting UtilityInfo');
+                let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Experiment Utilitystring");
+                this._airlockService.notifyDataChanged("error-notification", errorMessage);
+            });
+        }).catch(error => {
+            console.log('Error in getting Feature Attributes');
+            let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Feature Attributes");
+            this._airlockService.notifyDataChanged("error-notification", errorMessage);
+        });
+    }
+
+    private showEditExperiment(pathExperiment: Experiment) {
+        this._airlockService.getExperimentQuota(pathExperiment.uniqueId).then(result => {
+            let analyticsExperimentQuota = result;
+            this._airlockService.getAnalyticsForDisplayExperiment(pathExperiment.uniqueId).then(result1 => {
+                let analyticExperiment = result1;
+                this._airlockService.getExperimentUtilitiesInfo(pathExperiment.uniqueId, pathExperiment.stage, pathExperiment.minVersion).then(result2 => {
+                    let ruleUtilitieInfo = result2 as string;
+                    this._airlockService.getExperimentInputSample(pathExperiment.uniqueId, pathExperiment.stage, pathExperiment.minVersion).then(result3 => {
+                        let ruleInputSchemaSample = result3 as string;
+                        this.modalService.open(EditExperimentModal, {
+                            closeOnBackdropClick: false,
+                            context: {
+                                inlineMode: false,
+                                visible: true,
+                                experiment: Experiment.clone(pathExperiment),
+                                totalCountQuota: analyticsExperimentQuota.analyticsQuota,
+                                ruleInputSchemaSample: ruleInputSchemaSample,
+                                ruleUtilitiesInfo: ruleUtilitieInfo,
+                                analyticsExperiment: analyticExperiment,
+                                // experimentCell: this,
+                            },
+                        });
+                    }).catch(error => {
+                        let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Experiment Input Sample Schema");
+                        this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                        // this.hideIndicator.emit(error);
+                    });
+                }).catch(error => {
+                    console.log('Error in getting UtilityInfo');
+                    let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Experiment Utilitystring");
+                    this._airlockService.notifyDataChanged("error-notification", errorMessage);
+                });
+            }).catch(error => {
+                console.log('Error in getting getAnalyticsGlobalDataCollectionExperiment');
+                let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get Global Data collection for experiment");
+                this._airlockService.notifyDataChanged("error-notification", errorMessage);
+            });
+        }).catch(error => {
+            console.log('Error in getting analyticsExperimentQuota');
+            let errorMessage = this._airlockService.parseErrorMessage(error, "Failed to get analyticsExperimentQuota for experiment");
+            this._airlockService.notifyDataChanged("error-notification", errorMessage);
+        });
+    }
+
+    private getvariantWithId(pathVariantId: any) {
+        for (let experiment of this.experimentsContainer.experiments) {
+            for (let variant of experiment.variants) {
+                if (variant.uniqueId === pathVariantId) {
+                    return {
+                        variant: variant,
+                        experiment: experiment
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    showEditVariantInline(item: any) {
+        let pair = item as ExperimentVariantPair;
+        let variant = item.variant;
+        let experiment = item.experiment;
+        let callback = (result: boolean): void => {
+            if (result) {
+                this.inlineVariantMode = true;
+                this.inlineMode = true;
+                this.editVarianttInline.open(variant, experiment, null, null, null);
+            }
+        }
+        if (this.inlineMode && !this.inlineVariantMode) {
+            //moving from experiment
+            this.editExperimentInline.canMoveOn(callback);
+        } else {
+            callback(true);
+        }
+    }
+    showEditInline(item: any) {
+        // this.openExperimentCell
+        console.log("showEditExperimentInline");
+
+        if (item.variants !== undefined) {
+            let callback = (result: boolean): void => {
+                if (result) {
+                    this.inlineVariantMode = false;
+                    this.inlineMode = true;
+                    this.editExperimentInline.open(item, null, null, null, null);
+                }
+            }
+            if (this.inlineVariantMode) {
+                //moving from edit variant
+                this.editVarianttInline.canMoveOn(callback);
+            } else {
+                callback(true);
+            }
+
+        } else {
+            let callback = (result: boolean): void => {
+                if (result) {
+                    this.inlineVariantMode = true;
+                    this.inlineMode = true;
+                    this.editVarianttInline.open(item, null, null, null, null);
+                }
+            }
+            if (this.inlineMode && !this.inlineVariantMode) {
+                //moving from experiment
+                this.editExperimentInline.canMoveOn(callback);
+            } else {
+                callback(true);
+            }
+        }
+    }
+    closeEditInline(value) {
+        this.inlineMode = false;
+        this.inlineVariantMode = false;
+        this.loading = false;
     }
 }
 

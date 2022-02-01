@@ -8,9 +8,9 @@ export class TranslationIssue {
     locale: string;
     issueId: string;
     comments: any[];
-    issueSubTypeCode: string;//"DOES_NOT_FIT_SPACE"
+    issueSubTypeCode: string; //"DOES_NOT_FIT_SPACE"
     issueText: string;
-    createdDate: string;//"2017-06-07T09:20:04Z"
+    createdDate: string; //"2017-06-07T09:20:04Z"
     issueStateCode: string//"RESOLVED",
     issueTypeCode: string; // "TRANSLATION",
 
@@ -27,7 +27,7 @@ export class TranslationIssue {
             this.issueStateCode = i.issueStateCode;
             this.issueTypeCode = i.issueTypeCode;
             this.comments = [];
-            for(var j = 0; j < i.comments.length; j++){
+            for (var j = 0; j < i.comments.length; j++) {
                 this.comments[j] = i.comments[j];
             }
         }

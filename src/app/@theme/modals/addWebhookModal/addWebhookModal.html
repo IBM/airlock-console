@@ -1,0 +1,49 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Webhook
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_name')"
+                                 [title]="getString('add_webhook_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_webhook.name)" type="text" id="input01"
+                       [(ngModel)]="_webhook.name" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">URL</label>
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_url')"
+                                 [title]="getString('add_webhook_url_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_webhook.url)" type="text" id="input02"
+                       [(ngModel)]="_webhook.url" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="input01" class="control-label">Products</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_webhook_products')"
+                                 [title]="getString('add_webhook_products_title')"></airlock-tooltip>
+                <br>
+                <span [class.hide]="globalWebhook">
+                    <nb-select multiple *ngIf="!loading" class="full-no-padding"
+                               [(selected)]="selectedProducts"
+                               placeholder="Select Product">
+                        <nb-option hero *ngFor="let product of possibleProdsList" value="{{product.uniqueId}}"> {{ product.name }} </nb-option>
+                    </nb-select>
+                </span>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

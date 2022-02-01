@@ -1,0 +1,46 @@
+
+<nb-card #addToMXGroupModal id="reorderMXGroupModal" class="reorderMXGroupModal">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span >
+                Configure Mutual Exclusion - {{_featureUtils.getFeatureDisplayName(_feature)}}
+            </span>
+        </h4>
+        <!--<h5 class="modal-title">-->
+            <!--{{getString('add_feature_to_group_subheader')}}-->
+        <!--</h5>-->
+        <h5 class="modal-title">
+            {{getMXTitle()}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="accordion">
+            <section  class="accordion-item" [class.col-sm-12]="false" *ngFor="let item of getChildren(_contextFeature); let i = index" [class.invisible]="!(item?.type==_feature?.type || (isMXgroup(item) && getChildren(item)?.length > 0))" [class.isOpen]="item==_selectedTarget">
+
+                <div class="panel panel-success" *ngIf="item.uniqueId!=_feature.uniqueId">
+                    <span *ngIf="item?.type==_feature?.type || getChildren(item)?.length > 0">
+                        <div class="panel-body targetItem">
+                            <ul class="list-group ">
+                                <!--<li *ngFor="let feat of item?.features; let j = index" class="list-group-item">{{getName(feat)}}</li>-->
+                                <li class="list-group-item liItem" [class.selected]="item==_selectedTarget" (click)="selectTarget(item)">{{getName(item)}}
+
+                                </li>
+
+                            </ul>
+                        </div>
+                    </span>
+                </div>
+
+            </section>
+        </div>
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="_selectedTarget==null || _selectedTarget?.uniqueId==_feature?.parent || _selectedTarget?.uniqueId==_feature?.uniqueId">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

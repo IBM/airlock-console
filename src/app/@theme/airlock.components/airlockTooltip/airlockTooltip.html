@@ -1,0 +1,8 @@
+<ng-template #popTemplate>
+    <p class="littleMargin" *ngFor="let line of lines" style="color: black;">{{line}}</p>
+</ng-template>
+<button type="button" *ngIf="content" class="profile-toggle-link btn btn-default btn-icon btn-circle reorder-button" [style.padding]="0" [style.padding-right]="1" [style.border-width]="0"
+        [popover]="popTemplate" popoverTitle="{{title}}"
+        triggers="focus" [placement]="placement" container="body" tabindex="-1">
+    <i class="fa ion-help-circled"></i>
+</button>

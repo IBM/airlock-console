@@ -1,0 +1,485 @@
+@media (min-width:544px) {
+  .modal-dialog {
+    width:600px;
+    margin:30px auto
+  }
+  .modal-sm {
+    width:300px
+  }
+}
+@media (min-width:768px) {
+  .modal-lg {
+    width:900px;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    margin: 30px auto;
+  }
+}
+
+
+.modal-dialog {
+  max-width: 900px;
+}
+
+.ngx-select__toggle {
+  background: transparent !important;
+  color: white !important;
+  transform: none !important;
+}
+
+a.ngx-select__item.dropdown-item {
+  color: black;
+}
+
+ul.ngx-select__choices.dropdown-menu.ng-star-inserted.show {
+  width: auto;
+}
+.open>.dropdown-menu {
+  display: block;
+}
+.nb-theme-dark a{
+  font-size: 12px !important;
+}
+
+.nb-theme-dark nb-layout .layout {
+  font-size: 12px !important;
+}
+
+span.menu-title {
+  font-size: 12px;
+}
+
+.popover-header {
+  color: black !important;
+  font-size: 0.975rem !important;
+}
+
+.popover {
+  max-width: 450px;
+}
+a.cursor {
+  font-size: 12px;
+}
+
+.nb-theme-dark [nbInput].size-medium {
+  font-size: 12px !important;
+  line-height: 1.35rem !important;
+}
+
+.show>.dropdown-menu {
+  display: block;
+}
+
+.active>.dropdown-menu {
+  display: block;
+}
+.show {
+  .dropdown-menu.top-dropdown-menu.profile-dropdown {
+    display: block;
+  }
+}
+
+span.highlight {
+  background: yellow;
+}
+
+
+
+.progress {
+  display:block;
+  width:100%;
+  height:1rem;
+  margin-bottom:1rem
+}
+.progress[value] {
+  color:#0074d9;
+  border:0;
+  appearance:none
+}
+.progress[value]::-webkit-progress-bar {
+  background-color:#eee;
+  border-radius:.25rem
+}
+.progress[value]::-webkit-progress-value:before {
+  content:attr(value)
+}
+.progress[value]::-webkit-progress-value {
+  background-color:#0074d9;
+  border-top-left-radius:.25rem;
+  border-bottom-left-radius:.25rem
+}
+.progress[value="100"]::-webkit-progress-value {
+  border-top-right-radius:.25rem;
+  border-bottom-right-radius:.25rem
+}
+
+.progress-bar.progress-bar-primary {
+  height: 20px;
+}
+
+.progress {
+  height: 20px;
+  line-height: 20px;
+}
+
+.btn {
+  display:inline-block;
+  font-weight:400;
+  text-align:center;
+  white-space:nowrap;
+  vertical-align:middle;
+  cursor:pointer;
+  user-select:none;
+  border:1px solid transparent;
+  padding:.375rem 1rem;
+  font-size:1rem;
+  line-height:1.5;
+  border-radius:.25rem
+}
+.descpDiv {
+  a:not([href]):not([tabindex]) {
+    color: #337ab7 ;
+  }
+}
+
+.tooltip {
+  opacity: .9;
+}
+.popover-content {
+  color: black;
+}
+
+.modal-header {
+  display: inherit;
+}
+
+.input-group .form-control {
+  position:relative;
+  z-index:2;
+  float:left;
+  width:100%;
+  height: 45px;
+  margin-bottom:0
+}
+.input-group-addon {
+  line-height: initial;
+}
+
+
+
+
+
+
+
+.modal.fade .modal-dialog {
+  transform: inherit;
+}
+
+
+
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity .15s linear;
+  -o-transition: opacity .15s linear;
+  transition: opacity .15s linear;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #000;
+}
+
+.modal-backdrop {
+  z-index: 1035;
+}
+
+.fade.in {
+  opacity: 1;
+}
+
+.modal-backdrop.fade {
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.modal-backdrop.in {
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+.fade.show {
+  background-color: rgba(0,0,0,0.5);
+}
+.modal-header {
+  padding:15px;
+  border-bottom:1px solid #e5e5e5
+}
+.modal-header:after {
+  content:"";
+  display:table;
+  clear:both
+}
+.modal-header .close {
+  margin-top:-2px
+}
+
+bs-modal-container .modal-header {
+  display: -webkit-box;
+}
+
+.simple-notification-wrapper.right.bottom {
+  position: absolute;
+}
+
+a.al-sidebar-list-link {
+  span {
+    font-size: 13px;
+  }
+
+}
+
+.ui-multiselect  {
+  width: 225px;
+  height: 30px;
+  background: transparent;
+}
+
+.ui-multiselect-label {
+  width: 225px;
+  height: 30px;
+  background: transparent;
+}
+
+.ui-multiselect-label-container {
+  height: 30px;
+  background: transparent;
+}
+
+.ui-multiselect .ui-multiselect-label {
+  background: transparent;
+  color: white;
+  padding-top: 0.344rem;
+  padding-left: 1rem;
+  padding-bottom: 0.344rem;
+}
+
+.ui-multiselect:hover .ui-multiselect-label:hover {
+  background: transparent;
+  color: white;
+}
+
+.ui-multiselect:not(.ui-state-disabled):hover {
+  background: transparent;
+   }
+
+.ui-multiselect:not(.ui-state-disabled):hover {
+  background: transparent;
+  color: white;
+}
+
+.ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
+  background: transparent;
+  color: white;
+}
+
+.ui-multiselect .ui-multiselect-trigger {
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+  border-left-width: initial;
+  border-left-style: initial;
+  border-left-color: rgba(255, 250, 250, 0.01);
+  cursor: pointer;
+  width: 1.5em;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0 .25em;
+}
+
+.ui-multiselect-panel.ui-widget.ui-widget-content.ui-corner-all.ui-shadow {
+  width: 225px;
+}
+
+span.ui-chkbox-icon.ui-c.fa.fa-check {
+  color: black;
+}
+.ui-widget-header .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-state-highlight {
+  background: transparent;
+  color: black;
+}
+
+.ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
+  color: black;
+}
+
+span.fa.fa-fw.fa-caret-down.ui-c {
+  color: white;
+}
+
+.tooltip-inner {
+  max-width:200px;
+}
+
+span.ui-select-placeholder.text-muted {
+  color: white !important;
+}
+
+span.btn.btn-default.btn-secondary.form-control.ui-select-toggle {
+  background: transparent !important;
+}
+
+span.btn.btn-default.btn-secondary.form-control.ui-select-toggle {
+  height: 32px;
+}
+
+ng-select.feature-filter > div > div.single > div.toggle {
+  font-size: 6px;
+  color: white;
+}
+
+ng-select.feature-filter > div > div.single > div.clear {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+ng-select.feature-filter > div > div.single > div.placeholder {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+ng-select.feature-filter {
+  .options {
+    color:black;
+  }
+  .below {
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+}
+.locales-filter {
+  .input-group.input-group-sm {
+    margin: 0px;
+    color: black;
+    height: 32px;
+  }
+  input.form-control {
+    height: 30px;
+  }
+
+  input.form-control {
+    border: 1px solid #ccc;
+    border-left: 0px;
+    color: black;
+  }
+  input.form-control::placeholder {
+    color: gray;
+  }
+
+
+  li.dropdown-item.search {
+    margin: 0px;
+    input.form-control {
+      height: 30px;
+    }
+  }
+
+  span#sizing-addon3 {
+    width: 30px;
+  }
+
+  .input-group-sm > .form-control, .input-group-sm > .input-group-addon, .input-group-sm > .input-group-btn > .btn {
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+  }
+  .input-group .form-control {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  span.input-group-btn {
+    width: 22px;
+    height: 30px;
+  }
+  i.fa.fa-times {
+    color: gray;
+  }
+  li.dropdown-item.search {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  button.dropdown-toggle.btn.btn-default.btn-secondary {
+    font-size: 12px;
+    font-weight: 400;
+    height: 32px;
+  }
+
+
+
+}
+
+input.form-control.smallPad.feature-filter.free-text-filter::placeholder {
+  font-weight: 400;
+  font-style: italic;
+}
+
+
+.placeholder {
+  font-style: italic;
+}
+.status-div {
+  .progress-bar.progress-bar-danger {
+    background-color: #f5f953 !important;
+  }
+}
+
+.ui-select-choices-row.active > a {
+  color: black;
+  text-decoration: none;
+  outline: 0;
+  background-color: #eaeaea;
+}
+
+.addProductModal {
+  .btn:hover {
+    transform: none !important;
+    color: white;
+    background-color: #337ab7 !important;
+  }
+}
+
+.ui-select-container.dropdown.open {
+  min-width: 150px;
+}
+
+input.form-control.ui-select-search {
+  width: 100%;
+}
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: -1px;
+  background-color: #326484;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.selected {
+  background-color: deepskyblue !important;
+}
+
+

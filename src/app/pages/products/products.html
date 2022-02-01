@@ -1,5 +1,5 @@
 
-<add-product-modal #addProductModal (onProductAdded)="productAdded($event)"></add-product-modal>
+<!--<add-product-modal #addProductModal (onProductAdded)="productAdded($event)"></add-product-modal>-->
 
 <table class="table">
     <tr>
@@ -19,12 +19,7 @@
         <div id="tloader" [hidden]="!_loading">
             <div></div>
         </div>
-
         <div class="row">
-            <!--<div class="col-md-3">-->
-                <!--<product-list [_products]="_products" [_selectedProduct]="_selectedProduct"-->
-                              <!--(onProductSelectionChanged)="productSelectionChanged($event)"></product-list>-->
-            <!--</div>-->
             <div style="width: 100%">
                 <product-detail [product]="_selectedProduct"
                                 (onProductUpdated)="productUpdated($event)"

@@ -1,0 +1,62 @@
+<div class="header-container">
+  <div class="logo-container">
+    <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+      <nb-icon icon="menu-2-outline"></nb-icon>
+    </a>
+    <a class="logo" href="#" (click)="openAbout()"><span style="color: #00abff">Airlock </span> <span
+            class="columnFlexContainer" style="color: white">Control Center
+    <a style="color: white"><span style="color: white">v7.0</span></a>
+    </span>
+    </a>
+
+  </div>
+    <div class="header-container" style="padding-left: 30px">
+        <ng-template #popTemplate>
+            <div style="min-width: 300px">
+                This is  a beta of the new Airlock Control Center. Feel free to update us on the <span class="airlock-blue">#airlock</span> slack channel on any issues you encounter.
+            </div>
+            <a class="old-airlock-link" href="https://airlock.twcmobile.weather.com/"> Click here for the old version</a>
+        </ng-template>
+        <span class="airlock-beta cursor play-active" [popoverTitle]="'Welcome to the new Airlock Control Center'" #pop="bs-popover" triggers='mouseover' outsideClick="true" [popover]="popTemplate">BETA</span>
+        <div class="buttonTitle" [class.grayed-out]="!enableProduct">Product:</div>
+        <div *ngIf="enableProduct" style="display: table-cell;">
+            <ngx-select *ngIf="enableProduct" style="display: table-cell; padding-left: 4px;min-width: 170px" [items]="productItems" (ngModelChange)="selectProductFromSelect($event)" [ngModel]="selectedProduct"></ngx-select>
+        </div>
+        <div *ngIf="!enableProduct" class="disabled-placeholder">- -</div>
+        <div class="buttonTitle" [class.grayed-out]="!enableSeason"><span class="bottom-align-text">
+                    Version Range:
+                </span></div>
+        <div *ngIf="enableSeason" style="display: table-cell;">
+            <ngx-select *ngIf="enableSeason && !loading" style="display: table-cell; padding-left: 4px;min-width: 200px" [items]="versiobRangeItems" [ngModel]="selectedSeason" (ngModelChange)="selectSeasonFromSelect($event)"></ngx-select>
+        </div>
+        <div *ngIf="!isSeasonEnabled(selectedSeason) || !enableSeason" class="disabled-placeholder">- -</div>
+        <div *ngIf="showBranches" class="buttonTitle" [class.grayed-out]="!enableBranches"><span class="bottom-align-text">
+                    Branch:
+                </span></div>
+        <div *ngIf="enableBranches && showBranches " style="display: table-cell;">
+
+            <div *ngIf="!loading" class="btn-group" dropdown  style="">
+                <ngx-select style="display: table-cell;padding-left: 4px;min-width: 200px" [items]="branchItems" [ngModel]="selectedBranch" (ngModelChange)="selectBranchFromSelect($event)"></ngx-select>
+                <div>
+                    <button style="margin-left: 3px;height: 31px" id="single-button" type="button" (click)="createNewBranch()" class="btn btn-primary" title="{{getNewBranchTitle()}}" [disabled]="!isBranchSupported()">
+                        <i class="ion-plus-circled"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!enableBranches && showBranches " class="disabled-placeholder">- -</div>
+    </div>
+</div>
+<div class="header-container">
+  <nb-actions size="small">
+    <nb-action class="user-action" *nbIsGranted="['view', 'user']">
+      <nb-user [nbContextMenu]="userMenu" nbContextMenuTag="headerMenu"
+               [onlyPicture]="userPictureOnly"
+               [name]="userName"
+               [title]= "userRole"
+               [picture]="user?.picture">
+      </nb-user>
+    </nb-action>
+  </nb-actions>
+</div>
+

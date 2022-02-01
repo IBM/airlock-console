@@ -1,0 +1,79 @@
+<nb-card id="documentlinksModal" class="documentlinksModal" data-keyboard="false">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)"-->
+<!--                          (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Download Defaults and Constants
+            </span>
+
+        </h4>
+        <h5 class="modal-title">
+            {{getString('document_links_subheader')}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body *ngIf="seasonId != null">
+        <div *ngIf="false" class="form-group tab-div-container">
+            <label class="control-label">Platform:</label>
+            <div style="display: table-cell;">
+                <div class="btn-group" dropdown style="vertical-align:baseline">
+                    <button type="button" class="btn btn-primary" dropdownToggle>
+                        {{buttonText}}
+                    </button>
+                    <ul class="dropdown-menu" dropdownMenu>
+                        <ng-template ngFor let-item [ngForOf]="platforms" let-i="index">
+                            <li class="dropdown-item" (click)="selectItem(i)" style="cursor: pointer">{{item}}</li>
+                        </ng-template>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <span>
+            <ng-template ngFor let-item [ngForOf]="links" let-i="index">
+                <li style="cursor: pointer">
+                    <!--<a class="docLink" download target=“_self” href="{{item.link}}">{{item.displayName}}</a>-->
+                    <span class="docLink" (click)="downloadLink(item)">{{item.displayName}}</span>
+                </li>
+            </ng-template>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-12 no-padding-left">
+                            <div class="docLink" *ngIf="staticRuntimeDevelopment != null">
+                                <label class="docLink" for="input03" class="control-label">Runtime Development Link</label>
+                                <div style="display: table-cell;width: 95%;">
+                                <input #keyTarget type="text" readonly="true" id="input03" placeholder=""
+                                       [(ngModel)]="staticRuntimeDevelopment" class="form-control  blackText"
+                                       tabindex="2">
+                                    </div>
+                                    <div style="display: table-cell;">
+                                <button class="btn btn-outline-secondary ion-ios-copy copy-button"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            <div class="row" style="margin-top: 10px;">
+                                        <div class="col-md-12 no-padding-left">
+                            <div class="no-margin " *ngIf="staticRuntimeProduction != null">
+                                <label for="input02" class="control-label">Runtime Production Link</label>
+                                <div style="display: table-cell;width: 95%;">
+                                <input #keyTargetRuntime type="text" readonly="true" id="input02" placeholder=""
+                                       [(ngModel)]="staticRuntimeProduction" class="form-control  blackText"
+                                       tabindex="2">
+                                    </div>
+                                    <div style="display: table-cell;">
+                                <button class="btn btn-outline-secondary ion-ios-copy copy-button"></button>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        </span>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+    </nb-card-footer>
+</nb-card>

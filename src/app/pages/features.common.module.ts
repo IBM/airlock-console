@@ -1,113 +1,117 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import {DropdownModule, ProgressbarModule, TabsModule} from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
-import { PopoverModule } from 'ng2-bootstrap';
-import {InputTextModule} from 'primeng/primeng';
-import {ListboxModule} from 'primeng/primeng';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
+//Third party
 
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import {TreeModule,TreeNode} from 'primeng/primeng';
-import {OrderCell} from "../theme/airlock.components/orderCell/orderCell.component";
-import {ClipboardModule} from "angular2-clipboard";
-import {SelectModule} from "ng2-select";
-import {NgaModule} from "../theme/nga.module";
-import {ReorderMXGroupModal} from "../theme/airlock.components/reorderMXGroupModal";
-import {ConfigurationCell} from "../theme/airlock.components/configurationCell/configurationCell.component";
-import {AddConfigurationModal} from "../theme/airlock.components/addConfigurationModal";
-import {wlAttributesModal} from "../theme/airlock.components/wlAttributesModal";
-import {HirarchyTree} from "../theme/airlock.components/hirarchyTree/hirarchyTree.component";
-import {wlContextModal} from "../theme/airlock.components/wlContextModal";
-import {Accordion, AccordionGroup, WhitelistAttributes} from "./wlattributes/wlattributes.component";
-import {HirarchyNode} from "../theme/airlock.components/hirarchyTree/hirarchyNode/hirarchyNode.component";
-import {VerifyRemoveFromBranchModal} from "../theme/airlock.components/verifyRemoveFromBranchModal";
+// import {InputTextModule} from 'primeng/inputtext';
+// import {ListboxModule} from 'primeng/listbox';
+// import {DataTableModule} from 'angular2-datatable';
+// import {TreeModule} from 'primeng/tree';
+// import {ClipboardModule} from "angular2-clipboard";
+// import {SelectModule} from "ng2-select";
+import {SelectDropDownModule} from 'ngx-select-dropdown';
+//internal
+import {OrderCell} from "../@theme/airlock.components/orderCell/orderCell.component";
+import {NgaModule} from "../@theme/nga.module";
 import ALCommonsModule from "./common.module";
+import {ConfigurationCell} from "../@theme/airlock.components/configurationCell/configurationCell.component";
+import {HirarchyTree} from "../@theme/airlock.components/hirarchyTree/hirarchyTree.component";
+import {Accordion, AccordionGroup, WhitelistAttributes} from "./wlattributes/wlattributes.component";
+import {HirarchyNode} from "../@theme/airlock.components/hirarchyTree/hirarchyNode/hirarchyNode.component";
 import {WhitelistSummary} from "./wlpreview/wlsummary.component";
-import {ShowEncryptionKeyModal} from "../theme/airlock.components/showEncryptionKeyModal";
 import {InlineEditComponent} from "./wlattributes/inlinedit/inline-edit.component";
-import {AddFeatureToGroupModal} from "../theme/airlock.components/addFeatureToGroupModal";
-import {EditFeatureModal} from "../theme/airlock.components/editFeatureModal";
+import {EditFeatureModal} from "../@theme/modals/editFeatureModal";
+import {ShowEncryptionKeyModal} from "../@theme/modals/showEncryptionKeyModal";
+import {ReorderMXGroupModal} from "../@theme/modals/reorderMXGroupModal";
+import {AddConfigurationModal} from "../@theme/modals/addConfigurationModal";
+import {AddFeatureToGroupModal} from "../@theme/modals/addFeatureToGroupModal";
+import {wlAttributesModal} from "../@theme/modals/wlAttributesModal";
+import {wlContextModal} from "../@theme/modals/wlContextModal";
+import {VerifyRemoveFromBranchModal} from "../@theme/modals/verifyRemoveFromBranchModal";
+import {TreeviewModule} from "ngx-treeview";
+import {
+    NbAccordionModule, NbAutocompleteModule,
+    NbButtonModule,
+    NbCardModule, NbLayoutModule,
+    NbListModule,
+    NbMenuModule, NbSidebarModule,
+    NbTabsetModule
+} from "@nebular/theme";
+import {TagInputModule} from "ngx-chips-angular";
+import { EditFeaturePage } from 'app/@theme/airlock.components/editFeaturePage/editFeaturePage.component';
+import {AceEditorModule} from "ngx-ace-editor-wrapper";
+import {NgSelectModule} from "@ng-select/ng-select";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
-        PopoverModule.forRoot(),
-        ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
-        TooltipModule.forRoot(),
-        TabsModule.forRoot(),
-        AccordionModule.forRoot(),
-        ButtonsModule.forRoot(),
-        AlertModule.forRoot(),
-        ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        DropdownMultiselectModule,
-        PushNotificationsModule,ALCommonsModule,
-        InputTextModule,
-        ListboxModule,
-        DataTableModule,
-        TreeModule,
-        SelectModule,
-        ClipboardModule
-
+        TagInputModule,
+        SelectDropDownModule,
+        NbAutocompleteModule,
+        ALCommonsModule,
+        TreeviewModule,
+        NbMenuModule,
+        NbAccordionModule,
+        NbListModule,
+        NbTabsetModule,
+        ALCommonsModule,
+        NbCardModule,
+        NbButtonModule,
+        NbLayoutModule,
+        NbSidebarModule,
+        ALCommonsModule,
+        AceEditorModule,
+        NgSelectModule,
+        AccordionModule
     ],
     declarations: [
         OrderCell,
-        ReorderMXGroupModal,
-        ConfigurationCell,
-        AddConfigurationModal,
         HirarchyNode,
         HirarchyTree,
         WhitelistSummary,
-        wlAttributesModal,
-        wlContextModal,
         WhitelistAttributes,
         Accordion,
         AccordionGroup,
         InlineEditComponent,
-        VerifyRemoveFromBranchModal,
-        ShowEncryptionKeyModal,
-        AddFeatureToGroupModal,
         EditFeatureModal,
+        EditFeaturePage,
+        ShowEncryptionKeyModal,
+        ReorderMXGroupModal,
+        AddConfigurationModal,
+        wlAttributesModal,
+        wlContextModal,
+        VerifyRemoveFromBranchModal,
+        AddFeatureToGroupModal,
     ],
     providers: [
-        // TransparentSpinner,
-        // NotificationsService,
-        // FeatureUtilsService,
-
     ],
     exports: [
         OrderCell,
-        ReorderMXGroupModal,
-        ConfigurationCell,
-        AddConfigurationModal,
         HirarchyNode,
         HirarchyTree,
         WhitelistSummary,
-        wlAttributesModal,
-        wlContextModal,
         WhitelistAttributes,
         Accordion,
         AccordionGroup,
         InlineEditComponent,
+        ShowEncryptionKeyModal,
+        ReorderMXGroupModal,
+        AddConfigurationModal,
+        wlAttributesModal,
+        wlContextModal,
         VerifyRemoveFromBranchModal,
         AddFeatureToGroupModal,
-        ShowEncryptionKeyModal,
-        EditFeatureModal
-    ]
+        EditFeaturePage,
+        EditFeatureModal,
+    ],
 })
-export default class FeaturesCommonModule {}
+export default class FeaturesCommonModule {
+}

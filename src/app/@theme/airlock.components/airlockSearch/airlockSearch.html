@@ -1,0 +1,20 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="side-fixed-size-modal1 search-card column-curtain">
+    <nb-card-header id="searchModal">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close(null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     {{searchTerm}} - {{results?.length}} results
+                </span>
+        </h4>
+    </nb-card-header>
+
+    <nb-card-body>
+
+    </nb-card-body>
+
+</nb-card>

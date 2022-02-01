@@ -1,0 +1,27 @@
+
+<nb-card #usageModal id="usageModal"  data-keyboard="false" data-backdrop="static" class="fixed-size-modal">
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Branch Usage - {{fileName}}
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div #mytesteditor ace-editor id="input56" [mode]="'javascript'"
+             [markdown]="text" [readonly]="true" [heightSize]="'350px'">
+        </div>
+        <ul>
+            <li style="cursor: pointer; padding: 8px">
+                <a class="btn btn-primary btn-with-icon ng-star-inserted" title="Download JSON" [href]="downloadJsonHref" [download]="fileName"><i class="fa ion-ios-download-outline"></i>Download file</a>
+            </li>
+        </ul>
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Close</button>
+    </nb-card-footer>
+</nb-card>

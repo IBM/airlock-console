@@ -1,4 +1,4 @@
-@import "../../../../../theme/sass/conf/conf";
+//@import "../../../../../theme/sass/conf/conf";
 .stringList {
   .strings .selected {
     background-color: #BBD8DC !important;
@@ -18,7 +18,6 @@
     background-color: white;
     color: black;
     margin: .5em;
-    padding: .3em 0;
     height: 3.2em;
     border-radius: 4px;
   }
@@ -44,8 +43,7 @@
     line-height: 1em;
     position: relative;
     left: -1px;
-    top: -4.5px;
-    height: 3.0em;
+    height: inherit;
     margin-right: .4em;
     border-radius: 4px 0 0 4px;
   }
@@ -111,7 +109,7 @@
         li {
           margin: 0;
           border: none;
-          font-weight: $font-light;
+          //font-weight: $font-light;
 
           .blur-container {
             height: 40px;
@@ -146,7 +144,7 @@
           label.todo-checkbox > span {
             &:before {
               position: absolute;
-              color: $content-text;
+              //color: $content-text;
               content: '\f10c';
               float: none;
               margin-right: 6px;
@@ -267,14 +265,18 @@
 
 .right-margin {
   margin-right: 8px;
+  margin-top: 8px;
 }
 
 .noExpand {
   .btn:hover {
     transform: none !important;
     background-color: #009ff3 !important;
-
   }
+}
+
+.buttonMargin {
+  margin: 4px;
 }
 
 li.dropdown-item {
@@ -282,7 +284,7 @@ li.dropdown-item {
 }
 
 .production-indicator {
-  vertical-align: top;padding-top: 2px;
+  vertical-align: top;padding-top: 15px;
 }
 
 
@@ -299,12 +301,6 @@ li.dropdown-item {
   background: #3E506B;
 }
 
-.dropdown-li {
-  a {
-    color: yellow;
-  }
-  background-color: #7bf2f5;
-}
 li.dropdown-item {
   a {
     width: 100%;

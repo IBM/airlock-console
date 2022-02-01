@@ -1,0 +1,88 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--<modal #addDataimportModal id="addDataimportModal" class="addDataimportModal" [backdrop]="'static'">-->
+    <!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Create User Attribute Import Job
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input001" class="control-label">Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_cohort_name')"
+                                 [title]="getString('add_cohort_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_job.name)" type="text" id="input001" [(ngModel)]="_job.name"
+                       class="form-control whiteText" tabindex="2">
+            </div>
+
+
+            <div class="form-group">
+                <label for="input01" class="control-label">S3 Path</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_cohort_name')"
+                                 [title]="getString('add_cohort_name_title')"></airlock-tooltip>
+                <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('add_job_s3path_details')}}
+                                <!--                                <br>-->
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showS3PathHelp()">{{getString('add_job_s3path_learn_more')}}</button>
+                                <!--<a href="" class="modalLink" (click)="showRuleHelp()"> {{getString('edit_feature_rule_tab_learn_more')}}</a>-->
+                            </h5>
+                </span>
+                <input [class.mustType]="isInputWarningOn(_job.s3File)" type="text" id="input01"
+                       [(ngModel)]="_job.s3File" [placeholder]="'s3://mybucket/imports/my_user_attribute_file.csv'"
+                       [class.whiteTextPlaceholder]="isPlaceHolderVisible(_job.s3File)" class="form-control whiteText"
+                       tabindex="2">
+            </div>
+
+            <div class="no-margin">
+                <label class="control-label">Target Table <span class="import-notice">This cannot be changed after creation</span></label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('select_import_data_table')"
+                                 [title]="getString('')"></airlock-tooltip>
+                <div class="padding-right intervalPicker">
+                    <div class="btn-group frequency-dropdown" dropdown style="vertical-align:baseline">
+<!--                        <button type="button" class="btn btn-default intervalPickerBtn" dropdownToggle-->
+<!--                                style="width: 100%;" [disabled]="false">-->
+<!--                            {{destinationTableName}}-->
+<!--                        </button>-->
+<!--                        <ul class="dropdown-menu max-width-menu frequency-menu" dropdownMenu>-->
+<!--                            <ng-template ngFor let-item [ngForOf]="possibleTableNames" let-i="index">-->
+<!--                                <li class="dropdown-item frequency-li" (click)="destinationTableChosen(item)"-->
+<!--                                    style="cursor: pointer">{{item}}</li>-->
+<!--                            </ng-template>-->
+<!--                        </ul>-->
+                        <!--                                   [(selected)]="selectedProducts"-->
+                        <nb-select multiple *ngIf="!loading" class="full-no-padding"
+                                   placeholder="Select Table">
+                            <nb-option hero *ngFor="let item of possibleTableNames" value="{{item}}"> {{item}} </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_description')"
+                                 [title]="getString('add_experiment_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_job.description" value="FEATURE" class="form-control  whiteText"
+                          tabindex="5"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Import now</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

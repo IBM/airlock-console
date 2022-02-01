@@ -1,0 +1,658 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<ace-modal #paceModalContainerDialog (outputEventFeatureRuleUpdate)="ruleUpdated($event)"
+           (outputEventFeaturePremiumRuleUpdate)="premiumRuleUpdated($event)"
+           (outputEventconfigurationSchemaUpdate)="schemaUpdated($event)"
+           (outputEventdefaultConfigUpdate)="defaultConfigurationUpdated($event)"
+           (outputEventoutputConfigUpdate)="outputConfigurationUpdated($event)"
+           (outputEventInputSchemaUpdate)="orderRuleUpdated($event)">
+</ace-modal>
+<nb-card [class.center-fixed-size-modal]="!inlineMode" [style.width]="modalWidth" [style.height]="modalHeight" [class.edit-inline]="inlineMode" *ngIf="visible">
+<!--<nb-card class="center-fixed-size-modal column-curtain edit-feature-page" [style.width]="modalWidth">-->
+    <nb-card-header id="editModal" *ngIf="feature != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close(null)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span *ngIf="feature?.namespace.length > 0">
+                    <span *ngIf="isDirty()">*</span>{{title}} - {{feature.namespace}}.{{_featureUtils.getFeatureDisplayName(feature)}}
+                </span>
+            <span *ngIf="feature?.namespace.length == 0">
+                     {{title}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <div [class.editModalLeftPane]="!inlineMode" [class.flexMiddleContainer]="inlineMode">
+                    <span>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="generalTabActive" (click)="selectTab('General')">General</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!generalTabActive" (click)="selectTab('General')">General</button>
+                    </span>
+
+                <span *ngIf="feature != null && !isConfigurationRule()  && !isOrderRule()">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="hirarchyTabActive" (click)="selectTab('Hierarchy')">Hierarchy</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!hirarchyTabActive" (click)="selectTab('Hierarchy')">Hierarchy</button>
+                    </span>
+
+                <span *ngIf="feature != null">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_feature_rule_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!ruleTabActive" (click)="selectTab('Rule')">{{getString('edit_feature_rule_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="feature != null && !isConfigurationRule() && !isOrderRule()">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="configTabActive" (click)="selectTab('Configuration')">{{getString('edit_feature_configuration_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!configTabActive" (click)="selectTab('Configuration')">{{getString('edit_feature_configuration_tab_heading')}}</button>
+                    </span>
+
+                <span *ngIf="feature != null && isConfigurationRule()">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="valuesTabActive" (click)="selectTab('Values')">{{getString('edit_configuration_rule_tab_learn_more')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!valuesTabActive" (click)="selectTab('Values')">{{getString('edit_configuration_rule_tab_learn_more')}}</button>
+                    </span>
+
+                <span *ngIf="feature != null && isOrderRule()">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="orderTabAcive" (click)="selectTab('Weights')">{{getString('edit_order_rule_tab_learn_more')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!orderTabAcive" (click)="selectTab('Weights')">{{getString('edit_order_rule_tab_learn_more')}}</button>
+                    </span>
+
+                <span *ngIf="feature != null && feature.type !=='CONFIGURATION_RULE' && feature.type !== 'ORDERING_RULE'">
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="primary" *ngIf="premiumTabActive" (click)="selectTab('Premium')">{{getString('edit_feature_premium_tab_heading')}}</button>
+                        <button nbButton style="text-transform: capitalize; border-style: none;" fullWidth class="tabButton" outline status="basic" *ngIf="!premiumTabActive" (click)="selectTab('Premium')">{{getString('edit_feature_premium_tab_heading')}}</button>
+                    </span>
+
+            </div>
+            <div *ngIf="isOpen" [class.editModalRightPane]="!inlineMode">
+                <div #general *ngIf="generalTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                                    <div class="row1">
+                                        <div class="col-md-12">
+                                            <div class="row" *ngIf="feature != null && !isConfigurationRule() && !isOrderRule()">
+                                                <div class="col-md-6 no-padding-left">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <label for="input01" class="control-label">Namespace</label>
+                                                        <airlock-tooltip *ngIf="!isConfigurationRule()" class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_namespace')"
+                                                                         [title]="getString('edit_feature_namespace_title')"></airlock-tooltip>
+                                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input01"
+                                                               placeholder="" [(ngModel)]="feature.namespace"
+                                                               class="form-control  blackText" tabindex="2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 no-padding-right">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <label for="input02" class="control-label">Stage</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_stage')"
+                                                                         [title]="getString('edit_feature_stage_title')"></airlock-tooltip>
+                                                        <input type="text" id="input02" placeholder="" [(ngModel)]="feature.stage"
+                                                               class="form-control blackText" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row no-margin "
+                                                 *ngIf="feature != null && (isConfigurationRule() || isOrderRule())">
+                                                <label for="input03" class="control-label">Namespace</label>
+                                                <airlock-tooltip *ngIf="!isConfigurationRule() && !isOrderRule()"
+                                                                 class="endFlexContainer"
+                                                                 [content]="getString('edit_feature_namespace')"
+                                                                 [title]="getString('edit_feature_namespace_title')"></airlock-tooltip>
+                                                <airlock-tooltip *ngIf="isOrderRule()" class="endFlexContainer"
+                                                                 [content]="getString('edit_ordering_rule_namespace')"
+                                                                 [title]="getString('edit_feature_namespace_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="true" id="input03" placeholder=""
+                                                       [(ngModel)]="feature.namespace" class="form-control  blackText" tabindex="2">
+                                            </div>
+                                            <div class="row no-margin "
+                                                 *ngIf="feature != null && (isConfigurationRule() || isOrderRule())">
+                                                <label for="input04" class="control-label">Stage</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_feature_stage')"
+                                                                 [title]="getString('edit_feature_stage_title')"></airlock-tooltip>
+                                                <input type="text" id="input04" placeholder="" [(ngModel)]="feature.stage"
+                                                       class="form-control blackText" disabled>
+                                            </div>
+                                            <div class="row no-margin" *ngIf="feature != null">
+                                                <label for="input05" class="control-label">Name</label>
+                                                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_name')"
+                                                                 [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="isOnlyDisplayMode" id="input05" placeholder=""
+                                                       [(ngModel)]="feature.name" class="form-control blackText" tabindex="1">
+                                            </div>
+                                            <div class="row no-margin"
+                                                 *ngIf="feature != null && !(isConfigurationRule() || isOrderRule())">
+                                                <label for="input06" class="control-label">Display Name</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_feature_display_name')"
+                                                                 [title]="getString('edit_feature_display_name_title')"></airlock-tooltip>
+                                                <input type="text" [disabled]="isOnlyDisplayMode" id="input06" placeholder=""
+                                                       [(ngModel)]="feature.displayName" class="form-control blackText"
+                                                       tabindex="1">
+                                            </div>
+                                            <div class="row" *ngIf="feature != null">
+                                                <div class="no-padding-left"
+                                                     [class.col-md-5]="!(isConfigurationRule() || isOrderRule())"
+                                                     [class.col-md-8]="(isConfigurationRule() || isOrderRule())">
+                                                    <label for="input07" class="control-label">Rollout Percentage</label>
+                                                    <airlock-tooltip *ngIf="!isConfigurationRule() && !isOrderRule()"
+                                                                     class="endFlexContainer"
+                                                                     [content]="getString('edit_feature_rollout')"
+                                                                     [title]="getString('edit_feature_rollout_title')"></airlock-tooltip>
+                                                    <airlock-tooltip *ngIf="isConfigurationRule() && !isOrderRule()"
+                                                                     class="endFlexContainer"
+                                                                     [content]="getString('edit_configuration_rollout')"
+                                                                     [title]="getString('edit_feature_rollout_title')"></airlock-tooltip>
+                                                    <airlock-tooltip *ngIf="isOrderRule()" class="endFlexContainer"
+                                                                     [content]="getString('edit_ordering_rule_rollout')"
+                                                                     [title]="getString('edit_feature_rollout_title')"></airlock-tooltip>
+                                                    <div class="input-group rollout">
+                                                        <!--<span class="input-group-addon addon-left input-group-addon-success">$</span>-->
+                                                        <!--<div aria-label="Rollout percentage" class="rollout form-control with-success-addon" style="height: 100%" type="text">-->
+                                                        <!--<input id= "input87"[disabled] = "isOnlyDisplayMode"  aria-label="Rollout percentage" class="form-control with-success-addon" type="range" min="0" max="100" [(ngModel)]="feature.rolloutPercentage" tabindex="3">-->
+                                                        <!--</div>-->
+                                                        <input id="input07" [disabled]="isOnlyDisplayMode"
+                                                               aria-label="Rollout percentage"
+                                                               class="form-control with-success-addon numberInput" type="number"
+                                                               step="0.0001" min="0" max="100"
+                                                               [(ngModel)]="feature.rolloutPercentage" tabindex="3"
+                                                               style="width: 100px;height: 35px;">
+
+                                                        <!--<span class="input-group-addon addon-right input-group-addon-default rollout">{{feature.rolloutPercentage}}%</span>-->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 no-padding-middle"
+                                                     *ngIf="feature != null  && !(isConfigurationRule() || isOrderRule())">
+                                                    <div class="">
+                                                        <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="align-right no-pa-top"><label class="control-label"
+                                                                                                         style="padding-right: 2px;">Default</label>
+                                                                    <airlock-tooltip *ngIf="!isConfigurationRule()"
+                                                                                     class="endFlexContainer"
+                                                                                     [content]="getString('edit_feature_default')"
+                                                                                     [title]="getString('edit_feature_default_title')"></airlock-tooltip>
+                                                                    <airlock-tooltip *ngIf="isConfigurationRule()"
+                                                                                     class="endFlexContainer"
+                                                                                     [content]="getString('edit_configuration_default')"
+                                                                                     [title]="getString('edit_feature_default_title')"></airlock-tooltip>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="align-right">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="feature.defaultIfAirlockSystemIsDown"
+                                                                               ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 no-padding-right">
+                                                    <table style="width: 100%;">
+                                                        <tr>
+                                                            <td class="align-right"><label
+                                                                    class="control-label">{{getString('edit_feature_fallback_switch_label')}}</label>
+                                                                <airlock-tooltip class="endFlexContainer leftPad"
+                                                                                 [content]="getString('edit_feature_cache')"
+                                                                                 [title]="getString('edit_feature_cache_title')"></airlock-tooltip>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="align-right">
+                                                                <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                           [(checked)]="!feature.noCachedResults"
+                                                                           ></nb-toggle>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8 no-padding-left">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <label for="input08" class="control-label">Minimum App Version</label>
+                                                        <airlock-tooltip *ngIf="!(isConfigurationRule() || isOrderRule())"
+                                                                         class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_min_app_version')"
+                                                                         [title]="getString('edit_feature_min_app_version_title')"></airlock-tooltip>
+                                                        <airlock-tooltip *ngIf="(isConfigurationRule() && !isOrderRule())"
+                                                                         class="endFlexContainer"
+                                                                         [content]="getString('edit_configuration_min_app_version')"
+                                                                         [title]="getString('edit_feature_min_app_version_title')"></airlock-tooltip>
+                                                        <airlock-tooltip *ngIf="(!isConfigurationRule() && isOrderRule())"
+                                                                         class="endFlexContainer"
+                                                                         [content]="getString('edit_ordering_rule_min_app_version')"
+                                                                         [title]="getString('edit_feature_min_app_version_title')"></airlock-tooltip>
+                                                        <input type="text" [disabled]="isOnlyDisplayMode" id="input08"
+                                                               placeholder="" [(ngModel)]="feature.minAppVersion"
+                                                               class="form-control blackText " tabindex="5">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 no-padding-right">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <table style="width: 100%;">
+                                                            <tr>
+                                                                <td class="align-right no-pa-top"><label class="control-label">Enabled</label>
+                                                                </td>
+                                                                <airlock-tooltip class="endFlexContainer"
+                                                                                 [content]="getString('edit_feature_enabled')"
+                                                                                 [title]="getString('edit_feature_enabled_title')"></airlock-tooltip>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="align-right">
+                                                                    <nb-toggle [disabled]="isOnlyDisplayMode"
+                                                                               [(checked)]="feature.enabled"
+                                                                               ></nb-toggle>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="form-group" *ngIf="feature!=null">
+                                                <label for="select05" class="control-label">User Groups</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_feature_groups')"
+                                                                 [title]="getString('edit_feature_groups_title')"></airlock-tooltip>
+                                                <br>
+                                                <user-groups-input id="select05" [disabled]="isOnlyDisplayMode" [(internalUserGroups)]="feature.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+                                            </div>
+
+
+                                            <div class="no-margin " *ngIf="feature != null">
+                                                <label for="input09" class="control-label">Description</label>
+                                                <airlock-tooltip class="endFlexContainer"
+                                                                 [content]="getString('edit_feature_description')"
+                                                                 [title]="getString('edit_feature_description_title')"></airlock-tooltip>
+                                                <textarea id="input09" [disabled]="isOnlyDisplayMode" placeholder=""
+                                                          [(ngModel)]="feature.description" value="FEATURE"
+                                                          class="form-control description-text blackText"
+                                                          style="height: 68px;resize:none" tabindex="8"></textarea>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="no-margin" *ngIf="feature != null">
+                                                        <label for="input10" class="control-label">Owner</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_owner')"
+                                                                         [title]="getString('edit_feature_owner_title')"></airlock-tooltip>
+                                                        <input type="text" id="input10" [disabled]="isOnlyDisplayMode"
+                                                               placeholder="" [(ngModel)]="feature.owner"
+                                                               class="form-control blackText" tabindex="6">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <label for="input11" class="control-label">Creator</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_creator')"
+                                                                         [title]="getString('edit_feature_creator_title')"></airlock-tooltip>
+                                                        <input type="text" id="input11" disabled placeholder=""
+                                                               [(ngModel)]="feature.creator" class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="no-margin" *ngIf="feature != null">
+                                                        <label for="input12" class="control-label">Creation Date</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_creation_date')"
+                                                                         [title]="getString('edit_feature_creation_date_title')"></airlock-tooltip>
+                                                        <input type="text" id="input12" disabled placeholder=""
+                                                               [value]="creationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="no-margin " *ngIf="feature != null">
+                                                        <label for="input13" class="control-label">Last Modified</label>
+                                                        <airlock-tooltip class="endFlexContainer"
+                                                                         [content]="getString('edit_feature_last_modified')"
+                                                                         [title]="getString('edit_feature_last_modified_title')"></airlock-tooltip>
+                                                        <input type="text" id="input13" disabled placeholder=""
+                                                               [value]="lastModificationDate | date:'medium'"
+                                                               class="form-control blackText">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                </div>
+                <div tabTitle="Hierarchy" #hierarchy (change)="showHierarchyChanged($event)" *ngIf="hirarchyTabActive && feature != null && !isConfigurationRule()  && !isOrderRule()" (select)="showHirarchy()">
+                        <span>
+                            <div class="no-margin  tab-div-container" *ngIf="isShowHirarchy">
+                                <h5 class="modal-title">
+                                    {{getString('add_feature_hirarchy_details')}}
+                                </h5>
+                                <label class="control-label">Parent
+                                    - {{_featureUtils.getFeatureDisplayNameInTree(selectedParent?.feature)}}</label>
+                                <hirarchy-tree *ngIf="loaded" [root]="root" [feature]="feature" [featurePath]="featurePath"
+                                               (onNewFatherSelected)="selectNewParent($event)" [showAll]="false">
+                                </hirarchy-tree>
+                            </div>
+                        </span>
+                </div>
+                <div tabTitle="Rule" #rule *ngIf="feature != null && ruleTabActive">
+                        <span>
+                            <div class="no-margin  tab-div-container">
+                    <span class="flexcontainer">
+                        <h5 class="modal-title">
+                            {{getString('add_feature_rule_tab_details')}}
+                            <br>
+                            <button class="modalLink modalLinkButton"
+                                    (click)="showRuleHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                        </h5>
+                    </span>
+                                <span>
+                        <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button" (click)="openAceEditorRuleExpand()">
+                            <i class="ion-arrow-expand"></i>
+                        </button>
+                        <div *ngIf="!loading" #mytesteditor ace-editor class="ace-github" id="input56" (onTextChanged)="ruleUpdated($event)"
+                             [markdown]="feature.rule.ruleString" [readonly]="isOnlyDisplayMode"
+                             [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo"
+                             [mode]="'javascript'"
+                             [heightSize]="aceEditorRuleHeight">
+                        </div>
+                    </span>
+                            </div>
+                        </span>
+                </div>
+                <div tabTitle="Configuration" #config *ngIf="feature != null && !isConfigurationRule() && !isOrderRule() && configTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                            <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_feature_configuration_tab_details_1')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showConfigurationSchemaHelp()">{{getString('edit_feature_configuration_tab_details_link')}}</button>
+                                {{getString('edit_feature_configuration_tab_details_2')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showConfigurationHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                            </h5>
+                            </span>
+                                    <div class="no-margin " *ngIf="feature != null">
+                                        <label for="input57"
+                                               class="control-label">{{getString('edit_feature_configuration_configuration_edit_title')}}</label>
+                                        <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px"
+                                                         [content]="getString('edit_feature_config_schema')"
+                                                         [title]="getString('edit_feature_config_schema_title')"></airlock-tooltip>
+                                        <span>
+                                <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                        (click)="openAceEditorConfigurationSchemaExpand()">
+                                    <i class="ion-arrow-expand"></i>
+                                </button>
+                                <div *ngIf="!loading" #mytesteditor1 ace-editor id="input57" (onTextChanged)="schemaUpdated($event)"
+                                     [markdown]="configurationSchemaString" [readonly]="isOnlyDisplayMode" [sample]=""
+                                     [mode]="'javascript'"
+                                     [heightSize]="aceEditorConfigurationHeight">
+                                </div>
+                                </span>
+                                    </div>
+                                    <div class="no-margin " *ngIf="feature != null">
+                                        <label for="input58"
+                                               class="control-label">{{getString('edit_feature_configuration_default_configuration_edit_title')}}</label>
+                                        <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px"
+                                                         [content]="getString('edit_feature_default_config')"
+                                                         [title]="getString('edit_feature_default_config_title')"></airlock-tooltip>
+                                        <span>
+                                <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                        (click)="openAceEditorDefaultConfigurationExpand()">
+                                    <i class="ion-arrow-expand"></i>
+                                </button>
+                                <div *ngIf="!loading" #mytesteditor2 ace-editor id="input58"
+                                     (onTextChanged)="defaultConfigurationUpdated($event)"
+                                     [markdown]="defaultConfigurationString" [readonly]="isOnlyDisplayMode" [sample]=""
+                                     [mode]="'javascript'"
+                                     [heightSize]="aceEditorConfigurationHeight">
+                                </div>
+                                </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </span>
+                </div>
+                <div #configuration *ngIf="feature != null && isConfigurationRule() && valuesTabActive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <accordion *ngIf="isConfigurationRule()">
+                                    <accordion-group #group [(isOpen)]="referenceOpen">
+                                        <div accordion-heading class="accordionHead">
+                                            <span class="modal-title">
+                                                <span class="openIndicator">
+                                                <i [class.ion-arrow-right-b]="!group.isOpen"
+                                                   [class.ion-arrow-down-b]="group.isOpen"></i>
+                                                </span>
+                                                {{getString('edit_feature_rule_tab_context_schema')}}
+                                            </span>
+                                        </div>
+                                        <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                (click)="openAceEditorReferenceSchemaExpand()">
+                                            <i class="ion-arrow-expand"></i>
+                                        </button>
+
+                                        <div *ngIf="!loading" #mytesteditor4 ace-editor (onTextChanged)="referenceSchemaUpdated($event)"
+                                             [markdown]="referenceSchemaString" [readonly]="true" [sample]=""
+                                             [mode]="'javascript'"
+                                             [heightSize]="aceEditorConfigurationHeight">
+                                        </div>
+                                    </accordion-group>
+                                </accordion>
+                                <div class="box">
+                             <span class="modal-title">
+                            <h5 class="modal-title">
+                                {{getString('edit_configuration_configuration_tab_details')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showConfigurationHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                            </h5>
+                             </span>
+                                    <div class="no-margin " *ngIf="feature != null">
+                                        <label class="control-label">Configuration</label>
+                                        <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px"
+                                                         [content]="getString('edit_feature_output_config')"
+                                                         [title]="getString('edit_feature_output_config_title')"></airlock-tooltip>
+                                        <button class="btn btn-expand btn-expand-down btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                (click)="openAceEditorOutputConfigurationExpand()">
+                                            <i class="ion-arrow-expand"></i>
+                                        </button>
+                                        <div *ngIf="!loading" #mytesteditor3 ace-editor (onTextChanged)="outputConfigurationUpdated($event)"
+                                             [markdown]="outputConfigurationString" [readonly]="isOnlyDisplayMode" [sample]=""
+                                             [mode]="'javascript'"
+                                             [heightSize]="aceEditorConfigurationHeight">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </span>
+                </div>
+                <div #order *ngIf="feature != null && isOrderRule() && orderTabAcive">
+                        <span>
+                            <div class="tabContentBackgroud tab-div-container">
+                                <div class="box">
+                             <span class="modal-title">
+                                <h5 class="modal-title">
+                                    {{getString('edit_order_rule_tab_details')}}
+                                    <button class="modalLink modalLinkButton"
+                                            (click)="showOrderingRuleHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                </h5>
+                             </span>
+
+                                    <div class="no-margin-reorder" *ngIf="feature != null"
+                                         style="overflow-y: scroll;height: 378px;position: relative">
+                                        <!--<template ngFor let-item [ngForOf]="sourceFeature.features" [ngForTrackBy]="curRule" let-i="index">-->
+                                        <accordion class="sub-feature-order-rule">
+                                            <accordion-group
+                                                    *ngFor="let item of _featureUtils.filterEmptyMTX(sourceFeature.features)" #group
+                                                    [isOpen]="isShowSubFeatures[item.uniqueId]"
+                                                    [isDisabled]="mapSubFeaturesIdsToOrderIndex[item.uniqueId]==-1"
+                                                    [class.no-reorder]="mapSubFeaturesIdsToOrderIndex[item.uniqueId]==-1"
+                                                    [class.shouldOpen]="isShowSubFeatures[item.uniqueId]">
+                                                <div accordion-heading class="accordionHead" style="cursor: default">
+                                    <span class="modal-title-not">
+                                        <span class="openIndicator-reorder">
+                                            <i class="reorder-chevron"
+                                               [class.order-trans]="mapSubFeaturesIdsToOrderIndex[item.uniqueId] == -1"
+                                               [class.ion-arrow-right-b]="!group.isOpen"
+                                               [class.ion-arrow-down-b]="group.isOpen"></i>
+
+                                        </span>
+                                        <span class="limit-text-width">{{_featureUtils.getDisplayNameForBothFeatureAndMX(item)}}</span>
+                                        <span style="cursor: pointer">
+                                            <i style="cursor: pointer"
+                                               class="fa ion-trash-b remove-order-icon button-behavior"
+                                               (click)="deleteOrderRule(item.uniqueId)"
+                                               *ngIf="!isOnlyDisplayMode && mapSubFeaturesIdsToOrderIndex[item.uniqueId] > -1"></i>
+                                            <i style="cursor: pointer"
+                                               class="ion-plus button-behavior add-subfeature-button"
+                                               (click)="addNewSubFeatureOrder(item,group); group.isOpen=true"
+                                               *ngIf="!isOnlyDisplayMode && mapSubFeaturesIdsToOrderIndex[item.uniqueId] == -1"></i>
+                                        </span>
+                                    </span>
+                                                </div>
+                                                <div class="no-margin" *ngIf="group.isOpen">
+                                                    <!--<airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px" [content]="getString('edit_feature_output_config')" [title]="getString('edit_feature_output_config_title')"></airlock-tooltip>-->
+                                                    <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                            (click)="openAceEditorOrderRuleExpand(mapSubFeaturesIdsToOrderIndex[item.uniqueId])"
+                                                            style="margin-top: 5px; margin-right: 24px">
+                                                        <i class="ion-arrow-expand" style="height: 12px;width: 12px;"></i>
+                                                    </button>
+                                                    <div *ngIf="!loading" #mytesteditor5 ace-editor
+                                                         (onTextChanged)="outputOrderRuleUpdated($event,mapSubFeaturesIdsToOrderIndex[item.uniqueId])"
+                                                         [markdown]="orderRules[mapSubFeaturesIdsToOrderIndex[item.uniqueId]].value"
+                                                         [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample"
+                                                         [heightSize]="aceEditorConfigurationHeightForOrder"
+                                                         [mode]="'javascript'"
+                                                         [utilitiesinfo]="ruleUtilitiesInfo">
+                                                    </div>
+                                                </div>
+                                            </accordion-group>
+                                        </accordion>
+                                        <!--</template>-->
+                                    </div>
+                                    <div class="no-margin " *ngIf="feature != null && 1 == 2"
+                                         style="overflow-y: scroll;height: 300px;position: relative">
+                                        <ng-template ngFor let-item [ngForOf]="orderRules" let-i="index">
+
+                                            <div class="no-margin " style="margin-bottom: 0px;margin-top: 5px;">
+                                                <label class="control-label">{{item.name}}</label>
+                                                <button class="btn" type="button" (click)="deleteOrderRule(item.id)"
+                                                        style="margin-left: 10px;">
+                                                    <i class="fa ion-trash-b" style="color: red"></i>
+                                                </button>
+                                            </div>
+                                            <div class="no-margin ">
+                                                <!--<airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px" [content]="getString('edit_feature_output_config')" [title]="getString('edit_feature_output_config_title')"></airlock-tooltip>-->
+                                                <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                                        (click)="openAceEditorOrderRuleExpand(i)" style="margin-top: 5px;">
+                                                    <i class="ion-arrow-expand" style="height: 12px;width: 12px;"></i>
+                                                </button>
+                                                <div *ngIf="!loading" #mytesteditor5 ace-editor (onTextChanged)="outputOrderRuleUpdated($event,i)"
+                                                     [markdown]="item.value" [readonly]="isOnlyDisplayMode"
+                                                     [sample]="ruleInputSchemaSample"
+                                                     [mode]="'javascript'"
+                                                     [heightSize]="aceEditorConfigurationHeightForOrder">
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </span>
+                </div>
+                <div #premium *ngIf="premiumTabActive && feature != null && feature.type !=='CONFIGURATION_RULE' && feature.type !== 'ORDERING_RULE'">
+                        <span>
+                            <div class="no-margin  tab-div-container">
+                                <div class="">
+                                    <div class="">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td class="align-left no-pa-top" style="width: 100px"><label class="control-label"
+                                                                                                             style="padding-right: 2px;">Premium</label>
+                                                    <airlock-tooltip class="" [content]="getString('edit_feature_premium')"
+                                                                     [title]="getString('edit_feature_premium_title')"></airlock-tooltip>
+                                                </td>
+                                                <td class="align-left no-pa-top"><label class="control-label"
+                                                                                        style="padding-right: 2px;">Associate with
+                                                    Purchase</label>
+                                                    <airlock-tooltip class=""
+                                                                     [content]="getString('edit_feature_assosiate_with_purchase')"
+                                                                     [title]="getString('edit_feature_premium_title')"></airlock-tooltip>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-left">
+                                                    <nb-toggle class="premium-toggle" [disabled]="isOnlyDisplayMode" [(checked)]="feature.premium"
+                                                               (change)="setIsPremium($event)"></nb-toggle>
+                                                </td>
+                                                <td class="align-left">
+                                                    <div style="display: table-cell;width:300px">
+                                                        <nb-select *ngIf="!loading"
+                                                                   [(selected)]="feature.entitlement"
+                                                                   placeholder="Select purchase product" class="full-no-padding" [disabled]="!feature.premium" >
+                                                                <nb-option hero *ngFor="let option of purchasesForSelect" value="{{option.id.uniqueId}}"><span [innerHTML]="option.name"></span>  </nb-option>
+                                                        </nb-select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <span class="flexcontainer upper-padding">
+                            <h5 class="modal-title">
+                                {{getString('add_feature__premium_rule_tab_details')}}
+                                <!--<br>-->
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showRuleHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                <!--<a href="" class="modalLink" (click)="showRuleHelp()"> {{getString('edit_feature_rule_tab_learn_more')}}</a>-->
+                            </h5>
+                        </span>
+
+                                <div></div>
+                                <span>
+                            <button class="btn btn-expand btn-expand-rule btn-icon" [class.btn-expand-down-deeplink]="!inlineMode" type="button"
+                                    (click)="openAceEditorPremiumRuleExpand()">
+                                <i class="ion-arrow-expand"></i>
+                            </button>
+                                                                <div *ngIf="!feature.premium && !loading" #mytesteditor8 ace-editor id="input59" (onTextChanged)="premiumRuleUpdated($event)" [mode]="'javascript'"
+                                                                     [markdown]="feature.premiumRule?.ruleString" [readonly]="true" [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo" [heightSize]="aceEditorRuleHeight">
+                                                                </div>
+                                                                <div *ngIf="feature.premium && !loading" #mytesteditor9 ace-editor id="input60" (onTextChanged)="premiumRuleUpdated($event)" [mode]="'javascript'"
+                                                                     [markdown]="feature.premiumRule?.ruleString" [readonly]="isOnlyDisplayMode" [sample]="ruleInputSchemaSample" [utilitiesinfo]="ruleUtilitiesInfo" [heightSize]="aceEditorRuleHeight">
+                                                                </div>
+                        </span>
+                            </div>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer style="flex-direction: row;" *ngIf="feature != null">
+        <button type="button" class="btn btn-primary align-button-left" *ngIf="inlineMode && showDeepLink" data-dismiss="modal" (click)="openOnNewTab()">
+            <i class="fa ion-compose"></i>Open in New Tab</button>
+        <button type="button" class="btn btn-primary" (click)="save()"
+                [disabled]="isOnlyDisplayMode && !allowChangeParent">Save
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Cancel</button>
+    </nb-card-footer>
+</nb-card>

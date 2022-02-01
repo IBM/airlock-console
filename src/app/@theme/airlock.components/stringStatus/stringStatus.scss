@@ -1,0 +1,34 @@
+.progress {
+  min-width: 20px;
+  height: 10px;
+  background-color: white;
+}
+
+.progress-bar-danger {
+  background-color: #f5f953;
+}
+
+.progress-container {
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle !important;
+}
+.table > tbody > tr > td > .progress {
+  margin-bottom: 0px !important;
+}
+
+.status-td {
+  border: 0px solid transparent;
+}
+
+.top-pad {
+  padding-top: 4px;
+}

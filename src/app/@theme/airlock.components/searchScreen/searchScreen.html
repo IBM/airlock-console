@@ -1,0 +1,17 @@
+<div *ngIf="visible" class="form-control" style="position:relative;top:43px;">
+  <div class="rightFlexContainer">
+            <span class="middle-align-element">
+                <i class="ion-ios-search-strong searchIcon"></i>
+            </span>
+    <input class="form-control smallPad" placeholder="Search for..." type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterFeatures()" (keyup.enter)="getNextResult()">
+
+    <span class="search-count">{{getNumResults(numSearchResults)}}</span>
+    <i aria-hidden="true" class="ion-chevron-down search-down-button clearSearchIcon" *ngIf="numSearchResults > 0"
+       (click)="getNextResult()"></i>
+    <i aria-hidden="true" class="ion-chevron-up search-up-button clearSearchIcon" *ngIf="numSearchResults > 0"
+       (click)="getPreviousResult()"></i>
+    <i aria-hidden="true" class="ion-close-circled clearSearchIcon search-clear" *ngIf="searchQuery?.length > 0"
+       (click)="clearSearch()"></i>
+  </div>
+</div>
+<!--div *ngIf="visible" class="overlay" (click)="close()"></div-->

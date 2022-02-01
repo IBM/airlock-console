@@ -1,0 +1,68 @@
+
+<nb-card #limitModal id="limitModal" class="limitNotificationsModal" data-keyboard="false" data-backdrop="static">
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header [show-close]="true" *ngIf="_polls != null" >
+        <h4 class="modal-title">
+            <span>
+                 Polls Limitations
+            </span>
+            <span style="width:3em;float: right;"> </span>
+        </h4>
+
+        <div>
+            <h5 class="modal-title">
+                {{getString('limit_polls_subheader')}}
+            </h5>
+        </div>
+    </nb-card-header>
+    <nb-card-body  *ngIf="_polls != null">
+        <div class="row no-margin">
+
+            <div  class="no-margin">
+
+            </div>
+            <div class="col-md-12 border-gray">
+                <div class="dashFlexContainer"
+                     *ngIf="_polls != null">
+                    <input type="checkbox" id="checkboxname1" class="form-checkbox blackText check-all"
+                           [(ngModel)]="useSessionsLimitationRule" name="checkboxname1">
+                    <label class="control-label answer-label">Limit polls display per sessions</label>
+                </div>
+                <div class="no-margin">
+                    <label for="input80" class="control-label" [class.label-disabled]="!useSessionsLimitationRule">Sessions between Polls</label>
+                    <airlock-tooltip class="endFlexContainer"
+                                     [content]="getString('edit_experiment_creation_date')"
+                                     [title]="getString('edit_experiment_creation_date_title')"></airlock-tooltip>
+                    <input type="number" id="input80" placeholder="" min="0"
+                           [(ngModel)]="_polls.sessionsBetweenPolls"
+                           class="form-control blackText" [disabled]="!useSessionsLimitationRule">
+                </div>
+            </div>
+            <div class="col-md-12 border-gray" style="margin-top: 10px">
+                <div class="dashFlexContainer"
+                     *ngIf="_polls != null">
+                    <input type="checkbox" id="checkboxname2" class="form-checkbox blackText check-all"
+                           [(ngModel)]="useSecondsLimitationRule" name="checkboxname2">
+                    <label class="control-label answer-label">Limit polls display per seconds</label>
+                </div>
+                <div class="no-margin">
+                    <label for="input82" class="control-label"[class.label-disabled]="!useSecondsLimitationRule">Seconds between Polls</label>
+                    <airlock-tooltip class="endFlexContainer"
+                                     [content]="getString('edit_experiment_last_modified')"
+                                     [title]="getString('edit_experiment_last_modified_title')"></airlock-tooltip>
+                    <input type="number" id="input82" placeholder="" min="0"
+                           [(ngModel)]="_polls.secondsBetweenPolls"
+                           class="form-control blackText" [disabled]="!useSecondsLimitationRule">
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

@@ -12,7 +12,7 @@ export default (app, router, auth) => {
     // Express middleware to use for all requests
     router.use((req, res, next) => {
 
-        console.log('Request arrived'); // DEBUG
+        // console.log('Request arrived'); // DEBUG
 
         // Make sure we go to the next routes and don't stop here...
         next();

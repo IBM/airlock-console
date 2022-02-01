@@ -1,1 +1,0 @@
-export * from './showMessageModal.component';

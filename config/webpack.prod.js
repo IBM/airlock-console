@@ -133,6 +133,8 @@ module.exports = function (env) {
                 process.env.AIRLOCK_API_AUTH : 'FALSE'),
           'AIRLOCK_STATIC_FEATURE_MODE': JSON.stringify((process.env.AIRLOCK_STATIC_FEATURE_MODE) ?
               process.env.AIRLOCK_STATIC_FEATURE_MODE : 'FALSE'),
+          'AIRLOCK_COHORTS_MODE': JSON.stringify((process.env.AIRLOCK_COHORTS_MODE) ?
+              process.env.AIRLOCK_COHORTS_MODE : 'FALSE'),
             'AIRLOCK_AUTH_TYPE': JSON.stringify((process.env.AIRLOCK_AUTH_TYPE) ?
                 process.env.AIRLOCK_AUTH_TYPE : 'OKTA'),
                 'AIRLOCK_API_AUTH_KEY': JSON.stringify((process.env.AIRLOCK_API_AUTH_KEY)  ?

@@ -1,0 +1,79 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header >
+        <h4 class="modal-title">
+            <span>
+                     {{title}}
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body *ngIf="poll != null">
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name
+                <i class="mandatoryField">*</i>
+                <span class="export-notice">The name cannot be changed after creation</span></label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_name')"
+                                 [title]="getString('edit_feature_groups_title')"></airlock-tooltip>
+
+                <input [class.mustType]="isInputWarningOn(poll.pollId)" type="text" id="input01"
+                       [(ngModel)]="poll.pollId" class="form-control whiteText" tabindex="2">
+            </div>
+            <div class="form-group">
+                <label for="titleId" class="control-label">Title</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_name')"
+                                 [title]="getString('add_feature_name_title')"></airlock-tooltip>
+                <textarea id="titleId" [(ngModel)]="poll.title" value="FEATURE" class="form-control  whiteText"
+                          tabindex="5"></textarea>
+            </div>
+            <div class="form-group" >
+                <label class="control-label">Groups</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_group')"
+                                 [title]="getString('add_feature_group_title')"></airlock-tooltip>
+                <br>
+            <user-groups-input [(internalUserGroups)]="poll.internalUserGroups" [possibleGroupsList]="possibleGroupsList"></user-groups-input>
+            </div>
+
+            <div class="form-group">
+                <label for="input54" class="control-label">Minimum App Version</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_min_app_version')"
+                                 [title]="getString('edit_feature_min_app_version_title')"></airlock-tooltip>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <input [class.mustType]="isInputWarningOn(poll.minVersion)" type="text" id="input54"
+                       [(ngModel)]="poll.minVersion" class="form-control whiteText" tabindex="4">
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_feature_description')"
+                                 [title]="getString('add_feature_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="poll.description" value="FEATURE" class="form-control  whiteText"
+                          tabindex="5"></textarea>
+            </div>
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td><label class="control-label">Enabled</label>
+                            <airlock-tooltip [content]="getString('add_feature_enabled')"
+                                             [title]="getString('add_feature_enabled_title')"></airlock-tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <nb-toggle [(checked)]="poll.enabled"
+                                       ></nb-toggle>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close(null)">Cancel</button>
+    </nb-card-footer>
+    <!--    </modal>-->
+</nb-card>

@@ -1,9 +1,8 @@
-
 export class Stream {
     uniqueId: string;
     seasonId: string;
     name: string;
-    displayName:string;
+    displayName: string;
     lastModified: number;
     stage: string;
     description: string;
@@ -19,7 +18,12 @@ export class Stream {
     owner: string;
     processor: string;
     resultsSchema: string;
-    static cloneToStream(src: Stream,target:Stream){
+    operateOnHistoricalEvents: boolean;
+    processEventsOfLastNumberOfDays: number;
+    limitByEndDate: number;
+    limitByStartDate: number;
+
+    static cloneToStream(src: Stream, target: Stream) {
         target.uniqueId = src.uniqueId;
 
         target.seasonId = src.seasonId;
@@ -28,6 +32,7 @@ export class Stream {
         target.stage = src.stage;
         target.description = src.description;
         target.enabled = src.enabled;
+        target.displayName = src.displayName;
         target.minAppVersion = src.minAppVersion;
         target.rolloutPercentage = src.rolloutPercentage;
         target.creator = src.creator;
@@ -39,12 +44,17 @@ export class Stream {
         target.owner = src.owner;
         target.processor = src.processor;
         target.resultsSchema = src.resultsSchema;
+        target.operateOnHistoricalEvents = src.operateOnHistoricalEvents;
+        target.processEventsOfLastNumberOfDays = src.processEventsOfLastNumberOfDays;
+        target.limitByEndDate = src.limitByEndDate;
+        target.limitByStartDate = src.limitByStartDate;
     }
 
-    static clone(src: Stream) : Stream {
-        let toRet:Stream = new Stream();
+    static clone(src: Stream): Stream {
+        let toRet: Stream = new Stream();
         toRet.uniqueId = src.uniqueId;
         toRet.seasonId = src.seasonId;
+        toRet.displayName = src.displayName;
         toRet.name = src.name;
         toRet.lastModified = src.lastModified;
         toRet.stage = src.stage;
@@ -61,14 +71,20 @@ export class Stream {
         toRet.owner = src.owner;
         toRet.processor = src.processor;
         toRet.resultsSchema = src.resultsSchema;
+        toRet.operateOnHistoricalEvents = src.operateOnHistoricalEvents;
+        toRet.processEventsOfLastNumberOfDays = src.processEventsOfLastNumberOfDays;
+        toRet.limitByEndDate = src.limitByEndDate;
+        toRet.limitByStartDate = src.limitByStartDate;
         return toRet;
     }
-    setFromStream(src: Stream){
+
+    setFromStream(src: Stream) {
         this.uniqueId = src.uniqueId;
         this.seasonId = src.seasonId;
         this.name = src.name;
         this.lastModified = src.lastModified;
         this.stage = src.stage;
+        this.displayName = src.displayName;
         this.description = src.description;
         this.enabled = src.enabled;
         this.minAppVersion = src.minAppVersion;
@@ -82,19 +98,25 @@ export class Stream {
         this.owner = src.owner;
         this.processor = src.processor;
         this.resultsSchema = src.resultsSchema;
+        this.operateOnHistoricalEvents = src.operateOnHistoricalEvents;
+        this.processEventsOfLastNumberOfDays = src.processEventsOfLastNumberOfDays;
+        this.limitByEndDate = src.limitByEndDate;
+        this.limitByStartDate = src.limitByStartDate;
     }
-    static duplicateArrayString(array:Array<string>): Array<string> {
+
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })

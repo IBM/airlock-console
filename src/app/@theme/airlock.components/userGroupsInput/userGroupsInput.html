@@ -1,0 +1,18 @@
+<div class="leftFlexContainer user-groups-input" #groupsContainer [class.columnFlexContainer]="shouldPutInputDown()">
+  <tag-input [(ngModel)]="internalUserGroups" theme='dark' [placeholder]="'Add User Groups'" [allowDupes]="false" (ngModelChange)="onModelChange()">
+  </tag-input>
+  <input class="input-control" #autoInput
+         type="text"
+         [disabled]="disabled"
+         (input)="onChange()"
+         (keyup.enter)="onEnter()"
+         [nbAutocomplete]="auto" />
+
+  <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+
+    <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+      {{ option }}
+    </nb-option>
+
+  </nb-autocomplete>
+</div>

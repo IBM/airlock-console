@@ -1,0 +1,80 @@
+
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">
+        <div>
+            <div id="tloader" [hidden]="!loading">
+                <div></div>
+            </div>
+            <div style="float: right;    display: flex;">
+                <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="toggleCalendarView()" *ngIf="isShowAddExperiment()">
+                    <i class="ion-android-calendar"></i>
+                </button>
+                <button  style="margin-right: 10px;" type="button" class="btn btn-primary" (click)="limitPolls()" *ngIf="canLimitPolls()">
+                    Limitations
+                </button>
+                <button  style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addPoll()" *ngIf="isShowAddExperiment()">
+                    <i class="ion-plus"></i>
+                    Add Poll
+                </button>
+                <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" id="single-button" type="button" class="btn btn-primary" dropdownToggle title="Actions">
+                    <i class="ion-settings"></i>
+                </button>
+                <ng-template #templateRef>
+                    <ul class="menu-items">
+                        <li class="dropdown-item" *ngIf="isShowOptions() && canImportExport"><a (click)="importPoll()"><i class="fa ion-log-in"></i>Import</a></li>
+                        <li class="dropdown-item" *ngIf="isShowOptions() && !isViewer()"><a (click)="reorderPolls()"><i class="fa fa-sort"></i>Reorder</a></li>
+                    </ul>
+                </ng-template>
+            </div>
+<!--            <div class="btn-group" *ngIf="!isViewer()" dropdown style="margin-right: 8px;" [hidden]="!isShowOptions()">-->
+<!--                -->
+<!--            </div>-->
+            <custom-airlock-header [showConfig]="showConfig" (onShowConfigChanged)="setShowConfig($event)" [showDevFeatures]="showDevFeatures" (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                                   [showDisabled]="showDisabled" (onShowDisabledChanged)="setShowDisabled($event)"
+                                   [showSearch]="true" [showPolls]="true" (onSearchQueryChanged)="onSearchQueryChanged($event)" [numSearchResults]="filteredItems.length"
+                                   (onNextSearchResult)="showNextSearchResult($event)" [selectedResultNum]="selectedIndex" [showAnalytics]="showAnalytics" [showTableHeader]="!inlineMode"
+                                   ></custom-airlock-header>
+            <div class="row col-sm-12 featuresContainer" style="padding-bottom: 20px" *ngIf="selectedProduct != null">
+                <poll-cell *ngFor="let poll of polls; let i = index"
+                                 [poll]="poll" [level]="0"
+                                 [openPolls]="openPolls"
+                                 [searchTerm]="searchQueryString"
+                                 [showDevFeatures]="showDevFeatures"
+                                 [showDisabled]="showDisabled"
+                                 [inlineMode]="inlineMode"
+                                 [filterlistDict]="filterlistDict"
+                                 [shouldOpenCell]="isCellOpen(poll.uniqueId)"
+                                 [selectedId]="selectedId"
+                                 (onSearchHit)="experimentIsInFilter($event)"
+                                 (onDummySearchHit)="variantIsNotInFilter($event)"
+                                 (onCellClick)="pollChangedStatus($event)"
+                                 (onEditInline)="showEditInline($event)"
+                                 (onEditQuestionInline)="showEditQuestionInline($event)"
+                                 (onEditAnswerInline)="showEditAnswerInline($event)"
+                                 (onUpdate)="refreshTable()"
+                                 (questionAdded)="showEditQuestionInline({'question':$event,'poll':poll})"
+                                 (hideIndicator)="afterUpdate()"
+                                 (beforeUpdate)="beforeUpdate()"
+                                 (onSelected)="itemIsSelected(poll)"
+                ></poll-cell>
+
+            </div>
+
+    </div>
+    </div>
+    <div [class.col-md-6]="inlineMode && !inlineQuestionMode">
+        <edit-poll-modal #editInline (onClose)="closeEditInline($event)" [visible]="inlineMode && !inlineQuestionMode && !inlineAnswerMode && !inlineOpenAnswerMode && !inlineCalendarMode"></edit-poll-modal>
+    </div>
+    <div [class.col-md-6]="inlineMode && !inlineCalendarMode">
+        <polls-calendar-view #calendarViewInline (onClose)="closeEditInline($event)" [visible]="inlineCalendarMode"></polls-calendar-view>
+    </div>
+    <div [class.col-md-6]="inlineQuestionMode">
+        <edit-question-modal #editQuestionInline (onClose)="closeEditInline($event)" [visible]="inlineQuestionMode"></edit-question-modal>
+    </div>
+    <div [class.col-md-6]="inlineAnswerMode">
+        <edit-answer-modal #editAnswerInline (onClose)="closeEditInline($event)" [visible]="inlineAnswerMode"></edit-answer-modal>
+    </div>
+    <div [class.col-md-6]="inlineOpenAnswerMode">
+        <edit-open-answer-modal #editOpenAnswerInline (onClose)="closeEditInline($event)" [visible]="inlineOpenAnswerMode"></edit-open-answer-modal>
+    </div>
+</div>

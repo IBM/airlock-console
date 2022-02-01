@@ -1,0 +1,61 @@
+<nb-card #importModal id="importModal" class="importModal fixed-size-modal" data-keyboard="false" data-backdrop="static">
+    <div id="tloader" [hidden]="!loading">
+        <div></div>
+    </div>
+    <nb-card-header>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     {{title}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body style="max-height: 495px;overflow:auto">
+
+                <div>
+                    <div class="box">
+                        <div *ngIf="!isPaste && showImportFile" class="form-group" style="padding-left: 18px;;width: 400px;vertical-align: top;">
+                            <div style="margin-bottom: 10px;width: 500px; display: table-caption;">
+                                <label for="input01" class="control-label" style="font-size: 15px">
+                                    CMS URL
+                                    <i class="mandatoryField">*</i>
+                                </label>
+                                <airlock-tooltip class="endFlexContainer"
+                                                 [content]="getString('edit_feature_name')"
+                                                 [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                                <input type='text' id="input01"
+                                       class="form-control blackText">
+                            </div>
+                        </div>
+                        <div class="form-group" style="padding-left: 18px;width: 400px; vertical-align: top;">
+                            <label class="control-label" style="font-size: 14px">Set the minimum app
+                                version </label>
+                            <i *ngIf="isShowMinApp" class="mandatoryField"
+                               [tooltip]="getString('tooltip_mandatory_field')">*</i>
+
+                            <div style="display: table-row">
+                                <div style="width: 270px; display: table-cell;">
+                                    <input [class.mustType]="isShowMinApp" type="text" id="input08" placeholder=""
+                                           [(ngModel)]="minAppVersion" class="form-control blackText"
+                                           style="max-width: 400px;">
+                                </div>
+                                <div style="display: table-cell;padding-left: 10px;">
+                                    <airlock-tooltip class="endFlexContainer" [placement]="'right'"
+                                                     [content]="getString('minapp_description_content')"
+                                                     [title]="getString('minapp_description_title')"></airlock-tooltip>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">{{saveText}}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

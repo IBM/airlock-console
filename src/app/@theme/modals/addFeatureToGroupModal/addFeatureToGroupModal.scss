@@ -1,0 +1,61 @@
+.reorderMXGroupModal .modal-title{
+  color:white !important;
+}
+.reorderMXGroupModal .modal-content{
+  background: currentColor;//url("assets/img/sky-bg.jpg");
+}
+
+.reorderMXGroupModal .whiteText{
+  color: white !important;
+  //color: black !important;
+  //border: 1px solid #00abff !important;
+}
+.reorderMXGroupModal .select2{
+  display:block !important;
+  width:100% !important;
+}
+.reorderMXGroupModal .ordertable{
+  width: 100%;
+}
+
+.selected {
+  background: rgba(256,256,256,0.6);
+}
+
+.targetItem {
+  margin: 2px;
+}
+
+.invisible {
+  display: none;
+}
+
+
+/*accordion stuff*/
+
+/* The Magic */
+.accordion:hover .accordion-item:hover .accordion-item-content,
+.accordion .accordion-item--default .accordion-item-content {
+  height: 3em;
+}
+
+.accordion-item-content,
+.accordion:hover .accordion-item-content {
+  height: 0;
+  overflow: hidden;
+  transition: height .25s;
+}
+
+.accordion h1 {
+  margin: 0;
+}
+.reorderMXGroupModal .liItem
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reorderMXGroupModal {
+  width: 600px;
+  height: 480px;
+}

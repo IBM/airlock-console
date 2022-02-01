@@ -1,0 +1,71 @@
+
+<div [class.row]="inlineMode">
+    <div class="container_not" [class.col-md-6]="inlineMode">
+        <div *ngIf="isAllowedToSeePage()">
+        <div id="tloader" [hidden]="!loading">
+            <div></div>
+        </div>
+        <div style="float: right;    display: flex;">
+            <button style="margin-right: 0px;" type="button" class="btn btn-primary" (click)="addCohort()" *ngIf="isShowAddCohort()">
+                <i class="ion-plus"></i>
+                Add Cohort
+            </button>
+        </div>
+        <custom-airlock-header [showConfig]="showConfig"
+                               (onShowConfigChanged)="setShowConfig($event)"
+                               [showDevFeatures]="showDevFeatures"
+                               (onShowDevFeaturesChanged)="setShowDevFeatures($event)"
+                               [showDisabled]="showDisabled"
+                               (onShowDisabledChanged)="setShowDisabled($event)"
+                               [showSearch]="true" [showExperiments]="false"
+                               (onSearchQueryChanged)="onSearchQueryChanged($event)"
+                               [numSearchResults]="filteredItems.length"
+                               (onNextSearchResult)="showNextSearchResult($event)"
+                               [selectedResultNum]="selectedIndex" [showAnalytics]="false"
+                               [showCohorts]="showCohorts"
+                               [showTableHeader]="!inlineMode"
+                            ></custom-airlock-header>
+
+        <div *ngIf="cohortsData?.cohorts?.length > 0" class="row col-sm-12 featuresContainer" style="padding-bottom: 20px">
+            <div [class.panel]="true" [class.hide]="!hasSomeData()" [class.panel-warning]="true" [class.mx-group-background]="true" [class.full-width]="true" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="true" [class.noPadding]="false" [class.noRightPadding]="false">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <div *ngIf="true" class="mx-group-panel">
+                            <p class="configTitle">{{getString('cohorts_header_text')}}</p>
+                            <span class="flexContainer">
+                                <button *ngIf="isShowReorder()" [disabled]="isViewer()" class="profile-toggle-link btn btn-default btn-icon reorder-button" [style.border-width]="0" aria-expanded="false" (click)="reorder()">
+                                    <i class="fa fa fa-sort"></i>
+                                    Reorder
+                                </button>
+                            </span>
+                        </div>
+                        <cohort-cell *ngFor="let cohort of cohortsData?.cohorts; let i = index"
+                                         [cohort]="cohort"
+                                         [level]="0"
+                                         [openCohorts]="openExperiments"
+                                         [searchTerm]="searchQueryString"
+                                         [showDisabled]="showDisabled"
+                                         [filterlistDict]="filterlistDict"
+                                         (onEditInline)="showEditInline(cohort)"
+                                         (onSearchHit)="experimentIsInFilter($event)"
+                                         (onDummySearchHit)="variantIsNotInFilter($event)"
+                                         (onCellClick)="experimentChangedStatus($event)"
+                                         (onUpdate)="refreshTable()"
+                                         (hideIndicator)="afterUpdate()"
+                                         (beforeUpdate)="beforeUpdate()"
+                                         (onSelected)="itemIsSelected($event)"
+                        ></cohort-cell>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="h5" *ngIf="!isAllowedToSeePage()">
+        You do not have enough permissions to view this page
+    </div>
+</div>
+    <div [class.col-md-6]="inlineMode">
+        <edit-cohort-modal #editInline (onClose)="closeEditInline('')" (onEditCohort)="refreshTable()" [visible]="inlineMode"></edit-cohort-modal>
+    </div>
+</div>

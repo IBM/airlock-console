@@ -1,108 +1,78 @@
 /**
  * Created by elikkatz on 19/01/2017.
  */
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgaModule } from '../../theme/nga.module';
-
-import { routing }       from './experiments.routing';
-import { ProgressbarModule } from 'ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import {FeatureCell} from "../../theme/airlock.components/featureCell/featureCell.component";
-import {AddConfigurationModal} from "../../theme/airlock.components/addConfigurationModal/addConfigurationModal.component";
-import {AddFeatureToGroupModal} from "../../theme/airlock.components/addFeatureToGroupModal/addFeatureToGroupModal.component";
-import {ReorderMXGroupModal} from "../../theme/airlock.components/reorderMXGroupModal/reorderMXGroupModal.component";
-import {AddFeatureModal} from "../../theme/airlock.components/addFeatureModal/addFeatureModal.component";
-import {EditFeatureModal} from "../../theme/airlock.components/editFeatureModal/editFeatureModal.component";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {NgaModule} from '../../@theme/nga.module';
+import {routing} from './experiments.routing';
 import {ExperimentsPage} from "./experiments.component";
-//import {UiSwitchComponent} from "angular2-ui-switch/dist/ui-switch.component";
-import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {ModalModule} from "angular2-modal/";
-import {ConfigurationCell} from "../../theme/airlock.components/configurationCell/configurationCell.component";
-import { DropdownModule } from 'ng2-bootstrap';
-import { TooltipModule } from 'ng2-bootstrap';
-import {VerifyActionModal} from "../../theme/airlock.components/verifyActionModal/verifyActionModal.component";
-import { AccordionModule } from 'ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap';
-import { AlertModule } from 'ng2-bootstrap';
-import {HirarchyTree} from "../../theme/airlock.components/hirarchyTree/hirarchyTree.component";
-import {HirarchyNode} from "../../theme/airlock.components/hirarchyTree/hirarchyNode/hirarchyNode.component";
-import {SimpleNotificationsModule, PushNotificationsModule} from 'angular2-notifications';
 import ALCommonsModule from "../common.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {InputTextModule} from 'primeng/primeng';
-import {ListboxModule} from 'primeng/primeng';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-import {SelectModule} from "ng2-select";
-
-import {ImportFeaturesModal} from "../../theme/airlock.components/importFeaturesModal/importFeaturesModal.component";
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import { BrowserModule } from '@angular/platform-browser';
-import {WhitelistSummary} from "../wlpreview/wlsummary.component";
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import {wlAttributesModal} from "../../theme/airlock.components/wlAttributesModal/wlAttributesModal.component";
-import {wlContextModal} from "../../theme/airlock.components/wlContextModal/wlContextModal.component";
-import {TreeModule,TreeNode} from 'primeng/primeng';
-import {Accordion, AccordionGroup, WhitelistAttributes} from "../wlattributes/wlattributes.component";
-import {InlineEditComponent} from "../wlattributes/inlinedit/inline-edit.component";
-import FeaturesModule from "../featuresPage/features.module";
-import {ExperimentCell} from "../../theme/airlock.components/experimentCell/experimentCell.component";
-import {AddExperimentModal} from "../../theme/airlock.components/addExperimentModal/addExperimentModal.component";
-import {EditExperimentModal} from "../../theme/airlock.components/editExperimentModal/editExperimentModal.component";
-import {EditVariantModal} from "../../theme/airlock.components/editVariantModal/editVariantModal.component";
-import {AddVariantModal} from "../../theme/airlock.components/addVariantModal/addVariantModal.component";
-import {VariantCell} from "../../theme/airlock.components/variantCell/variantCell.component";
-import {FlaskIcon} from "../../theme/airlock.components/flaskIcon/flaskIcon.component";
-import {ReorderExperimentsModal} from "../../theme/airlock.components/reorderExperimentsModal/reorderExperimentsModal.component";
-import {ReorderVariantsModal} from "../../theme/airlock.components/reorderVariantsModal/reorderVariantsModal.component";
-import {ShowDashboardModal} from "../../theme/airlock.components/showDashboardModal/showDashboardModal.component";
+import {PopoverModule} from "ngx-bootstrap/popover";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {TooltipModule} from "@swimlane/ngx-charts";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AlertModule} from "ngx-bootstrap/alert";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {ExperimentCell} from "../../@theme/experimentCell";
+import {VariantCell} from "../../@theme/airlock.components/variantCell";
+import {FlaskIcon} from "../../@theme/flaskIcon";
+import {AddBranchModal} from "../../@theme/modals/addBranchModal";
+import {AddExperimentModal} from "../../@theme/modals/addExperimentModal";
+import {AddVariantModal} from "../../@theme/modals/addVariantModal";
+import {
+    NbButtonModule,
+    NbCardModule,
+    NbLayoutModule,
+    NbPopoverModule,
+    NbSidebarModule,
+    NbTabsetModule
+} from "@nebular/theme";
+import {EditExperimentModal} from "../../@theme/modals/editExperimentModal";
+import {EditVariantModal} from "../../@theme/modals/editVariantModal";
+import {ReorderVariantsModal} from "../../@theme/modals/reorderVariantsModal";
+import {ReorderExperimentsModal} from "../../@theme/modals/reorderExperimentsModal";
+import {AceEditorModule} from "ngx-ace-editor-wrapper";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgaModule,
-        Ng2Bs3ModalModule,
+        NbCardModule,
         PopoverModule.forRoot(),
+        NbPopoverModule,
         ProgressbarModule.forRoot(),
-        DropdownModule.forRoot(),
-        TooltipModule.forRoot(),
-        TabsModule.forRoot(),
+        TooltipModule,
+        NbTabsetModule,
         AccordionModule.forRoot(),
         ButtonsModule.forRoot(),
         AlertModule.forRoot(),
         ModalModule.forRoot(),
-        SimpleNotificationsModule,
-        DropdownMultiselectModule,
-        PushNotificationsModule,ALCommonsModule,
+        ALCommonsModule,
         routing,
-        InputTextModule,
-        ListboxModule,
-        DataTableModule,
-        TreeModule,
-        SelectModule,
-
+        NbCardModule,
+        NbButtonModule,
+        NbLayoutModule,
+        NbSidebarModule,
+        AceEditorModule,
+        ALCommonsModule,
+        ALCommonsModule,
     ],
     declarations: [
         ExperimentsPage,
         ExperimentCell,
+        AddBranchModal,
         AddExperimentModal,
-        EditExperimentModal,
         EditVariantModal,
         AddVariantModal,
+        EditExperimentModal,
         VariantCell,
         FlaskIcon,
         ReorderExperimentsModal,
         ReorderVariantsModal,
-        ShowDashboardModal
+        // ShowDashboardModal
     ],
-    providers: [
-        // TransparentSpinner,
-        // NotificationsService,
-        // FeatureUtilsService,
-
-    ]
 })
-export default class ExperimentsModule {}
+export class ExperimentsModule {}

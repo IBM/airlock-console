@@ -1,0 +1,127 @@
+<ace-modal #paceInputSchemaModalContainerDialog
+           (outputEventInputSchemaUpdate)="curUtilityUpdatedExpanded($event)">
+</ace-modal>
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <nb-card-header *ngIf="season != null">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+                <span>
+                     {{title}}
+                </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="tabContentBackgroud tab-div-container">
+            <div class="box">
+                <span class="flexcontainer">
+                            <h5 class="modal-title">
+                                {{getString('edit_utils_leading_text')}}
+                                <button class="modalLink modalLinkButton"
+                                        (click)="showRuleHelp()">{{getString('edit_feature_rule_tab_learn_more')}}</button>
+                                <br>
+                                  <div class="no-margin " *ngIf="utilities != null && utilities.length > 0">
+                                      <div class="row">
+                                        <div class="col-md-10">
+                                        </div>
+                                        <div class="col-md-2 no-right-padding">
+                                           <button type="button" class="btn btn-primary" (click)="createNewUtil()"
+                                                                    style="cursor: pointer; float: right" [disabled]="!canAddNewUtil()">
+                                                        <i class="ion-plus"></i>
+                                                        Add Utility
+                                           </button>
+                                        </div>
+                                      </div>
+                                      <div class="row" style="margin-top: 10px;">
+                                          <div class="flexLeftcontainer">
+                                              <label class="control-label"
+                                                     style="width: 320px; padding-right: 1px;">{{getString('edit_utils_select_util_title')}} </label>
+                                              <nb-select fullWidth id="select05" class="full-no-padding airlytics-select" [selected]='getSelectedUtilityName()' [placeholder]="getSelectedUtilityName()">
+                                                    <nb-option (click)="selectUtilityByName(item.name)" *ngFor="let item of utilities"
+                                                               value="{{item.name}}"><p style="width: 90%;vertical-align: middle;margin-bottom: 0px;">{{ item.name }} </p><nb-icon *ngIf="item.stage=='PRODUCTION'" icon="product-hunt" pack="brands" style="vertical-align: center"></nb-icon></nb-option>
+                                              </nb-select>
+                                              <div class="btn-group" dropdown
+                                                   style="width:70px;margin-bottom: 10px; margin-right: 8px;">
+                                                <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" id="single-button" class="btn btn-primary"
+                                                        *ngIf="selectedUtility != null" type="button" dropdownToggle
+                                                        title="Actions"
+                                                        style="cursor: pointer;margin-right: 0px;margin-left: 2px; height: 38px; margin-left: 5px"
+                                                        [disabled]="isAddNewMode || !(canDelete() || canChangeStage())">
+                                                    <i class="ion-settings"></i>
+                                                </button>
+                                                  <ng-template #templateRef>
+                                                    <ul dropdownMenu role="menu" *ngIf="selectedUtility != null"
+                                                        aria-labelledby="single-button" class="dropdown-menu-right">
+                                                        <li role="menuitem" *ngIf="canChangeStage() "><a
+                                                                class="dropdown-item" [class.disabled]="false"
+                                                                (click)="changeStage()"><i class="fa"
+                                                                                           [class.ion-code-working]="selectedUtility.stage!='DEVELOPMENT'"
+                                                                                           [class.fa-flag]="selectedUtility.stage=='DEVELOPMENT'"
+                                                                                           style="margin-right: 5px;"></i>
+                                                            {{(selectedUtility.stage != "PRODUCTION") ? getString('edit_utils_release_to_prodution') : getString('edit_utils_revert_to_development')}}</a>
+                                                        </li>
+                                                        <li role="menuitem"><a class="dropdown-item"
+                                                                               [class.grayText]="!canDelete()"
+                                                                               [class.disabled]="!canDelete()"
+                                                                               (click)="canDelete() && deleteUtility()"
+                                                                               style="color: red"><i class="fa ion-trash-b"
+                                                                                                     style="margin-right: 15px;"></i>Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                  </ng-template>
+                                          </div>
+                                      </div>
+                                      </div>
+                                  </div>
+                            </h5>
+                        </span>
+                <div class="no-margin " *ngIf="season != null && selectedUtility != null">
+                    <div class="row">
+                        <div class="col-md-7 no-left-padding">
+                            <label for="input01" class="control-label">Name</label>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_name')"
+                                             [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                            <input type="text" [disabled]=false id="input01" placeholder=""
+                                   [(ngModel)]="selectedUtility.name" class="form-control blackText" tabindex="1"
+                                   (change)="markDirtyName()">
+                            <br>
+                        </div>
+                        <div class="col-md-5 no-right-padding">
+                            <label for="input101" class="control-label">Stage</label>
+                            <airlock-tooltip class="endFlexContainer" [content]="getString('edit_feature_name')"
+                                             [title]="getString('edit_feature_name_title')"></airlock-tooltip>
+                            <input type="text" [disabled]="true" id="input101" placeholder=""
+                                   [(ngModel)]="selectedUtility.stage" class="form-control blackText" tabindex="1">
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="season != null">
+                    <!--<label for="input59" class="control-label">Input schema</label>-->
+                    <airlock-tooltip class="endFlexContainer small-right-padding" style="padding-right: 1px"
+                                     [content]="getString('edit_feature_output_config')"
+                                     [title]="getString('edit_feature_output_config_title')"></airlock-tooltip>
+                    <button class="btn btn-expand btn-expand-down btn-icon" type="button"
+                            (click)="openAceEditorOutputConfigurationExpand()">
+                        <i class="ion-arrow-expand"></i>
+                    </button>
+                    <div #mytesteditor3 ace-editor (onTextChanged)="curUtilityUpdated($event)" [senddiff]="true"
+                         [markdown]="curUtilityString" [readonly]=false [sample]=""
+                         [mode]="'javascript'"
+                         [heightSize]="aceEditorConfigurationHeight">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="text" #plainVersion style="display: none;width: 860px;">
+
+    </nb-card-body>
+    <nb-card-footer *ngIf="season != null">
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!canSave()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>

@@ -1,0 +1,62 @@
+<div [class.col-sm-12]="true" *ngIf="!isFilteredOut()">
+        <div #webhookCell [class.col-sm6]="true">
+            <div [class.panel]="shouldStyleCell()" [class.panel-warning]="shouldStyleCell()" [class.highlight-cell]="shouldHightlight()" [class.mx-group-background]="shouldStyleAsMTX()" style="margin-bottom: 2px; margin-top: 2px;">
+                <div class="panel-body" [class.smallPadding]="shouldStyleCell()" [class.noPadding]="shouldNotStyleCell()" [class.noRightPadding]="isSubFeature()">
+                    <ul class="list-group" style="margin: 0px; background-color: transparent">
+                        <table class="table table-hover feature-cell" [style.background-color]="getBackgroundStyle()" [class.selected-feature]="isSelectedFeature()" [style.color]="getColorStyle()">
+                            <tr>
+
+                                <td style="width: 3%; text-align: start;  vertical-align: middle;" class="align-left" align="left">
+                                    <div class="">
+                                        <i class="reported-to-analytics-icon fa fa-plug" [class.not-active]="!isNotificationRunning()"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 51%; text-align: start;  vertical-align: middle;" (click)="cellClicked()" class="align-left descpCell" align="left">
+                                    <div class="descpDiv">
+                                        <a (click)="openEditDialog($event)" class="cursor" [innerHTML]="highlighted">
+                                        </a>
+                                        <ng-template #popTemplate>
+                                            <div class="descpPopover">
+                                                <div  class="no-margin "  *ngIf="(webhook?.products?.length > 0)">
+                                                    <label for="input55" class="control-label">Products</label>
+                                                    <p id="input55" [innerHTML]="productsList"></p>
+                                                </div>
+                                            </div>
+
+                                        </ng-template>
+                                        <i *ngIf="(webhook?.products?.length > 0)" class="ion-ios-information-outline info-icon" [popover]="popTemplate" placement="right" triggers="mouseenter:mouseleave"></i>
+                                    </div>
+                                </td>
+                                <td style="width: 12%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left capitalize" [class.prod]="isInProduction()" >
+                                </td>
+                                <td style="width: 8%; text-align: start; vertical-align: middle;" (click)="cellClicked()" class="align-left" ><span class=""></span></td>
+                                <td style="width: 8%; min-width: 70px; text-align: center; vertical-align: middle;" (click)="cellClicked()" class="align-left" >
+                                    <div style="vertical-align: middle; height: 20px;">
+
+                                    </div>
+                                </td>
+                                <td style="width: 11%; vertical-align: middle;" (click)="doNothing()" class="align-right">
+                                    <div style="vertical-align: middle;" class="middle-align-element">
+                                    </div>
+                                </td>
+
+                                <td style="width:7%; min-width: 60px; vertical-align: middle; text-align: end;" class="-align-right">
+                                    <div class="dropdown noExpand maxWidth" dropdown >
+                                        <button [nbPopover]="templateRef" dropdownToggle class="profile-toggle-link btn btn-icon btn-circle" id="user-profile-dd1" data-toggle="dropdown" aria-expanded="false" title="Actions" nbPopoverPlacement="bottom">
+                                            <i class="ion-settings"></i>
+                                        </button>
+                                        <ng-template #templateRef>
+                                            <ul class="menu-items">
+                                                <li class="dropdown-item" *ngIf="isShowOptions()"><a (click)="openEditDialog($event)"><i class="fa ion-compose"></i>Edit</a></li>
+                                                <li class="dropdown-item" *ngIf="isShowOptions()" ><a (click)="delete()" class="signout destructive" [style.color]="getDeleteColor()" style="color: red;"><i class="fa ion-trash-b"></i>Delete</a></li>
+                                            </ul>
+                                        </ng-template>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</div>

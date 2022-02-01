@@ -1,0 +1,49 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<!--<modal #editBranchModal id="editBranchModal" class="editBranchModal" >-->
+<!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+<nb-card class="fixed-size-modal">
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span *ngIf="_branch.name">
+                 Edit Branch - {{_branch.name}}
+            </span>
+            <span *ngIf="!_branch.name">
+                 Edit Branch
+            </span>
+        </h4>
+        <h5 class="modal-title">
+            {{getString('add_branch_subheader')}}
+        </h5>
+    </nb-card-header>
+    <nb-card-body>
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="name" class="control-label">Name</label>
+                <!--                    <airlock-tooltip class="endFlexContainer" [content]="getString('add_branch_name')" [title]="getString('add_branch_name_title')"></airlock-tooltip>-->
+                <input type="text" class="form-control" id="name" placeholder="" class="form-control whiteText"
+                       [(ngModel)]="_branch.name" name="name" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="description" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_branch_description')"
+                                 [title]="getString('add_branch_description_title')"></airlock-tooltip>
+                <textarea class="form-control" id="description" style="height: 60px" placeholder=""
+                          class="form-control whiteText"
+                          [(ngModel)]="_branch.description" name="description"></textarea>
+            </div>
+        </div>
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+</nb-card>
+<!--</modal>-->

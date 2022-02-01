@@ -1,0 +1,86 @@
+<div id="tloader" [hidden]="!loading">
+    <div></div>
+</div>
+<nb-card class="fixed-size-modal">
+    <!--<modal #addCohortModal id="addCohortModal" class="addDataimportModal" [backdrop]="'static'">-->
+    <!--    <simple-notifications [options]="options" (onCreate)="onCreate($event)" (onDestroy)="onDestroy($event)"></simple-notifications>-->
+
+    <nb-card-header>
+        <h4 class="modal-title">
+            <span>
+                 Add Cohort
+            </span>
+        </h4>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="box">
+            <div class="form-group">
+                <label for="input01" class="control-label">Name</label>
+                <!--                <i class="mandatoryField" [tooltip]="getString('tooltip_mandatory_field')">*</i>-->
+                <i class="mandatoryField">*</i>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_cohort_name')"
+                                 [title]="getString('add_cohort_name_title')"></airlock-tooltip>
+                <input [class.mustType]="isInputWarningOn(_cohort.name)" type="text" id="input01"
+                       [(ngModel)]="_cohort.name" class="form-control whiteText" tabindex="2">
+            </div>
+
+            <div class="no-margin " *ngIf="_cohort != null">
+                <label class="control-label">Export Type <span class="export-notice">This cannot be changed after creation</span></label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_cohort_export_type')"
+                                 [title]="getString('add_cohort_export_type_title')"></airlock-tooltip>
+                <div class="padding-right intervalPicker">
+                    <div class="btn-group frequency-dropdown" dropdown style="vertical-align:baseline">
+                        <button [nbPopover]="templateRef" nbPopoverPlacement="bottom" type="button" class="btn btn-default intervalPickerBtn" dropdownToggle
+                                style="width: 100%;" [disabled]="false">
+                            {{exportKey}}
+                        </button>
+                        <ng-template #templateRef>
+                        <ul class="menu-items" dropdownMenu>
+                            <ng-template ngFor let-item [ngForOf]="possibleExportKeys"
+                                         let-i="index">
+                                <li class="dropdown-item" (click)="exportKeyChosen(item)"
+                                    style="cursor: pointer">{{item}}</li>
+                            </ng-template>
+                        </ul>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-margin " *ngIf = "_cohort != null">
+                <label class="control-label">Value Type <span class="export-notice">This cannot be changed after creation</span></label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_cohort_value_type')" [title]="getString('add_cohort_value_type_title')"></airlock-tooltip>
+                <div class="padding-right intervalPicker">
+                    <div class="btn-group frequency-dropdown" dropdown style="vertical-align:baseline">
+                        <button [nbPopover]="templateRef2" nbPopoverPlacement="bottom" type="button" class="btn btn-default intervalPickerBtn" dropdownToggle
+                                style="width: 100%;" [disabled]="false">
+                            {{_cohort.valueType}}
+                        </button>
+                        <ng-template #templateRef2>
+                            <ul class="menu-items" dropdownMenu>
+                                <ng-template ngFor let-item [ngForOf]="possibleValueTypes"
+                                             let-i="index">
+                                    <li class="dropdown-item" (click)="valueTypeChosen(item,templateRef2);"
+                                        style="cursor: pointer">{{item}}</li>
+                                </ng-template>
+                            </ul>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="input55" class="control-label">Description</label>
+                <airlock-tooltip class="endFlexContainer" [content]="getString('add_experiment_description')"
+                                 [title]="getString('add_experiment_description_title')"></airlock-tooltip>
+                <textarea id="input55" [(ngModel)]="_cohort.description" value="FEATURE" class="form-control  whiteText"
+                          tabindex="5"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button type="button" class="btn btn-primary" (click)="save()">Add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">Cancel</button>
+    </nb-card-footer>
+    <!--</modal>-->
+</nb-card>

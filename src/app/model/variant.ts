@@ -1,13 +1,14 @@
 import {Rule} from './rule';
+
 export class Variant {
     uniqueId: string;
     name: string;
-    displayName:string;
+    displayName: string;
     lastModified: number;
     stage: string;
     description: string;
     branchName: string;
-    experimentId:string;
+    experimentId: string;
     enabled: boolean;
     rule: Rule;
     rolloutPercentage: number;
@@ -15,7 +16,7 @@ export class Variant {
     internalUserGroups: string[];
     creationDate: number;
 
-    static cloneToVariant(variant: Variant,target:Variant){
+    static cloneToVariant(variant: Variant, target: Variant) {
         target.uniqueId = variant.uniqueId;
         target.name = variant.name;
         target.displayName = variant.displayName;
@@ -33,8 +34,8 @@ export class Variant {
 
     }
 
-    static clone(variant: Variant) : Variant {
-        let toRet:Variant = new Variant();
+    static clone(variant: Variant): Variant {
+        let toRet: Variant = new Variant();
 
         toRet.uniqueId = variant.uniqueId;
         toRet.name = variant.name;
@@ -53,7 +54,8 @@ export class Variant {
 
         return toRet;
     }
-    setFromExperiment(variant: Variant){
+
+    setFromExperiment(variant: Variant) {
 
         this.uniqueId = variant.uniqueId;
         this.name = variant.name;
@@ -71,18 +73,20 @@ export class Variant {
         this.creationDate = variant.creationDate;
 
     }
-    static duplicateArrayString(array:Array<string>): Array<string> {
+
+    static duplicateArrayString(array: Array<string>): Array<string> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(x);
             })
         }
         return arr;
     }
-    static duplicateArray(array:Array<any>): Array<any> {
+
+    static duplicateArray(array: Array<any>): Array<any> {
         let arr = [];
-        if(array != null) {
+        if (array != null) {
             array.forEach((x) => {
                 arr.push(Object.assign({}, x));
             })

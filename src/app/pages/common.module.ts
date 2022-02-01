@@ -1,63 +1,110 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {DropdownModule, TooltipModule} from 'ng2-bootstrap';
-import { AccordionModule } from 'ng2-bootstrap';
-import {AirlockTooltip} from "../theme/airlock.components/airlockTooltip/airlockTooltip.component";
-import {NgaModule} from "../theme/nga.module";
-import {SimpleNotificationsModule} from "angular2-notifications/lib/simple-notifications.module";
-import { PopoverModule } from 'ng2-bootstrap';
-import {Ng2Bs3ModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
-//import {whiteListABModal} from "../theme/airlock.components/whiteListABModal/whiteListABModal.component";
-import {UiSwitchComponent} from "angular2-ui-switch/dist/ui-switch.component";
-import {TreeModule,TreeNode} from 'primeng/primeng';
-import {ShowMessageModal} from "../theme/airlock.components/showMessageModal/showMessageModal.component";
-import {AceModal} from "../theme/airlock.components/aceModal/aceModal.component";
-import {AceEditor} from "../theme/airlock.components/aceEditor/aceEditor";
-import {FeatureUtilsService} from "../services/featureUtils.service";
-import {TransparentSpinner} from "../theme/airlock.components/transparentSpinner/transparentSpinner.service";
-import {EditInputSchemaModal} from "../theme/airlock.components/editInputSchemaModal/editInputSchemaModal.component";
-import {DocumentlinksModal} from "../theme/airlock.components/documentlinksModal/documentlinksModal.component";
-import {CustomAirlockHeader} from "../theme/airlock.components/customAirlockHeader/customAirlockHeader.component";
-import { DropdownMultiselectModule } from 'ng2-dropdown-multiselect';
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-import {VerifyActionModal} from "../theme/airlock.components/verifyActionModal/verifyActionModal.component";
-import {SelectModule} from "ng2-select";
-import {EditBranchModal} from "../theme/airlock.components/editBranchModal/editBranchModal.component";
-import {ShowConflictsModal} from "../theme/airlock.components/showConflictsModal/showConflictsModal.component";
-import {ImportStringsModal} from "../theme/airlock.components/importStringsModal/importStringsModal.component";
-import {EditUtilityModal} from "../theme/airlock.components/editUtilityModal/editUtilityModal.component";
-import {ClipboardModule} from "angular2-clipboard";
-import {SelectLocaleForRuntimeModal} from "../theme/airlock.components/selectLocaleForRuntimeModal";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {PendingIcon} from "../@theme/airlock.components/pendingIcon";
+import {LoadingIcon} from "../@theme/airlock.components/loadingIcon";
+import {AirlockTooltip} from "../@theme/airlock.components/airlockTooltip/airlockTooltip.component";
+import {NgaModule} from "../@theme/nga.module";
+import {AceEditor} from "../@theme/airlock.components/aceEditor/aceEditor";
+import {CustomAirlockHeader} from "../@theme/airlock.components/customAirlockHeader/customAirlockHeader.component";
+import {EditBranchModal} from "../@theme/modals/editBranchModal";
+import {AceModal} from "../@theme/modals/aceModal/aceModal.component";
+import {EditUtilityModal} from "../@theme/modals/editUtilityModal";
+import {VerifyActionModal} from "../@theme/modals/verifyActionModal";
+import { AceEditorModule } from 'ngx-ace-editor-wrapper';
+import {
+    NbAutocompleteModule, NbButtonModule,
+    NbCardModule,
+    NbContextMenuModule, NbIconModule,
+    NbPopoverModule,
+    NbSelectModule,
+    NbTabsetModule,
+    NbToggleModule
+} from "@nebular/theme";
+import {EditInputSchemaModal} from "../@theme/modals/editInputSchemaModal/editInputSchemaModal.component";
+import {ShowErrorModal} from "../@theme/modals/showErrorModal";
+import {DocumentlinksModal} from "../@theme/airlock.components/documentlinksModal";
+import {ConfirmActionModal} from "../@theme/modals/confirmActionModal";
+import {ImportStringsModal} from "../@theme/modals/importStringsModal";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ShowConflictsModal} from "../@theme/modals/showConflictsModal";
+import {StickyViewDirective} from "../@theme/directives/stickyView/sticky-view.directive";
+import {UserGroupsInput} from "../@theme/airlock.components/userGroupsInput";
+import {TagInputModule} from "ngx-chips-angular";
+import {AirlockSearch} from "../@theme/airlock.components/airlockSearch";
+import {ToggleSettingsButtonComponent} from "../@theme/components";
+import {AceCmp} from "../@theme/airlock.components/aceEditor/aceEditor2";
+import { SaveActionModal } from 'app/@theme/modals/saveActionModal';
 
+
+// @ts-ignore
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgaModule,
-    DropdownMultiselectModule,
-    MultiselectDropdownModule,
-    DropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    SelectModule,
-    AccordionModule.forRoot()
-    ,SimpleNotificationsModule,Ng2Bs3ModalModule,PopoverModule.forRoot(),TreeModule,ClipboardModule
-  ],
-  declarations: [
-    AceEditor, AceModal, ShowMessageModal,ShowConflictsModal,EditInputSchemaModal,DocumentlinksModal,SelectLocaleForRuntimeModal,CustomAirlockHeader
-  ,VerifyActionModal,UiSwitchComponent,EditBranchModal,ImportStringsModal,EditUtilityModal
-
-  ],
-  exports:
-  [
-    AirlockTooltip, AceEditor,EditBranchModal,
-    AceModal,ShowMessageModal,ShowConflictsModal,EditInputSchemaModal,DocumentlinksModal,SelectLocaleForRuntimeModal,CustomAirlockHeader,VerifyActionModal,UiSwitchComponent,ImportStringsModal,EditUtilityModal
-  ]
-    ,
-    providers: [
-  FeatureUtilsService,
-
-]
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgaModule,
+        NbTabsetModule,
+        NbToggleModule,
+        NbCardModule,
+        AceEditorModule,
+        NbSelectModule,
+        NbContextMenuModule,
+        AccordionModule,
+        NbIconModule,
+        NbPopoverModule,
+        NbAutocompleteModule,
+        TagInputModule,
+        NbButtonModule,
+    ],
+    declarations: [
+        AceEditor,
+        AceCmp,
+        AceModal,
+        UserGroupsInput,
+        AirlockSearch,
+        CustomAirlockHeader,
+        DocumentlinksModal,
+        PendingIcon,
+        LoadingIcon,
+        VerifyActionModal,
+        ConfirmActionModal,
+        SaveActionModal,
+        EditUtilityModal,
+        EditInputSchemaModal,
+        ToggleSettingsButtonComponent,
+        EditBranchModal,
+        ShowErrorModal,
+        ImportStringsModal,
+        ShowConflictsModal,
+        StickyViewDirective,
+    ],
+    exports:
+        [
+            NbTabsetModule,
+            NbToggleModule,
+            NbCardModule,
+            NbSelectModule,
+            NbContextMenuModule,
+            AirlockTooltip,
+            AceEditor,
+            AceModal,
+            UserGroupsInput,
+            CustomAirlockHeader,
+            DocumentlinksModal,
+            // UiSwitchComponent,
+            PendingIcon,
+            AirlockSearch,
+            LoadingIcon,
+            VerifyActionModal,
+            ConfirmActionModal,
+            SaveActionModal,
+            ShowErrorModal,
+            ImportStringsModal,
+            ShowConflictsModal,
+            StickyViewDirective,
+            ToggleSettingsButtonComponent,
+            AceCmp,
+        ]
 })
 export default class ALCommonsModule {
 }
